@@ -1,0 +1,84 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+}
+
+.go-to-content {
+    display: block;
+    width: max-content;
+    position: absolute;
+    left: 50%;
+    /* top: -2rem; */
+    background-color: #DB8876;
+    border-radius: 0.3rem;
+    font-size: 1.2rem;
+    color: black;
+    text-decoration: none;
+    padding: 0.2rem 0.5rem;
+}
+
+.page {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.page header {
+    display: flex;
+    margin: 1.5rem;
+    height: max-content;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.page header nav {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.page header img {
+    width: 12.5rem;
+    height: 3.125rem;
+}
+
+.nav-tag-item {
+    margin : 0.5rem;
+    height:min-content;
+    border: #c4c4c4 solid 0.03rem;
+    color: #901C1C;
+
+}
+
+.photograph-profile__avatar img{
+    width: 12.5rem;
+    height: 12.5rem;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+main#content {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: -6rem;
+}  
+
+#content h1{
+    margin: 1.5rem;
+    margin-left: 60rem;
+    color: #901C1C;
+    width: max-content;
+    height: min-content;
+}
+
+.photograph-wrapper {
+    width: 100vw;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.photograph-profile {
+    width: 30vw;
+}
