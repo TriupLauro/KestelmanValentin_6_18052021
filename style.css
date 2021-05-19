@@ -1,3 +1,4 @@
+/*Base rules*/
 * {
     margin: 0;
     padding: 0;
@@ -7,11 +8,12 @@ body {
     font-family: 'DM Sans', sans-serif;
 }
 
+/* Header */
 .go-to-content {
     display: block;
     width: max-content;
     position: absolute;
-    left: 50%;
+    left: 45%;
     /* top: -2rem; */
     background-color: #DB8876;
     border-radius: 0.3rem;
@@ -28,15 +30,23 @@ body {
 
 .page header {
     display: flex;
-    margin: 1.5rem;
+    margin: 1.5rem 0;
     height: max-content;
     align-items: center;
     justify-content: space-between;
+    max-width: max-content;
+    width: 75vw;
+    /*Otherwise interaction prevented, main superimposed*/
+    z-index: 1;
 }
 
 .page header nav {
     display: flex;
     flex-wrap: wrap;
+}
+
+.image-link-homepage {
+    display: b;
 }
 
 .page header img {
@@ -45,11 +55,44 @@ body {
 }
 
 .nav-tag-item {
-    margin : 0.5rem;
     height:min-content;
     border: #c4c4c4 solid 0.03rem;
+    border-radius: 0.7rem;
     color: #901C1C;
+    padding: 0 0.5rem;
+    margin: 0.2rem;
+    cursor: pointer;
+}
 
+.nav-tag-item:hover {
+    color: white;
+    background-color: #911c1c;
+}
+
+/* Main content homepage */
+main#content {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: -6rem;
+}  
+
+/* Necessay to get to the right position while being included in main tag, without header */
+#content h1{
+    margin: 1.5rem;
+    margin-left: 75vw;
+    color: #901C1C;
+    max-width: max-content;
+    width: auto;
+    height: min-content;
+    font-weight: normal;
+}
+
+/* Photograph profiles*/
+.photograph-wrapper {
+    width: 100vw;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .photograph-profile__avatar img{
@@ -59,26 +102,60 @@ body {
     border-radius: 50%;
 }
 
-main#content {
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: -6rem;
-}  
-
-#content h1{
-    margin: 1.5rem;
-    margin-left: 60rem;
-    color: #901C1C;
-    width: max-content;
-    height: min-content;
-}
-
-.photograph-wrapper {
-    width: 100vw;
-    display: flex;
-    flex-wrap: wrap;
-}
-
 .photograph-profile {
-    width: 30vw;
+    width: 15rem;
+    margin: 2.5rem 5rem;
+    text-align: center;
+}
+
+.photograph-profile__avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #D3573C;
+}
+
+.photograph-profile__avatar h2 {
+    font-size: 2.25rem;
+    min-width: max-content;
+    text-align: center;
+}
+
+.photograph-profile__localisation {
+    font-size: 0.8rem;
+    color: #901C1C;
+}
+
+.photograph-profile__slogan {
+    font-size: 0.6rem;
+}
+
+.photograph-profile__price {
+    font-size: 0.55rem;
+    color: #757575;
+}
+
+.photograph-profile__description * {
+    margin: 0.2rem 0;
+}
+
+.photograph-profile__tags {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.photograph-profile__tags__tag-item {
+    border: 0.03rem solid #c4c4c4;
+    border-radius: 0.7rem;
+    margin: 0 0.2rem;
+    padding: 0 0.5rem;
+    font-size: 0.75rem;
+    color: #911C1c;
+}
+
+.photograph-profile__tags__tag-item:hover {
+    color: white;
+    background-color: #911C1C;
 }
