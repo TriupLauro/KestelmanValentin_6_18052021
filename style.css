@@ -33,9 +33,8 @@ body {
     margin: 1.5rem 0;
     height: max-content;
     align-items: center;
-    justify-content: space-between;
-    max-width: max-content;
-    width: 75vw;
+    justify-content: space-around;
+    width: 70vw;
     /*Otherwise interaction prevented, main superimposed*/
     z-index: 1;
 }
@@ -62,6 +61,7 @@ body {
     padding: 0 0.5rem;
     margin: 0.2rem;
     cursor: pointer;
+    font-size: 0.75rem;
 }
 
 .nav-tag-item:hover {
@@ -78,7 +78,7 @@ main#content {
 
 /* Necessay to get to the right position while being included in main tag, without header */
 #content h1{
-    margin: 1.5rem;
+    margin: 1.25rem;
     margin-left: 75vw;
     color: #901C1C;
     max-width: max-content;
@@ -93,6 +93,7 @@ main#content {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    margin-top: 2.5rem;
 }
 
 .photograph-profile__avatar img{
@@ -153,9 +154,48 @@ main#content {
     padding: 0 0.5rem;
     font-size: 0.75rem;
     color: #911C1c;
+    cursor: pointer;
 }
 
 .photograph-profile__tags__tag-item:hover {
     color: white;
     background-color: #911C1C;
+}
+
+/*Responsive */
+@media all and (max-width:1199px) {
+    .photograph-wrapper {
+        justify-content: center;
+    }
+
+    .page header {
+        width: 100vw;
+        flex-direction: column;
+    }
+
+    .page header a {
+        align-self: baseline;
+    }
+
+    .page header nav {
+        justify-content: center;
+        width: 90vw;
+    }
+
+    #content h1 {
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+    }
+}
+
+/* Corrections pour le déclenchement du wrap des tags de navigation */
+@media all and (max-width: 651px) {
+    #content h1 {
+        margin-top: -1rem;
+        margin-left: 60vw;
+    }
+
+    .photograph-wrapper {
+        margin-top: 4rem;
+    }
 }
