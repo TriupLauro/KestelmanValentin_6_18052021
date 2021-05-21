@@ -200,7 +200,10 @@ main#content {
     }
 }
 
+/*-----------------------------------------------------------------------------------------------*/
 /*  Photographer page */
+
+/* Header */
 .photographer-page header a {
     display: block;
     width: 12.5rem;
@@ -214,7 +217,7 @@ main#content {
 }
 
 .photographer-page {
-    margin: 0 6.25rem;
+    margin: 0 6.25rem 2rem;
 }
 
 .photographer-page .photograph-header {
@@ -280,5 +283,92 @@ main#content {
     height: 12.5rem;
     object-fit: cover;
     border-radius: 50%;
+    margin-left: auto;
+}
+
+/* Statistics */
+.photographer-page .stats {
+    display: flex;
+    background-color: #DB8876;
+    border-radius: 0.3rem;
+    width: 23.5rem;
+    height: 4rem;
+    line-height: 4rem;
+    font-weight: 500;
+    font-size: 1.5rem;
+    justify-content: space-around;
+    position: fixed;
+    bottom: -0.8rem;
+    right: 2rem;
+}
+
+/* Select form */
+.photographer-page .stats i {
+    font-size: 1.35rem;
+}
+
+.photographer-page .sorting > div {
+    display: flex;
+    align-items: center;
+    margin-top: 0.6rem;
+}
+
+.photographer-page .sorting label {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-right: 1.5rem;
+}
+
+.photographer-page .sorting .sort-wrapper {
+    position: relative;
+    width: max-content;
+}
+
+.photographer-page .sorting .sort-wrapper::after {
+    font-family: "Font Awesome 5 Free";
+    content: "\f078";
+    font-weight: 900;
+    position: absolute;
+    right: 1rem;
+    line-height: 3rem;
+    color: white;
+}
+
+.photographer-page .sorting #sort {
+    width: 10rem;
+    height: 3rem;
+    font-size: 1.2rem;
+    background-color: #901c1c;
+    color: white;
+    padding-left: 1rem;
+    appearance: none;
+    border: none;
+}
+
+/* The photographs */
+.photographer-page .photo-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.photographer-page .photo-container {
+    margin: 2rem 0;
+}
+
+.photographer-page .photo-container img {
+    width: 22rem;
+    height: 18rem;
+    border-radius: 0.3rem;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.photographer-page .photo-description {
+    color: #901C1C;
+    display: flex;
+}
+
+.photographer-page .photo-likes {
     margin-left: auto;
 }

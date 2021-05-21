@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page du photographe Mimi Keel</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -35,6 +38,52 @@
                 <div class="contact">Contactez-moi</div>
                 <img src="images/Sample_Photos/Photographers_ID_Photos/MimiKeel.jpg" alt="" class="avatar">
             </div>
+
+            <div class="stats">
+                <div class="stats__likes">297 081 <i class="fas fa-heart"></i></div>
+                <div class="stats__price">300€ / jour</div>
+            </div>
+
+            <form action="photographer-page.html" method="post" class="sorting">
+                <div>
+                    <label for="sort">Trier par</label>
+                    <div class="sort-wrapper">
+                        <select name="sort" id="sort">
+                            <option value="popularity">Popularité</option>
+                            <option value="date">Date</option>
+                            <option value="title">Tritre</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+
+            <div class="photo-wrapper">
+                <div class="photo-container">
+                    <img src="images/Sample_Photos/Mimi/Travel_Lonesome.jpg" alt="" class="photo-item">
+                    <span class="photo-description">Solitude<span class="photo-likes">88 <i class="fas fa-heart"></i></span></p>
+                </div>
+                <div class="photo-container">
+                    <img src="images/Sample_Photos/Mimi/Travel_HillsideColor.jpg" alt="" class="photo-item">
+                    <p class="photo-description">Colline colorée<span class="photo-likes">85 <i class="fas fa-heart"></i></span></p>
+                </div>
+                <div class="photo-container">
+                    <img src="images/Sample_Photos/Mimi/Portrait_Wednesday.jpg" alt="" class="photo-item">
+                    <p class="photo-description">Portrait du mercredi<span class="photo-likes">34 <i class="fas fa-heart"></i></span></p>
+                </div>
+                <div class="photo-container">
+                    <img src="images/Sample_Photos/Mimi/Portrait_Nora.jpg" alt="" class="photo-item">
+                    <p class="photo-description">Portrait de nora<span class="photo-likes">63 <i class="fas fa-heart"></i></span></p>
+                </div>
+                <div class="photo-container">
+                    <img src="images/Sample_Photos/Mimi/Portrait_Background.jpg" alt="" class="photo-item">
+                    <p class="photo-description">Portrait en noir et blanc<span class="photo-likes">55 <i class="fas fa-heart"></i></span></p>
+                </div>
+                <div class="photo-container">
+                    <img src="images/Sample_Photos/Mimi/Event_SeasideWedding.jpg" alt="" class="photo-item">
+                    <p class="photo-description">Mariage en mer<span class="photo-likes">25 <i class="fas fa-heart"></i></span></p>
+                </div>
+            </div>
+
         </main>
     </div>
 </body>
