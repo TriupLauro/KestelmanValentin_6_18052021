@@ -247,6 +247,7 @@ main#content {
 .photographer-page .photograph-header .infos__tags {
     display: flex;
     margin-top: 0.6rem;
+    flex-wrap: wrap;
 }
 
 .photographer-page .photograph-header .infos__tags__item {
@@ -371,4 +372,84 @@ main#content {
 
 .photographer-page .photo-likes {
     margin-left: auto;
+}
+
+/* Responsive for photographer's page */
+@media all and (max-width: 1100px) {
+    .photographer-page {
+        margin: 0 1.25rem 5rem;
+    }
+
+    .photographer-page header a img {
+        margin-left: -2rem;
+    }
+
+    .photographer-page .stats {
+        display: none;
+    }
+
+    .photographer-page .photograph-header {
+        padding: 0;
+        align-items: center;
+        background-color: white;
+    }
+
+    .photographer-page .photograph-header .infos {
+        width: 60vw;
+    }
+
+    .photographer-page .photograph-header .contact {
+        position: fixed;
+        bottom: 1.8rem;
+        left: 50%;
+        height: 2.2rem;
+        line-height: 2.2rem;
+        margin-left: 0;
+        transform: translateX(-50%);
+    }
+
+    .photographer-page .photograph-header .infos h1 {
+        font-size: 2.25rem;
+    }
+
+    .photographer-page .photograph-header .avatar {
+        width: 6.25rem;
+        height: 6.25rem;
+    }
+
+    .photographer-page .photograph-header .infos__text__localisation {
+        font-size: 0.8rem;
+    }
+
+    .photographer-page .photograph-header .infos__text__slogan {
+        font-size: 0.8rem;
+        margin-top: 0;
+    }
+
+    .photographer-page .photograph-header .infos__tags__item {
+        font-size: 0.8rem;
+    }
+
+    .photographer-page .sorting {
+        display: none;
+    }
+}
+
+@media all and (max-width: 740px) {
+    .photographer-page .photograph-header {
+        margin-bottom: 2.8rem;
+    }
+
+    .photographer-page .photo-wrapper {
+        justify-content: center;
+    }
+
+    .photographer-page .photo-container {
+        margin: 0;
+    }
+
+    .photographer-page .photo-description {
+        height: 2rem;
+        line-height: 1.5rem;
+    }
 }
