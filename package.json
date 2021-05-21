@@ -1,0 +1,22 @@
+{
+  "name": "site-fisheye",
+  "version": "1.0.0",
+  "description": "OC Front-End P6",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TriupLauro/KestelmanValentin_6_18052021.git"
+  },
+  "author": "Valentin Kestelman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TriupLauro/KestelmanValentin_6_18052021/issues"
+  },
+  "homepage": "https://github.com/TriupLauro/KestelmanValentin_6_18052021#readme",
+  "dependencies": {
+    "eslint": "^7.26.0"
+  }
+}
