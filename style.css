@@ -158,7 +158,7 @@ main#content {
     cursor: pointer;
 }
 
-.photograph-profile__tags__tag-item:hover {
+.photograph-profile__tags__tag-item:hover, .photograph-profile__tags__tag-item:focus {
     color: white;
     background-color: #911C1C;
 }
