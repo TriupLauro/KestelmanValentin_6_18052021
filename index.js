@@ -15,13 +15,31 @@ let page = path.split("/").pop()
 const navTags = document.querySelectorAll('div.nav-tag-item');
 const photographersContainer = document.getElementsByClassName('photograph-wrapper')[0];
 // Dom elements from the photographers page header
-const displayedPhotographerInfos = document.querySelector('div.infos');
-const photographersPageTitle = displayedPhotographerInfos.querySelector('h1');
-const photographersLocalisation = displayedPhotographerInfos.querySelector('p.infos__text__localisation');
-const photographersLine = displayedPhotographerInfos.querySelector('p.infos__text__slogan');
-const photographersDisplayedTags = displayedPhotographerInfos.querySelector('div.infos__tags')
-const photographerDisplayedPortrait = document.querySelector('img.avatar');
-const photographerDisplayedPrice = document.querySelector('div.stats__price');
+let displayedPhotographerInfos;
+let photographersPageTitle;
+let photographersLocalisation;
+let photographersLine;
+let photographersDisplayedTags;
+let photographerDisplayedPortrait;
+let photographerDisplayedPrice; 
+if (page === "photographer-page.html") {
+    displayedPhotographerInfos = document.querySelector('div.infos');
+    photographersPageTitle = displayedPhotographerInfos.querySelector('h1');
+    photographersLocalisation = displayedPhotographerInfos.querySelector('p.infos__text__localisation');
+    photographersLine = displayedPhotographerInfos.querySelector('p.infos__text__slogan');
+    photographersDisplayedTags = displayedPhotographerInfos.querySelector('div.infos__tags')
+    photographerDisplayedPortrait = document.querySelector('img.avatar');
+    photographerDisplayedPrice = document.querySelector('div.stats__price');
+}
+// Dom elements from the modal
+let contactBtn;
+let modalbg;
+let closebtn;
+if (page === "photographer-page.html") {
+    contactBtn = document.querySelector('div.contact');
+    modalbg = document.querySelector('div.modalbg');
+    closebtn = document.querySelector('i.close');
+}
 
 // Removes the photographers elements from the homepage
 function removePhotographers () {
@@ -108,3 +126,13 @@ function tagSelected(e) {
     removePhotographers();
     displayPhotographersList(filteredPhotographers);
 }
+
+//Event triggered on clicking contact button
+contactBtn.addEventListener('click', () => {
+    modalbg.style.display = 'block';
+})
+
+//Event triggered on clicking the close modal btn
+closebtn.addEventListener('click', () => {
+    modalbg.style.display = 'none';
+})
