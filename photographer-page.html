@@ -12,6 +12,10 @@
 </head>
 
 <body>
+    <div class="loader">
+        <p>Veuillez patienter...</p>
+    </div>
+
     <div class="photographer-page">
         <header>
             <a href="index.html">
@@ -36,7 +40,7 @@
                 </div>
 
                 <div class="contact">Contactez-moi</div>
-                <img src="images/Sample_Photos/Photographers_ID_Photos/MimiKeel.jpg" alt="" class="avatar">
+                <img src="" alt="" class="avatar">
             </div>
 
             <div class="stats">
@@ -89,7 +93,7 @@
     <div class="modalbg">
         <div class="modal-container">
             <form action="" class="modal">
-                <h1>Contactez-moi<br>Mimi Keel</h1>
+                <h1>Contactez-moi<br><span class="modal-name"></span></h1>
                 <label for="firstname">Prénom</label>
                 <input type="text" name="firstname" id="firstname">
                 <label for="lastname">Nom</label>
@@ -103,6 +107,6 @@
             </form>
         </div>
     </div>
-    <script src="index.js"></script>
+    <script src="photographer.js"></script>
 </body>
 </html>

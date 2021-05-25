@@ -1,64 +1,61 @@
 
 // Global variables
-let fishEyeData;
+//let photographersStored = new Set();
 let photographersList;
-let mediaList;
-let photographersStored = new Set();
-let currentId;
 
-// Store the current page name
-let path = window.location.pathname;
-let page = path.split("/").pop()
-//console.log(page);
 
 // Dom elements
 const navTags = document.querySelectorAll('div.nav-tag-item');
 const photographersContainer = document.getElementsByClassName('photograph-wrapper')[0];
-// Dom elements from the photographers page header
-let displayedPhotographerInfos;
-let photographersPageTitle;
-let photographersLocalisation;
-let photographersLine;
-let photographersDisplayedTags;
-let photographerDisplayedPortrait;
-let photographerDisplayedPrice; 
-if (page === "photographer-page.html") {
-    displayedPhotographerInfos = document.querySelector('div.infos');
-    photographersPageTitle = displayedPhotographerInfos.querySelector('h1');
-    photographersLocalisation = displayedPhotographerInfos.querySelector('p.infos__text__localisation');
-    photographersLine = displayedPhotographerInfos.querySelector('p.infos__text__slogan');
-    photographersDisplayedTags = displayedPhotographerInfos.querySelector('div.infos__tags')
-    photographerDisplayedPortrait = document.querySelector('img.avatar');
-    photographerDisplayedPrice = document.querySelector('div.stats__price');
-}
-// Dom elements from the modal
-let contactBtn;
-let modalbg;
-let closebtn;
-if (page === "photographer-page.html") {
-    contactBtn = document.querySelector('div.contact');
-    modalbg = document.querySelector('div.modalbg');
-    closebtn = document.querySelector('i.close');
-}
 
-// Removes the photographers elements from the homepage
-function removePhotographers () {
-    let currentElt;
-    while (photographersContainer.children.length > 0 ) {
-        currentElt = photographersContainer.removeChild(photographersContainer.children[0]);
-        photographersStored.add(currentElt);
+
+// Remove all the content inside a container element
+function removeChildTags(container) {
+    while(container.firstChild) {
+        container.removeChild(container.firstChild);
     }
 }
 
-// Display the photographers included in the array
-// The array contains data from the JSON file
-function displayPhotographersList(photographersToDisplay) {
-    let namesList = photographersToDisplay.map(photographer => photographer.name);
-    console.log(namesList);
-    for (let  photographer of photographersStored) {
-        if (namesList.includes(photographer.querySelector('h2').innerText)) {
-            photographersContainer.appendChild(photographer);
-        }
+function appendPhotographer(container, photographerObject) {
+    // We create all the element for the photographer profile on the homepage
+    // And then append them to the specified container
+    let photographerProfileElt = document.createElement('div');
+    photographerProfileElt.classList.add('photograph-profile');
+    let photographerProfileAvatarElt = document.createElement('a');
+    photographerProfileAvatarElt.classList.add('photograph-profile__avatar');
+    photographerProfileAvatarElt.setAttribute('href', `photographer-page.html?id=${photographerObject.id}`);
+    let photographerPortraitElt = document.createElement('img');
+    photographerPortraitElt.setAttribute('src', `images/Sample_Photos/Photographers_ID_Photos/${photographerObject.portrait}`);
+    let photographerNameElt = document.createElement('h2');
+    photographerNameElt.textContent = `${photographerObject.name}`;
+    let photographerDescriptionElt = document.createElement('div');
+    photographerDescriptionElt.classList.add('photograph-profile__description');
+    let photographerLocalisationElt = document.createElement('p');
+    photographerLocalisationElt.classList.add('photograph-profile__localisation');
+    photographerLocalisationElt.textContent = `${photographerObject.city}, ${photographerObject.country}`;
+    let photographerSloganElt = document.createElement('p');
+    photographerSloganElt.classList.add('photograph-profile__slogan');
+    photographerSloganElt.textContent = photographerObject.tagline;
+    let photographerPriceElt = document.createElement('p');
+    photographerPriceElt.classList.add('photograph-profile__price');
+    photographerPriceElt.textContent = `${photographerObject.price}€/jour`;
+    let photographerTagsElt = document.createElement('div');
+    photographerTagsElt.classList.add('photograph-profile__tags');
+
+    container.appendChild(photographerProfileElt);
+    photographerProfileElt.appendChild(photographerProfileAvatarElt);
+    photographerProfileAvatarElt.appendChild(photographerPortraitElt);
+    photographerProfileAvatarElt.appendChild(photographerNameElt);
+    photographerProfileElt.appendChild(photographerDescriptionElt);
+    photographerDescriptionElt.appendChild(photographerLocalisationElt);
+    photographerDescriptionElt.appendChild(photographerSloganElt);
+    photographerDescriptionElt.appendChild(photographerPriceElt);
+    photographerProfileElt.appendChild(photographerTagsElt);
+    for (let currentTag of photographerObject.tags) {
+        let tagItemElt = document.createElement('div');
+        tagItemElt.classList.add('photograph-profile__tags__tag-item');
+        tagItemElt.textContent = `#${currentTag}`;
+        photographerTagsElt.appendChild(tagItemElt);
     }
 }
 
@@ -71,43 +68,20 @@ function readJsonData () {
         }
         return response.json();
     })
-    .then(json => {
-        return json;
-    })
-    .catch(() => {
-        this.dataError = true;
-    })
 }
 
 // Event triggered on page launch
 window.addEventListener('load', () => {
     readJsonData()
     .then((v) => {
+        let fishEyeData;
+        
         fishEyeData = v;
         photographersList = fishEyeData.photographers;
-        mediaList = fishEyeData.media;
-        console.log(mediaList);
-        // Only runs in the photographers page
-        if (page === "photographer-page.html") {
-            console.log("We're on the photographer's page !")
-            currentId = self.location.toString().split('?')[1].split('=')[1];
-            console.log(`Which Id is ${currentId}`);
-            const currentPhotographerData = photographersList.find(photographer => photographer.id === parseInt(currentId));
-            console.log(currentPhotographerData);
-            document.title = `Page du photographe ${currentPhotographerData.name}`;
-            photographersPageTitle.innerText = currentPhotographerData.name;
-            photographersLocalisation.innerText = `${currentPhotographerData.city}, ${currentPhotographerData.country}`;
-            photographersLine.innerText = currentPhotographerData.tagline;
-            photographersDisplayedTags.innerHTML = '';
-            for (let tag of currentPhotographerData.tags) {
-                let currentTagElement = document.createElement('div');
-                currentTagElement.classList.add('infos__tags__item');
-                currentTagElement.innerText = `#${tag}`;
-                photographersDisplayedTags.appendChild(currentTagElement);
-            }
-            photographerDisplayedPortrait.setAttribute('src', `images/Sample_Photos/Photographers_ID_Photos/${currentPhotographerData.portrait}`);
-            photographerDisplayedPrice.innerText = `${currentPhotographerData.price}€ / jour`;
-        }
+
+        // Test
+        // removePhotographers(photographersContainer);
+        // appendPhotographer(photographersContainer, photographersList[2]);
     })
 });
 
@@ -123,16 +97,9 @@ function tagSelected(e) {
     
     let filteredPhotographers = photographersList.filter(photographer => photographer.tags.includes(lowercaseTag));
     
-    removePhotographers();
-    displayPhotographersList(filteredPhotographers);
+    removeChildTags(photographersContainer);
+    for (let currentPhotographer of filteredPhotographers) {
+        appendPhotographer(photographersContainer, currentPhotographer);
+    }
 }
 
-//Event triggered on clicking contact button
-contactBtn.addEventListener('click', () => {
-    modalbg.style.display = 'block';
-})
-
-//Event triggered on clicking the close modal btn
-closebtn.addEventListener('click', () => {
-    modalbg.style.display = 'none';
-})
