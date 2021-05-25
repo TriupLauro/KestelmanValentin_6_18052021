@@ -87,7 +87,7 @@ window.addEventListener('load', () => {
 
 // Click a tag in navigation event
 navTags.forEach(tag => {
-    tag.addEventListener('click', tagSelected)
+    tag.addEventListener('click', tagSelected);
 });
 
 // Function called on clicking a tag

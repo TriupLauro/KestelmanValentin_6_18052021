@@ -48,18 +48,17 @@
                 <div class="stats__price">300€ / jour</div>
             </div>
 
-            <form action="photographer-page.html" method="post" class="sorting">
-                <div>
+            <div class="sorting">
                     <label for="sort">Trier par</label>
-                    <div class="sort-wrapper">
-                        <select name="sort" id="sort">
-                            <option value="popularity">Popularité</option>
-                            <option value="date">Date</option>
-                            <option value="title">Titre</option>
-                        </select>
+                    <div class="sort-button">
+                        <span class="sort-selected">Popularité</span><i class="fas fa-chevron-down"></i>
+                        <div name="sort" class="sort-dropdown">
+                            <div class="sort-dropdown__item"><span class="sort-text">Popularité</span><i class="fas fa-chevron-up"></i></div>
+                            <div class="sort-dropdown__item">Date</div>
+                            <div class="sort-dropdown__item">Titre</div>
+                        </div>
                     </div>
-                </div>
-            </form>
+            </div>
 
             <div class="photo-wrapper">
                 <div class="photo-container">

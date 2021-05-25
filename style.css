@@ -313,46 +313,88 @@ main#content {
 }
 
 /* Select form */
-.photographer-page .stats i {
-    font-size: 1.35rem;
-}
-
-.photographer-page .sorting > div {
+.sorting {
     display: flex;
-    align-items: center;
-    margin-top: 0.6rem;
+    margin-top: 1.2rem;
 }
 
-.photographer-page .sorting label {
+.sorting .sort-button {
+    background-color: #901C1C;
+    position: relative;
+    color: white;
+    width: 11rem;
+    padding: 0 1.2rem;
     font-size: 1.2rem;
     font-weight: 700;
-    margin-right: 1.5rem;
+    height: 3.75rem;
+    line-height: 3.75rem;
+    cursor: pointer;
+    border-radius: 0.3rem;
 }
 
-.photographer-page .sorting .sort-wrapper {
-    position: relative;
-    width: max-content;
-}
-
-.photographer-page .sorting .sort-wrapper::after {
-    font-family: "Font Awesome 5 Free";
-    content: "\f078";
-    font-weight: 900;
+.sorting .sort-button i {
     position: absolute;
-    right: 1rem;
-    line-height: 3rem;
-    color: white;
+    right: 2rem;
+    line-height: 3.75rem;
 }
 
-.photographer-page .sorting #sort {
-    width: 10rem;
-    height: 3rem;
+.sorting label {
     font-size: 1.2rem;
-    background-color: #901c1c;
-    color: white;
+    margin-right: 1.5rem;
+    font-weight: 700;
+    line-height: 3.75rem;
+}
+
+.sorting .sort-selected {
     padding-left: 1rem;
-    appearance: none;
-    border: none;
+    /* padding-right: 2.5rem; */
+}
+
+.sorting .sort-dropdown {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: #901C1C;
+    width: 100%;
+    padding-left: 1.2rem;
+    box-sizing: border-box;
+    border-radius: 0.3rem;
+}
+
+
+/* .sorting .sort-text {
+    padding-right: 2.5rem;
+} */
+
+
+.sorting .sort-dropdown__item {
+    height: 3.75rem;
+    line-height: 3.75rem;
+    padding-left: 1rem;
+}
+
+.sorting .sort-dropdown__item:nth-child(2) {
+    position: relative;
+}
+
+.sorting .sort-dropdown__item:nth-child(2)::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 11rem;
+    border-top: white solid 0.06rem;
+}
+
+.sorting .sort-dropdown__item:nth-child(2)::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 11rem;
+    border-bottom: white solid 0.06rem;
 }
 
 /* The photographs */
@@ -544,6 +586,11 @@ form.modal input[type="submit"]{
     font-weight: 700;
     font-size: 1.1rem;
 }
+
+/* form.modal input[type="submit"]:hover {
+    background-color: #DB8876;
+    color: black;
+} */
 
 /* Loader */
 .loader {

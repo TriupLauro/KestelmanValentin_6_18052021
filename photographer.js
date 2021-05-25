@@ -1,9 +1,14 @@
 
+// Dom elements from the sorting menu
+const sortBtn = document.querySelector('div.sort-button');
+const sortMenu = document.querySelector('div.sort-dropdown');
+const sortOptions = document.querySelectorAll('div.sort-dropdown__item');
 
 // Dom elements from the modal
 const contactBtn = document.querySelector('div.contact');
 const modalbg = document.querySelector('div.modalbg');
 const closebtn = document.querySelector('i.close');
+const modalForm = document.querySelector('form.modal');
 
 // This function returns a promise, so we need to use .then after we call it
 function readJsonData () {
@@ -80,4 +85,37 @@ contactBtn.addEventListener('click', () => {
 //Event triggered on clicking the close modal btn
 closebtn.addEventListener('click', () => {
     modalbg.style.display = 'none';
+});
+
+// Events relative to the sorting drop down menu
+sortBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sortMenu.style.display = 'block';
+});
+
+sortOptions.forEach(option => {
+    option.addEventListener('click', sortOptionSelected);
+})
+
+function sortOptionSelected(e) {
+    e.stopPropagation();
+    let option = e.target.textContent;
+    console.log(option);
+    const selectedSorting = document.querySelector('span.sort-selected');
+    selectedSorting.textContent = option;
+    sortMenu.style.display = 'none';
+}
+
+// Closing dropdown without selecting
+window.addEventListener('click', closeDropDown);
+
+function closeDropDown() {
+    if (sortMenu.style.display === 'block') {
+        sortMenu.style.display = 'none';
+    }
+}
+
+// Event triggered on submitting the modal form
+modalForm.addEventListener('submit', (e) => {
+    e.preventDefault();
 });
