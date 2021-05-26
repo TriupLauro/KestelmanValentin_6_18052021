@@ -1,9 +1,4 @@
 
-// Dom elements from the sorting menu
-const sortBtn = document.querySelector('div.sort-button');
-const sortMenu = document.querySelector('div.sort-dropdown');
-const sortOptions = document.querySelectorAll('div.sort-dropdown__item');
-
 // Dom elements from the modal
 const contactBtn = document.querySelector('div.contact');
 const modalbg = document.querySelector('div.modalbg');
@@ -65,7 +60,12 @@ function appendMedia(container, photographerObject, mediaObject) {
         imageElt.setAttribute('src', `images/Sample_Photos/${folderName}/${mediaObject.image}`);
         mediaContainerElt.appendChild(imageElt);
     } else {
-        return false;
+        const playBtnElt = document.createElement('div');
+        const playIconElt = document.createElement('i');
+        playBtnElt.classList.add('play-btn');
+        playIconElt.classList.add('far', 'fa-play-circle');
+        playBtnElt.appendChild(playIconElt);
+        mediaContainerElt.appendChild(playBtnElt);
     }
     const mediaDescriptionElt = document.createElement('p');
     mediaDescriptionElt.classList.add('photo-description');
@@ -82,8 +82,8 @@ function appendMedia(container, photographerObject, mediaObject) {
     mediaLikesElt.appendChild(likeIconElt);
 }
 
-function addMediaList(container, photographerObject, mediaList) {
-    for (let currentMedia of mediaList) {
+function addMediaList(container, photographerObject, mediaArray) {
+    for (let currentMedia of mediaArray) {
         appendMedia(container, photographerObject, currentMedia);
     }
 }
@@ -113,7 +113,6 @@ window.addEventListener('load', () => {
         const currentPhotographerMedias = mediaList.filter(media => media.photographerId === parseInt(currentId));
         
         const sortedPhotographersMedias = currentPhotographerMedias.sort((a,b) => b.likes - a.likes);
-        console.log(sortedPhotographersMedias);
 
         const photographerHeader = document.querySelector('div.photograph-header');
         updatePhotographerHeader(photographerHeader, currentPhotographerData);
@@ -125,6 +124,34 @@ window.addEventListener('load', () => {
 
         removeChildTags(mediaWrapper);
         addMediaList(mediaWrapper, currentPhotographerData, sortedPhotographersMedias);
+
+        // Dom elements from the sorting menu
+        const sortBtn = document.querySelector('div.sort-button');
+        const sortMenu = document.querySelector('div.sort-dropdown');
+        const sortOptions = document.querySelectorAll('div.sort-dropdown__item');
+
+        // Events relative to the sorting drop down menu
+        sortBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sortMenu.style.display = 'block';
+        });
+        
+        
+        sortOptions.forEach(optionElt => {
+            optionElt.parameterMedia = currentPhotographerMedias;
+            optionElt.parameterPhotographer = currentPhotographerData;
+            optionElt.parameterMenuElt = sortMenu;
+            optionElt.addEventListener('click', sortOptionSelected);
+        })
+        
+        // Closing dropdown without selecting
+        window.addEventListener('click', closeDropDown);
+        
+        function closeDropDown() {
+            if (sortMenu.style.display === 'block') {
+                sortMenu.style.display = 'none';
+            }
+        }
     });
 })
 
@@ -138,32 +165,67 @@ closebtn.addEventListener('click', () => {
     modalbg.style.display = 'none';
 });
 
-// Events relative to the sorting drop down menu
-sortBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    sortMenu.style.display = 'block';
-});
-
-sortOptions.forEach(option => {
-    option.addEventListener('click', sortOptionSelected);
-})
-
+// Functions for drop down menu and sorting items
 function sortOptionSelected(e) {
     e.stopPropagation();
     let option = e.target.textContent;
     console.log(option);
     const selectedSorting = document.querySelector('span.sort-selected');
     selectedSorting.textContent = option;
-    sortMenu.style.display = 'none';
+    e.target.parameterMenuElt.style.display = 'none';
+    //console.log(e.target.parameterMedia);
+    let newSortedList;
+    switch(option) {
+        case 'Titre' :
+            newSortedList = sortAlphabeticalOrder(e.target.parameterMedia);
+            break;
+        case 'Popularité' :
+            newSortedList = e.target.parameterMedia;
+            break;
+        case 'Date' :
+            newSortedList = sortDate(e.target.parameterMedia);
+            break;
+    }
+    removeChildTags(mediaWrapper);
+    //console.log(newSortedList);
+    addMediaList(mediaWrapper, e.target.parameterPhotographer, newSortedList);
 }
 
-// Closing dropdown without selecting
-window.addEventListener('click', closeDropDown);
-
-function closeDropDown() {
-    if (sortMenu.style.display === 'block') {
-        sortMenu.style.display = 'none';
+function sortAlphabeticalOrder(mediaArray) {
+    let titleArray = mediaArray.map((mediaItem) => mediaItem.title.toLowerCase());  
+    let titleArrayWithIndex = [];
+    for (let title of titleArray) {
+        titleArrayWithIndex.push({index : titleArray.indexOf(title), title});
     }
+    
+    let sortedList = titleArrayWithIndex.sort((a,b) => {
+        if (a.title < b.title) {
+            return -1;
+        }
+        if (a.title > b.title) {
+            return 1;
+        }
+        return 0;
+    });
+    
+    let sortedObjectArray = sortedList.map((mediaItem) => mediaArray[mediaItem.index]);
+    
+    return sortedObjectArray;
+}
+
+function sortDate(mediaArray) {
+    let dateArray = mediaArray.map((mediaItem) => new Date(mediaItem.date));
+
+    let dateArrayWithIndex = [];
+    for (let date of dateArray) {
+        dateArrayWithIndex.push({index : dateArray.indexOf(date), date});
+    }
+    
+
+    let sortedList = dateArrayWithIndex.sort((a,b) => b.date - a.date);
+    
+    let sortedObjectArray = sortedList.map((mediaItem) => mediaArray[mediaItem.index]);
+    return sortedObjectArray;
 }
 
 // Event triggered on submitting the modal form

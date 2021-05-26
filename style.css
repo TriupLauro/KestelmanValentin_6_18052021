@@ -408,7 +408,7 @@ main#content {
     margin: 2rem 0;
 }
 
-.photographer-page .photo-container img {
+.photographer-page .photo-container img, .photographer-page .photo-container .play-btn{
     width: 22rem;
     height: 18rem;
     border-radius: 0.3rem;
@@ -416,6 +416,18 @@ main#content {
     cursor: pointer;
 }
 
+.photographer-page .photo-container .play-btn {
+    background-color:black;
+    display: flex;
+}
+
+.photographer-page .photo-container .play-btn i {
+    display: block;
+    color: white;
+    font-size: 10rem;
+    width: 10rem;
+    margin: auto;
+}
 .photographer-page .photo-description {
     color: #901C1C;
     display: flex;
