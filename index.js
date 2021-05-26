@@ -79,9 +79,6 @@ window.addEventListener('load', () => {
         fishEyeData = v;
         photographersList = fishEyeData.photographers;
 
-        // Test
-        // removePhotographers(photographersContainer);
-        // appendPhotographer(photographersContainer, photographersList[2]);
     })
 });
 
