@@ -620,3 +620,59 @@ form.modal input[type="submit"]{
     margin: auto;
     font-size: 3rem;
 }
+
+/* Lightbox */
+.lightbox-bg {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #fff;
+}
+
+.lightbox {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.lightbox__img {
+    width: 65rem;
+    height: 56rem;
+    border-radius: 0.3rem;
+    object-fit: cover;
+}
+
+.lightbox__title {
+    color: #901C1C;
+    font-size: 1.5rem;
+}
+
+.lightbox__previous, .lightbox__next, .lightbox__close {
+    color: #901C1C;
+    font-size: 3rem;
+    cursor: pointer;
+}
+
+.lightbox__previous {
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%);
+    left: -7vw;
+}
+
+.lightbox__next {
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%);
+    right: -7vw;
+}
+
+.lightbox__close {
+    position: absolute;
+    right: -6vw;
+    top: 0;
+}

@@ -8,6 +8,139 @@ const modalForm = document.querySelector('form.modal');
 // Dom of the media container
 const mediaWrapper = document.querySelector('div.photo-wrapper');
 
+// Media classes, used by the media factory
+class Photograph {
+    constructor(photoObject, photographerObject) {
+        this.name = photoObject.name;
+        this.folderName = photographerObject.name.slice(0,photographerObject.name.indexOf(' '));
+        this.id = photoObject.id;
+        this.likes = photoObject.likes;
+        this.tags = photoObject.tags;
+        this.fileName = photoObject.image;
+        this.price = photoObject.price;
+        this.title = photoObject.title;
+    }
+    appendMedia(container, index) {
+        this.index = index;
+        const mediaContainerElt = document.createElement('div');
+        mediaContainerElt.classList.add('photo-container');
+
+        const imageElt = document.createElement('img');
+        this.fullPath = `images/Sample_Photos/${this.folderName}/${this.fileName}`;
+        imageElt.setAttribute('src', this.fullPath);
+        imageElt.classList.add('thumbnail');
+        mediaContainerElt.appendChild(imageElt);
+
+        const mediaDescriptionElt = document.createElement('p');
+        mediaDescriptionElt.classList.add('photo-description');
+        mediaDescriptionElt.textContent = this.title;
+        const mediaLikesElt = document.createElement('span');
+        mediaLikesElt.classList.add('photo-likes');
+        mediaLikesElt.textContent = this.likes + ' ';
+        const likeIconElt = document.createElement('i');
+        likeIconElt.classList.add('fas','fa-heart');
+
+        container.appendChild(mediaContainerElt);
+        mediaContainerElt.appendChild(mediaDescriptionElt);
+        mediaDescriptionElt.appendChild(mediaLikesElt);
+        mediaLikesElt.appendChild(likeIconElt);
+
+        mediaContainerElt.addEventListener('click', () => {
+            
+            const modalLightboxBg = document.querySelector('div.lightbox-bg');
+            modalLightboxBg.style.display = 'block';
+
+            const lightBoxImg = document.querySelector('img.lightbox__img');
+            lightBoxImg.setAttribute('src', this.fullPath);
+            const lightBoxTitle = document.querySelector('p.lightbox__title');
+            lightBoxTitle.textContent = this.title;
+
+            const previousBtn = document.querySelector('div.lightbox__previous');
+            previousBtn.addEventListener('click', () => {
+                
+                
+                if (this.index > 0) {
+                    this.index --;
+                }else{
+                    this.index = this.sortedList.length - 1;
+                }
+                const newMediaObject = this.sortedList[this.index];
+                lightBoxTitle.textContent = newMediaObject.title;
+
+                if ('image' in newMediaObject) {
+                    this.fullPath = `images/Sample_Photos/${this.folderName}/${newMediaObject.image}`;
+                    lightBoxImg.setAttribute('src', this.fullPath);
+                }
+                if ('video' in newMediaObject) {
+                    this.fullPath = `images/Sample_Photos/${this.folderName}/${newMediaObject.video}`;
+                }
+                
+            });
+
+            const closeLightBoxBtn = document.querySelector('div.lightbox__close');
+            closeLightBoxBtn.addEventListener('click', () => {modalLightboxBg.style.display = 'none'});
+        });
+    }
+}
+
+class Video {
+    constructor(videoObject, photographerObject) {
+        this.name = videoObject.name;
+        this.folderName = photographerObject.name.slice(0,photographerObject.name.indexOf(' '));
+        this.id = videoObject.id;
+        this.likes = videoObject.likes;
+        this.tags = videoObject.tags;
+        this.fileName = videoObject.video;
+        this.price = videoObject.price;
+        this.title = videoObject.title;
+    }
+
+    appendMedia(container, index) {
+        this.index = index;
+        const mediaContainerElt = document.createElement('div');
+        mediaContainerElt.classList.add('photo-container');
+
+        const playBtnElt = document.createElement('div');
+        const playIconElt = document.createElement('i');
+        playBtnElt.classList.add('play-btn','thumbnail');
+        playIconElt.classList.add('far', 'fa-play-circle');
+        playBtnElt.appendChild(playIconElt);
+        mediaContainerElt.appendChild(playBtnElt);
+
+        const mediaDescriptionElt = document.createElement('p');
+        mediaDescriptionElt.classList.add('photo-description');
+        mediaDescriptionElt.textContent = this.title;
+        const mediaLikesElt = document.createElement('span');
+        mediaLikesElt.classList.add('photo-likes');
+        mediaLikesElt.textContent = this.likes + ' ';
+        const likeIconElt = document.createElement('i');
+        likeIconElt.classList.add('fas','fa-heart');
+
+        container.appendChild(mediaContainerElt);
+        mediaContainerElt.appendChild(mediaDescriptionElt);
+        mediaDescriptionElt.appendChild(mediaLikesElt);
+        mediaLikesElt.appendChild(likeIconElt);
+
+        mediaContainerElt.addEventListener('click', () => {
+            console.log('Clicked on video');
+        });
+    }
+}
+
+function mediaFactory(mediaObject, photographerObject) {
+    let media;
+    
+    if ('image' in mediaObject) {
+        media = new Photograph(mediaObject, photographerObject);
+    }
+
+    if ('video' in mediaObject) {
+        media = new Video(mediaObject, photographerObject);
+    }
+    
+    return media;
+}
+
 // This function returns a promise, so we need to use .then after we call it
 function readJsonData () {
     return fetch('database/FishEyeData.json')
@@ -51,40 +184,12 @@ function updatePhotographerHeader(container = document.querySelector('photograph
     photographerDisplayedPortrait.setAttribute('src', `images/Sample_Photos/Photographers_ID_Photos/${photographerObject.portrait}`);
 }
 
-function appendMedia(container, photographerObject, mediaObject) {
-    const mediaContainerElt = document.createElement('div');
-    mediaContainerElt.classList.add('photo-container');
-    if ("image" in mediaObject) {
-        const imageElt = document.createElement('img');
-        let folderName = photographerObject.name.substr(0, photographerObject.name.indexOf(' '));
-        imageElt.setAttribute('src', `images/Sample_Photos/${folderName}/${mediaObject.image}`);
-        mediaContainerElt.appendChild(imageElt);
-    } else {
-        const playBtnElt = document.createElement('div');
-        const playIconElt = document.createElement('i');
-        playBtnElt.classList.add('play-btn');
-        playIconElt.classList.add('far', 'fa-play-circle');
-        playBtnElt.appendChild(playIconElt);
-        mediaContainerElt.appendChild(playBtnElt);
-    }
-    const mediaDescriptionElt = document.createElement('p');
-    mediaDescriptionElt.classList.add('photo-description');
-    mediaDescriptionElt.textContent = mediaObject.title;
-    const mediaLikesElt = document.createElement('span');
-    mediaLikesElt.classList.add('photo-likes');
-    mediaLikesElt.textContent = mediaObject.likes + ' ';
-    const likeIconElt = document.createElement('i');
-    likeIconElt.classList.add('fas','fa-heart');
-
-    container.appendChild(mediaContainerElt);
-    mediaContainerElt.appendChild(mediaDescriptionElt);
-    mediaDescriptionElt.appendChild(mediaLikesElt);
-    mediaLikesElt.appendChild(likeIconElt);
-}
-
-function addMediaList(container, photographerObject, mediaArray) {
-    for (let currentMedia of mediaArray) {
-        appendMedia(container, photographerObject, currentMedia);
+function addMediaList(container, currentPhotographerData, mediaArray) {
+    
+    for (let currentMediaIndex in mediaArray) {
+        let mediaObject = new mediaFactory(mediaArray[currentMediaIndex], currentPhotographerData);
+        mediaObject.sortedList = mediaArray;
+        mediaObject.appendMedia(container, currentMediaIndex);
     }
 }
 
@@ -112,8 +217,8 @@ window.addEventListener('load', () => {
         const currentPhotographerData = photographersList.find(photographer => photographer.id === parseInt(currentId));
         const currentPhotographerMedias = mediaList.filter(media => media.photographerId === parseInt(currentId));
         
-        const sortedPhotographersMedias = currentPhotographerMedias.sort((a,b) => b.likes - a.likes);
-
+        const sortedPhotographersMedias = sortPopularity(currentPhotographerMedias);
+        
         const photographerHeader = document.querySelector('div.photograph-header');
         updatePhotographerHeader(photographerHeader, currentPhotographerData);
         loader.style.display = 'none';
@@ -146,12 +251,14 @@ window.addEventListener('load', () => {
         
         // Closing dropdown without selecting
         window.addEventListener('click', closeDropDown);
-        
+
         function closeDropDown() {
             if (sortMenu.style.display === 'block') {
                 sortMenu.style.display = 'none';
             }
         }
+
+        
     });
 })
 
@@ -169,7 +276,7 @@ closebtn.addEventListener('click', () => {
 function sortOptionSelected(e) {
     e.stopPropagation();
     let option = e.target.textContent;
-    console.log(option);
+    
     const selectedSorting = document.querySelector('span.sort-selected');
     selectedSorting.textContent = option;
     e.target.parameterMenuElt.style.display = 'none';
@@ -180,14 +287,13 @@ function sortOptionSelected(e) {
             newSortedList = sortAlphabeticalOrder(e.target.parameterMedia);
             break;
         case 'Popularité' :
-            newSortedList = e.target.parameterMedia;
+            newSortedList = sortPopularity(e.target.parameterMedia);
             break;
         case 'Date' :
             newSortedList = sortDate(e.target.parameterMedia);
             break;
     }
     removeChildTags(mediaWrapper);
-    //console.log(newSortedList);
     addMediaList(mediaWrapper, e.target.parameterPhotographer, newSortedList);
 }
 
@@ -221,11 +327,14 @@ function sortDate(mediaArray) {
         dateArrayWithIndex.push({index : dateArray.indexOf(date), date});
     }
     
-
     let sortedList = dateArrayWithIndex.sort((a,b) => b.date - a.date);
     
     let sortedObjectArray = sortedList.map((mediaItem) => mediaArray[mediaItem.index]);
     return sortedObjectArray;
+}
+
+function sortPopularity(mediaArray) {
+    return mediaArray.sort((a,b) => b.likes - a.likes);
 }
 
 // Event triggered on submitting the modal form
