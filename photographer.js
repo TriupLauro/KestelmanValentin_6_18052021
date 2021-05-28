@@ -8,7 +8,44 @@ const modalForm = document.querySelector('form.modal');
 // Dom of the media container
 const mediaWrapper = document.querySelector('div.photo-wrapper');
 
+// Events for the lightbox
+const lighboxBg = document.querySelector('div.lightbox-bg');
+const lightboxClose = document.querySelector('div.lightbox__close');
+const lightboxTitle = document.querySelector('p.lightbox__title');
+
+lightboxClose.addEventListener('click', () => {
+    lighboxBg.style.display = 'none';
+});
+
+const lightboxPrevious = document.querySelector('div.lightbox__previous');
+const fullImage = document.querySelector('img.lightbox__img');
+
+
+lightboxPrevious.addEventListener('click', () => {
+    const mediaEltsList = document.querySelectorAll('div.photo-container');
+
+    if (lightboxPrevious.lightboxIndex === 0) {
+        lightboxPrevious.lightboxIndex = mediaEltsList.length - 1;
+    }else{
+        lightboxPrevious.lightboxIndex--;
+    }
+    const previousElt = document.querySelector(`.photo-container[data-index='${lightboxPrevious.lightboxIndex}'] > *`);
+    const previousTitleElt = document.querySelector(`.photo-container[data-index='${lightboxPrevious.lightboxIndex}'] > .photo-description`);
+
+    const previousTitleText = previousTitleElt.innerText.slice(0, previousTitleElt.innerText.indexOf('\n'));
+    
+    lightboxTitle.innerText = previousTitleText;
+
+    if (previousElt.tagName === 'IMG') {
+        console.log(previousElt.src);
+        fullImage.setAttribute('src', previousElt.src);
+    }
+    
+});
+
 // Media classes, used by the media factory
+// Each of the two classes have theire respective appendMedia method to add the corrects DOM elements
+// given a container
 class Photograph {
     constructor(photoObject, photographerObject) {
         this.name = photoObject.name;
@@ -30,30 +67,31 @@ class Photograph {
         mediaContainerElt.insertBefore(imageElt,mediaContainerElt.firstChild);
         mediaContainerElt.dataset.index = index;
 
+        
+
         container.appendChild(mediaContainerElt);
         mediaContainerElt.addEventListener('click', (e) => {
-            console.log('clicked on photograph');
+            
             const mediaSrc = e.target.src
             const mediaTitleRaw = e.target.nextSibling.innerText;
             const mediaTitle = mediaTitleRaw.slice(0,mediaTitleRaw.indexOf('\n'));
-            console.log(mediaTitle);
 
-            const lighboxBg = document.querySelector('div.lightbox-bg');
             lighboxBg.style.display = 'block';
 
-            const fullImage = document.querySelector('img.lightbox__img');
             fullImage.setAttribute('src', mediaSrc);
 
-            const lightboxTitle = document.querySelector('p.lightbox__title');
             lightboxTitle.innerText = mediaTitle;
+            lightboxPrevious.lightboxTitleArgument = lightboxTitle;
 
-            const lightboxClose = document.querySelector('div.lightbox__close');
-            lightboxClose.addEventListener('click', () => {
-                lighboxBg.style.display = 'none';
-            });
+            let lightboxIndex = parseInt(e.target.parentElement.dataset.index, 10);
+            console.log(lightboxIndex);
+            lightboxPrevious.lightboxIndex = lightboxIndex;
+
         });
     }
 }
+
+
 
 class Video {
     constructor(videoObject, photographerObject) {
@@ -70,6 +108,7 @@ class Video {
     appendMedia(container, index) {
         const mediaContainerElt = createMediaFrame(this.title, this.likes);
 
+        // Adds a placeholder play button instead of a thumbnail
         const playBtnElt = document.createElement('div');
         const playIconElt = document.createElement('i');
         playBtnElt.classList.add('play-btn','thumbnail');
@@ -80,13 +119,15 @@ class Video {
 
         container.appendChild(mediaContainerElt);
         
-
+        // TODO : Add video elements
         mediaContainerElt.addEventListener('click', () => {
             console.log('Clicked on video');
         });
     }
 }
 
+// Create, without adding it to the page, the frame with the titles and the likes
+// Ready but without the media itself
 function createMediaFrame(title, likes) {
     const mediaFrameElt = document.createElement('div');
     mediaFrameElt.classList.add('photo-container');
@@ -107,6 +148,8 @@ function createMediaFrame(title, likes) {
     return mediaFrameElt;
 }
 
+// The factory that create the appropriate media object, just by checking the presence
+// of a video or image key in the object extracted from the JSON file
 function mediaFactory(mediaObject, photographerObject) {
     let media;
     
@@ -164,6 +207,7 @@ function updatePhotographerHeader(container = document.querySelector('photograph
     photographerDisplayedPortrait.setAttribute('src', `images/Sample_Photos/Photographers_ID_Photos/${photographerObject.portrait}`);
 }
 
+// Adds all the media to the specified container using the factory
 function addMediaList(container, currentPhotographerData, mediaArray) {
     
     for (let currentMediaIndex in mediaArray) {
@@ -173,13 +217,14 @@ function addMediaList(container, currentPhotographerData, mediaArray) {
     }
 }
 
+// Needs to be after the data is loaded, otherwise cause an error if the loader 
+// is hiding the element to update
 function updatePhotographerPrice (container = document.querySelector('div.stats__price'), photographerObject) {
     container.innerText = `${photographerObject.price}€ / jour`;
 }
 
 window.addEventListener('load', () => {
     let fishEyeData;
-    // Dom elements from the photographers page header
     
     readJsonData()
     .then((v) => {
@@ -221,7 +266,7 @@ window.addEventListener('load', () => {
             sortMenu.style.display = 'block';
         });
         
-        
+        // The parameters for the callback function are passed to the optionElt object
         sortOptions.forEach(optionElt => {
             optionElt.parameterMedia = currentPhotographerMedias;
             optionElt.parameterPhotographer = currentPhotographerData;
@@ -242,14 +287,17 @@ window.addEventListener('load', () => {
     });
 })
 
-//Event triggered on clicking contact button
+//Part relative to the modal form
 contactBtn.addEventListener('click', () => {
     modalbg.style.display = 'block';
 });
 
-//Event triggered on clicking the close modal btn
 closebtn.addEventListener('click', () => {
     modalbg.style.display = 'none';
+});
+
+modalForm.addEventListener('submit', (e) => {
+    e.preventDefault();
 });
 
 // Functions for drop down menu and sorting items
@@ -317,7 +365,3 @@ function sortPopularity(mediaArray) {
     return mediaArray.sort((a,b) => b.likes - a.likes);
 }
 
-// Event triggered on submitting the modal form
-modalForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-});
