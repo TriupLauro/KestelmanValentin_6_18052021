@@ -65,7 +65,7 @@ body {
     font-size: 0.75rem;
 }
 
-.nav-tag-item:hover {
+.nav-tag-item:hover, .nav-tag-item[data-selected="true"] {
     color: white;
     background-color: #911c1c;
     border-color: #911c1c;
@@ -159,7 +159,7 @@ main#content {
     cursor: pointer;
 }
 
-.photograph-profile__tags__tag-item:hover, .photograph-profile__tags__tag-item:focus {
+.photograph-profile__tags__tag-item:hover, .photograph-profile__tags__tag-item[data-selected="true"] {
     color: white;
     background-color: #911C1C;
     border-color: #911C1C;
@@ -419,6 +419,7 @@ main#content {
 .photographer-page .photo-container .play-btn {
     background-color:black;
     display: flex;
+    margin-bottom: 0.3rem;
 }
 
 .photographer-page .photo-container .play-btn i {

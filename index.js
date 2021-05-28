@@ -1,11 +1,11 @@
 
 // Global variables
-//let photographersStored = new Set();
 let photographersList;
-
+let activeTag = '';
 
 // Dom elements
 const navTags = document.querySelectorAll('div.nav-tag-item');
+const tagItems = document.querySelectorAll('div.photograph-profile__tags__tag-item');
 const photographersContainer = document.getElementsByClassName('photograph-wrapper')[0];
 
 
@@ -19,27 +19,27 @@ function removeChildTags(container) {
 function appendPhotographer(container, photographerObject) {
     // We create all the element for the photographer profile on the homepage
     // And then append them to the specified container
-    let photographerProfileElt = document.createElement('div');
+    const photographerProfileElt = document.createElement('div');
     photographerProfileElt.classList.add('photograph-profile');
-    let photographerProfileAvatarElt = document.createElement('a');
+    const photographerProfileAvatarElt = document.createElement('a');
     photographerProfileAvatarElt.classList.add('photograph-profile__avatar');
     photographerProfileAvatarElt.setAttribute('href', `photographer-page.html?id=${photographerObject.id}`);
-    let photographerPortraitElt = document.createElement('img');
+    const photographerPortraitElt = document.createElement('img');
     photographerPortraitElt.setAttribute('src', `images/Sample_Photos/Photographers_ID_Photos/${photographerObject.portrait}`);
-    let photographerNameElt = document.createElement('h2');
+    const photographerNameElt = document.createElement('h2');
     photographerNameElt.textContent = `${photographerObject.name}`;
-    let photographerDescriptionElt = document.createElement('div');
+    const photographerDescriptionElt = document.createElement('div');
     photographerDescriptionElt.classList.add('photograph-profile__description');
-    let photographerLocalisationElt = document.createElement('p');
+    const photographerLocalisationElt = document.createElement('p');
     photographerLocalisationElt.classList.add('photograph-profile__localisation');
     photographerLocalisationElt.textContent = `${photographerObject.city}, ${photographerObject.country}`;
-    let photographerSloganElt = document.createElement('p');
+    const photographerSloganElt = document.createElement('p');
     photographerSloganElt.classList.add('photograph-profile__slogan');
     photographerSloganElt.textContent = photographerObject.tagline;
-    let photographerPriceElt = document.createElement('p');
+    const photographerPriceElt = document.createElement('p');
     photographerPriceElt.classList.add('photograph-profile__price');
     photographerPriceElt.textContent = `${photographerObject.price}€/jour`;
-    let photographerTagsElt = document.createElement('div');
+    const photographerTagsElt = document.createElement('div');
     photographerTagsElt.classList.add('photograph-profile__tags');
 
     container.appendChild(photographerProfileElt);
@@ -55,6 +55,12 @@ function appendPhotographer(container, photographerObject) {
         let tagItemElt = document.createElement('div');
         tagItemElt.classList.add('photograph-profile__tags__tag-item');
         tagItemElt.textContent = `#${currentTag}`;
+        if (currentTag === activeTag) {
+            tagItemElt.dataset.selected = 'true';
+        } else {
+            tagItemElt.dataset.selected = 'false';
+        }
+        tagItemElt.addEventListener('click', tagSelected);
         photographerTagsElt.appendChild(tagItemElt);
     }
 }
@@ -84,19 +90,47 @@ window.addEventListener('load', () => {
 
 // Click a tag in navigation event
 navTags.forEach(tag => {
+    
+    tag.addEventListener('click', tagSelected);
+});
+
+tagItems.forEach(tag => {
+    
     tag.addEventListener('click', tagSelected);
 });
 
 // Function called on clicking a tag
 function tagSelected(e) {
+    
     let rawTag = e.target.textContent;
     let lowercaseTag = rawTag.toLowerCase().slice(1);
+    let filteredPhotographers;
+    if (activeTag === lowercaseTag) {
+        filteredPhotographers = photographersList;
+        activeTag = '';
+    } else {
+        filteredPhotographers = photographersList.filter(photographer => photographer.tags.includes(lowercaseTag));
+        activeTag = lowercaseTag;
+    }
     
-    let filteredPhotographers = photographersList.filter(photographer => photographer.tags.includes(lowercaseTag));
-    
+    updateNavTags(navTags);
+
     removeChildTags(photographersContainer);
     for (let currentPhotographer of filteredPhotographers) {
         appendPhotographer(photographersContainer, currentPhotographer);
+    }
+
+}
+
+function updateNavTags(navTagsArray) {
+    for (let currentTag of navTagsArray) {
+        let rawTag = currentTag.textContent;
+        let lowercaseTag = rawTag.toLowerCase().slice(1);
+        if (lowercaseTag === activeTag) {
+            currentTag.dataset.selected = 'true';
+        } else {
+            currentTag.dataset.selected = 'false';
+        }
     }
 }
 
