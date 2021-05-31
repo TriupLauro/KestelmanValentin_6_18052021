@@ -408,7 +408,7 @@ main#content {
     margin: 2rem 0;
 }
 
-.photographer-page .photo-container img, .photographer-page .photo-container .play-btn{
+.photographer-page .photo-container img, .photographer-page .photo-container .play-btn, .photographer-page .photo-container video{
     width: 22rem;
     height: 18rem;
     border-radius: 0.3rem;
