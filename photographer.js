@@ -8,40 +8,86 @@ const modalForm = document.querySelector('form.modal');
 // Dom of the media container
 const mediaWrapper = document.querySelector('div.photo-wrapper');
 
-// Events for the lightbox
-const lighboxBg = document.querySelector('div.lightbox-bg');
+// Events for the lightbox modal
+const lightboxBg = document.querySelector('div.lightbox-bg');
 const lightboxClose = document.querySelector('div.lightbox__close');
 const lightboxTitle = document.querySelector('p.lightbox__title');
-
-lightboxClose.addEventListener('click', () => {
-    lighboxBg.style.display = 'none';
-});
-
 const lightboxPrevious = document.querySelector('div.lightbox__previous');
+const lightboxNext = document.querySelector('div.lightbox__next');
 const fullImage = document.querySelector('img.lightbox__img');
 
+lightboxClose.addEventListener('click', () => {
+    lightboxBg.style.display = 'none';
+});
 
-lightboxPrevious.addEventListener('click', () => {
+function goToPreviousMedia() {
     const mediaEltsList = document.querySelectorAll('div.photo-container');
 
-    if (lightboxPrevious.lightboxIndex === 0) {
-        lightboxPrevious.lightboxIndex = mediaEltsList.length - 1;
+    let previousIndex;
+    
+    if (fullImage.dataset.index === '0') {
+        previousIndex = mediaEltsList.length - 1;
     }else{
-        lightboxPrevious.lightboxIndex--;
+        previousIndex = fullImage.dataset.index - 1;
     }
-    const previousElt = document.querySelector(`.photo-container[data-index='${lightboxPrevious.lightboxIndex}'] > *`);
-    const previousTitleElt = document.querySelector(`.photo-container[data-index='${lightboxPrevious.lightboxIndex}'] > .photo-description`);
+    const previousElt = document.querySelector(`.photo-container[data-index='${previousIndex}'] > *`);
+    const previousTitleElt = document.querySelector(`.photo-container[data-index='${previousIndex}'] > .photo-description`);
 
     const previousTitleText = previousTitleElt.innerText.slice(0, previousTitleElt.innerText.indexOf('\n'));
     
     lightboxTitle.innerText = previousTitleText;
 
-    if (previousElt.tagName === 'IMG') {
-        console.log(previousElt.src);
+    if (previousElt.tagName === fullImage.tagName) {
+        
         fullImage.setAttribute('src', previousElt.src);
     }
+
+    fullImage.dataset.index = previousIndex;
     
+}
+
+function goToNextMedia() {
+    const mediaEltsList = document.querySelectorAll('div.photo-container');
+
+    let nextIndex;
+    
+    if (parseInt(fullImage.dataset.index,10) === (mediaEltsList.length - 1)) {
+        nextIndex = 0;
+        console.log('end of the list');
+    }else{
+        nextIndex = parseInt(fullImage.dataset.index,10) + 1;
+    }
+
+    const nextElt = document.querySelector(`.photo-container[data-index='${nextIndex}'] > *`);
+    const nextTitleElt = document.querySelector(`.photo-container[data-index='${nextIndex}'] > .photo-description`);
+
+    const nextTitleText = nextTitleElt.innerText.slice(0, nextTitleElt.innerText.indexOf('\n'));
+    
+    lightboxTitle.innerText = nextTitleText;
+
+    if (nextElt.tagName === fullImage.tagName) {
+        
+        fullImage.setAttribute('src', nextElt.src);
+    }
+
+    fullImage.dataset.index = nextIndex;
+    
+}
+
+lightboxPrevious.addEventListener('click', goToPreviousMedia);
+
+document.addEventListener('keydown', (e) => {
+    if (lightboxBg.style.display === 'block') {
+        if (e.key === 'ArrowLeft') {
+            goToPreviousMedia();
+        }
+        if (e.key === 'ArrowRight') {
+            goToNextMedia();
+        }
+    }
 });
+
+lightboxNext.addEventListener('click', goToNextMedia);
 
 // Media classes, used by the media factory
 // Each of the two classes have theire respective appendMedia method to add the corrects DOM elements
@@ -76,16 +122,15 @@ class Photograph {
             const mediaTitleRaw = e.target.nextSibling.innerText;
             const mediaTitle = mediaTitleRaw.slice(0,mediaTitleRaw.indexOf('\n'));
 
-            lighboxBg.style.display = 'block';
+            lightboxBg.style.display = 'block';
 
             fullImage.setAttribute('src', mediaSrc);
 
             lightboxTitle.innerText = mediaTitle;
             lightboxPrevious.lightboxTitleArgument = lightboxTitle;
 
-            let lightboxIndex = parseInt(e.target.parentElement.dataset.index, 10);
-            console.log(lightboxIndex);
-            lightboxPrevious.lightboxIndex = lightboxIndex;
+            fullImage.dataset.index = parseInt(e.target.parentElement.dataset.index, 10);
+            
 
         });
     }
@@ -259,6 +304,7 @@ window.addEventListener('load', () => {
         const sortBtn = document.querySelector('div.sort-button');
         const sortMenu = document.querySelector('div.sort-dropdown');
         const sortOptions = document.querySelectorAll('div.sort-dropdown__item');
+        const sortChevronIcon = document.querySelector('div.sort-dropdown__item i');
 
         // Events relative to the sorting drop down menu
         sortBtn.addEventListener('click', (e) => {
@@ -273,7 +319,11 @@ window.addEventListener('load', () => {
             optionElt.parameterMenuElt = sortMenu;
             optionElt.addEventListener('click', sortOptionSelected);
         })
-        
+        // Hotfix when clicking on the chevron Icon
+        sortChevronIcon.parameterMedia = currentPhotographerMedias;
+        sortChevronIcon.parameterPhotographer = currentPhotographerData;
+        sortChevronIcon.parameterMenuElt = sortMenu;
+
         // Closing dropdown without selecting
         window.addEventListener('click', closeDropDown);
 
@@ -304,9 +354,11 @@ modalForm.addEventListener('submit', (e) => {
 function sortOptionSelected(e) {
     e.stopPropagation();
     let option = e.target.textContent;
+    console.log(option);
     
     const selectedSorting = document.querySelector('span.sort-selected');
     selectedSorting.textContent = option;
+
     e.target.parameterMenuElt.style.display = 'none';
     //console.log(e.target.parameterMedia);
     let newSortedList;
@@ -320,6 +372,10 @@ function sortOptionSelected(e) {
         case 'Date' :
             newSortedList = sortDate(e.target.parameterMedia);
             break;
+        default:
+            // Only reached when clicked on the chevron icon, which is next to Popularité
+            newSortedList = sortPopularity(e.target.parameterMedia);
+            selectedSorting.textContent = 'Popularité';
     }
     removeChildTags(mediaWrapper);
     addMediaList(mediaWrapper, e.target.parameterPhotographer, newSortedList);
