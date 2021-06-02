@@ -1,5 +1,5 @@
 
-// Dom elements from the modal
+// Dom elements from the modal form
 const contactBtn = document.querySelector('div.contact');
 const modalbg = document.querySelector('div.modalbg');
 const closebtn = document.querySelector('i.close');
@@ -26,10 +26,10 @@ function goToPreviousMedia() {
 
     let previousIndex;
     
-    if (displayedMedia.dataset.index === '0') {
+    if (lightbox.dataset.index === '0') {
         previousIndex = mediaEltsList.length - 1;
     }else{
-        previousIndex = displayedMedia.dataset.index - 1;
+        previousIndex = lightbox.dataset.index - 1;
     }
 
     
@@ -49,7 +49,7 @@ function goToPreviousMedia() {
         previousImage.classList.add('lightbox__img');
         lightbox.removeChild(displayedMedia);
         lightbox.insertBefore(previousImage, lightbox.firstChild);
-        previousImage.dataset.index = previousIndex;
+        lightbox.dataset.index = previousIndex;
 
     }
 
@@ -63,7 +63,7 @@ function goToPreviousMedia() {
         previousVideoElt.toggleAttribute('controls');
         lightbox.removeChild(displayedMedia);
         lightbox.insertBefore(previousVideoElt, lightbox.firstChild);
-        previousVideoElt.dataset.index = previousIndex;
+        lightbox.dataset.index = previousIndex;
     }
     
 }
@@ -75,11 +75,11 @@ function goToNextMedia() {
 
     let nextIndex;
     
-    if (parseInt(displayedMedia.dataset.index,10) === (mediaEltsList.length - 1)) {
+    if (parseInt(lightbox.dataset.index,10) === (mediaEltsList.length - 1)) {
         nextIndex = 0;
         
     }else{
-        nextIndex = parseInt(displayedMedia.dataset.index,10) + 1;
+        nextIndex = parseInt(lightbox.dataset.index,10) + 1;
     }
 
     const nextElt = document.querySelector(`.photo-container[data-index='${nextIndex}'] > *`);
@@ -96,7 +96,7 @@ function goToNextMedia() {
         nextImage.classList.add('lightbox__img');
         lightbox.removeChild(displayedMedia);
         lightbox.insertBefore(nextImage, lightbox.firstChild);
-        nextImage.dataset.index = nextIndex;
+        lightbox.dataset.index = nextIndex;
     }
     
     if (nextElt.tagName === 'VIDEO') {
@@ -109,11 +109,13 @@ function goToNextMedia() {
         nextVideoElt.toggleAttribute('controls');
         lightbox.removeChild(displayedMedia);
         lightbox.insertBefore(nextVideoElt, lightbox.firstChild);
-        nextVideoElt.dataset.index = nextIndex;
+        lightbox.dataset.index = nextIndex;
     }
 }
 
 lightboxPrevious.addEventListener('click', goToPreviousMedia);
+
+lightboxNext.addEventListener('click', goToNextMedia);
 
 document.addEventListener('keydown', (e) => {
     if (lightboxBg.style.display === 'block') {
@@ -125,8 +127,6 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
-
-lightboxNext.addEventListener('click', goToNextMedia);
 
 // Media classes, used by the media factory
 // Each of the two classes have theire respective appendMedia method to add the corrects DOM elements
@@ -151,6 +151,7 @@ class Photograph {
         imageElt.classList.add('thumbnail');
         mediaContainerElt.insertBefore(imageElt,mediaContainerElt.firstChild);
         mediaContainerElt.dataset.index = index;
+        mediaContainerElt.dataset.title = this.title;
 
         
 
@@ -160,8 +161,9 @@ class Photograph {
             const lastImage = document.querySelector('.lightbox__img');
             const lightbox = document.querySelector('div.lightbox')
             const mediaSrc = e.target.src
-            const mediaTitleRaw = e.target.nextSibling.innerText;
-            const mediaTitle = mediaTitleRaw.slice(0,mediaTitleRaw.indexOf('\n'));
+            const dataHolder = e.target.parentElement
+            const mediaTitle = dataHolder.dataset.title;
+            
 
             lightboxBg.style.display = 'block';
 
@@ -170,7 +172,9 @@ class Photograph {
             imageElt.setAttribute('src', mediaSrc);
             imageElt.classList.add('lightbox__img');
             lightbox.removeChild(lastImage);
-            imageElt.dataset.index = parseInt(e.target.parentElement.dataset.index, 10);
+            imageElt.dataset.index = parseInt(dataHolder.dataset.index, 10);
+            lightbox.dataset.index = parseInt(dataHolder.dataset.index, 10);
+
             lightbox.insertBefore(imageElt, lightbox.firstChild);
 
             
@@ -210,6 +214,7 @@ class Video {
 
         mediaContainerElt.insertBefore(videoElt, mediaContainerElt.firstChild);
         mediaContainerElt.dataset.index = index;
+        mediaContainerElt.dataset.title = this.title;
 
         
         container.appendChild(mediaContainerElt);
@@ -219,6 +224,8 @@ class Video {
             const ligthbox = document.querySelector('div.lightbox');
             lightboxBg.style.display = 'block';
             const fullImage = document.querySelector('.lightbox__img');
+            const mediaHolder = e.target.parentElement;
+            const mediaTitle = mediaHolder.dataset.title;
 
             
             ligthbox.removeChild(fullImage);
@@ -231,11 +238,9 @@ class Video {
             videoSource.setAttribute('src', mediaContainerElt.dataset.src);
             videoMedia.appendChild(videoSource);
             
-            const mediaTitleRaw = e.target.nextSibling.innerText;
-            const mediaTitle = mediaTitleRaw.slice(0,mediaTitleRaw.indexOf('\n'));
             lightboxTitle.innerText = mediaTitle;
 
-            videoMedia.dataset.index = parseInt(e.target.parentElement.dataset.index, 10);
+            videoMedia.dataset.index = parseInt(mediaHolder.dataset.index, 10);
 
         });
     }
@@ -299,7 +304,7 @@ function removeChildTags(container) {
 
 // Update the information displayed on the photographer's page
 // It modify the existing html content without adding or removing tags
-function updatePhotographerHeader(container = document.querySelector('photograph-header'), photographerObject) {
+function setPhotographerHeader(container = document.querySelector('photograph-header'), photographerObject) {
     const displayedPhotographerInfos = container.querySelector('div.infos');
     const photographersPageTitle = displayedPhotographerInfos.querySelector('h1');
     const photographersLocalisation = displayedPhotographerInfos.querySelector('p.infos__text__localisation');
@@ -332,80 +337,9 @@ function addMediaList(container, currentPhotographerData, mediaArray) {
     }
 }
 
-// Needs to be after the data is loaded, otherwise cause an error if the loader 
-// is hiding the element to update
-function updatePhotographerPrice (container = document.querySelector('div.stats__price'), photographerObject) {
+function setPhotographerPrice (container = document.querySelector('div.stats__price'), photographerObject) {
     container.innerText = `${photographerObject.price}€ / jour`;
 }
-
-window.addEventListener('load', () => {
-    let fishEyeData;
-    
-    readJsonData()
-    .then((v) => {
-        const loader = document.querySelector('div.loader');
-        
-        fishEyeData = v;
-        
-        const photographersList = fishEyeData.photographers;
-        const mediaList = fishEyeData.media;
-        
-
-        const queryString = window.location.search;
-        const currentId = new URLSearchParams(queryString).get('id');
-        
-        const currentPhotographerData = photographersList.find(photographer => photographer.id === parseInt(currentId));
-        const currentPhotographerMedias = mediaList.filter(media => media.photographerId === parseInt(currentId));
-        
-        const sortedPhotographersMedias = sortPopularity(currentPhotographerMedias);
-        
-        const photographerHeader = document.querySelector('div.photograph-header');
-        updatePhotographerHeader(photographerHeader, currentPhotographerData);
-        loader.style.display = 'none';
-        const photographerPrice = document.querySelector('div.stats__price');
-        updatePhotographerPrice(photographerPrice, currentPhotographerData);
-        const contactName = document.querySelector('span.modal-name');
-        contactName.textContent = currentPhotographerData.name;
-
-        removeChildTags(mediaWrapper);
-        addMediaList(mediaWrapper, currentPhotographerData, sortedPhotographersMedias);
-
-        // Dom elements from the sorting menu
-        const sortBtn = document.querySelector('div.sort-button');
-        const sortMenu = document.querySelector('div.sort-dropdown');
-        const sortOptions = document.querySelectorAll('div.sort-dropdown__item');
-        const sortChevronIcon = document.querySelector('div.sort-dropdown__item i');
-
-        // Events relative to the sorting drop down menu
-        sortBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            sortMenu.style.display = 'block';
-        });
-        
-        // The parameters for the callback function are passed to the optionElt object
-        sortOptions.forEach(optionElt => {
-            optionElt.parameterMedia = currentPhotographerMedias;
-            optionElt.parameterPhotographer = currentPhotographerData;
-            optionElt.parameterMenuElt = sortMenu;
-            optionElt.addEventListener('click', sortOptionSelected);
-        })
-        // Hotfix when clicking on the chevron Icon
-        sortChevronIcon.parameterMedia = currentPhotographerMedias;
-        sortChevronIcon.parameterPhotographer = currentPhotographerData;
-        sortChevronIcon.parameterMenuElt = sortMenu;
-
-        // Closing dropdown without selecting
-        window.addEventListener('click', closeDropDown);
-
-        function closeDropDown() {
-            if (sortMenu.style.display === 'block') {
-                sortMenu.style.display = 'none';
-            }
-        }
-
-        
-    });
-})
 
 //Part relative to the modal form
 contactBtn.addEventListener('click', () => {
@@ -419,37 +353,6 @@ closebtn.addEventListener('click', () => {
 modalForm.addEventListener('submit', (e) => {
     e.preventDefault();
 });
-
-// Functions for drop down menu and sorting items
-function sortOptionSelected(e) {
-    e.stopPropagation();
-    let option = e.target.textContent;
-    
-    
-    const selectedSorting = document.querySelector('span.sort-selected');
-    selectedSorting.textContent = option;
-
-    e.target.parameterMenuElt.style.display = 'none';
-    
-    let newSortedList;
-    switch(option) {
-        case 'Titre' :
-            newSortedList = sortAlphabeticalOrder(e.target.parameterMedia);
-            break;
-        case 'Popularité' :
-            newSortedList = sortPopularity(e.target.parameterMedia);
-            break;
-        case 'Date' :
-            newSortedList = sortDate(e.target.parameterMedia);
-            break;
-        default:
-            // Only reached when clicked on the chevron icon, which is next to Popularité
-            newSortedList = sortPopularity(e.target.parameterMedia);
-            selectedSorting.textContent = 'Popularité';
-    }
-    removeChildTags(mediaWrapper);
-    addMediaList(mediaWrapper, e.target.parameterPhotographer, newSortedList);
-}
 
 function sortAlphabeticalOrder(mediaArray) {
     let titleArray = mediaArray.map((mediaItem) => mediaItem.title.toLowerCase());  
@@ -491,3 +394,135 @@ function sortPopularity(mediaArray) {
     return mediaArray.sort((a,b) => b.likes - a.likes);
 }
 
+window.addEventListener('load', () => {
+    readJsonData()
+    .then((fishEyeData) => {
+        const loader = document.querySelector('div.loader');
+    
+        // Dom elements from the sorting menu
+        const sortBtn = document.querySelector('div.sort-button');
+        const sortMenu = document.querySelector('div.sort-dropdown');
+        const sortOptions = document.querySelectorAll('div.sort-dropdown__item');
+        const selectedSorting = document.querySelector('span.sort-selected');
+        
+        const photographersList = fishEyeData.photographers;
+        const mediaList = fishEyeData.media;
+        
+
+        const queryString = window.location.search;
+        const currentId = new URLSearchParams(queryString).get('id');
+        
+        const currentPhotographerData = photographersList.find(photographer => photographer.id === parseInt(currentId));
+        const currentPhotographerMedias = mediaList.filter(media => media.photographerId === parseInt(currentId));
+
+        const sortedPhotographersMedias = rememberSort(currentPhotographerMedias);
+
+        const photographerHeader = document.querySelector('div.photograph-header');
+        setPhotographerHeader(photographerHeader, currentPhotographerData);
+        const photographerPrice = document.querySelector('div.stats__price');
+        setPhotographerPrice(photographerPrice, currentPhotographerData);
+
+        const contactName = document.querySelector('span.modal-name');
+        contactName.textContent = currentPhotographerData.name;
+
+        removeChildTags(mediaWrapper);
+        addMediaList(mediaWrapper, currentPhotographerData, sortedPhotographersMedias);
+
+        loader.style.display = 'none';
+        
+        
+
+        
+
+        // Events relative to the sorting drop down menu
+        sortBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sortMenu.style.display = 'block';
+        });
+        
+        // The parameters for the callback function are passed to the optionElt object
+        sortOptions.forEach(optionElt => {
+            optionElt.addEventListener('click', sortOptionSelected);
+        })
+        
+
+        function rememberSort(mediaArray) {
+            let sortedArray;
+            if (!localStorage.getItem(`photographer${currentId}SortOption`)) {
+            
+                localStorage.setItem(`photographer${currentId}SortOption`, 'Popularité');
+                sortedArray = sortPopularity(mediaArray);
+            }else{
+                
+                const lastSortOption = localStorage.getItem(`photographer${currentId}SortOption`);
+                switch(lastSortOption) {
+                    case 'Popularité' :
+                    sortedArray = sortPopularity(mediaArray);
+                    selectedSorting.textContent = 'Popularité';
+                    break;
+    
+                    case 'Titre' :
+                    sortedArray = sortAlphabeticalOrder(mediaArray);
+                    selectedSorting.textContent = 'Titre';
+                    break;
+    
+                    case 'Date' :
+                    sortedArray = sortDate(mediaArray);
+                    selectedSorting.textContent = 'Date';
+                    break;
+                }
+            }
+            return sortedArray;
+        }
+
+        // Functions for drop down menu and sorting items
+        function sortOptionSelected(e) {
+            e.stopPropagation();
+
+            let option;
+            
+            if (e.target.tagName === 'DIV') {
+                
+                option = e.target.textContent;
+            }else{
+                
+                option = e.target.parentElement.textContent;
+            }
+            
+            selectedSorting.textContent = option;
+            
+            sortMenu.style.display = 'none';
+            
+            let newSortedList;
+            switch(option) {
+                case 'Titre' :
+                newSortedList = sortAlphabeticalOrder(currentPhotographerMedias);
+                localStorage.setItem(`photographer${currentId}SortOption`, 'Titre');
+                break;
+
+                case 'Popularité' :
+                newSortedList = sortPopularity(currentPhotographerMedias);
+                localStorage.setItem(`photographer${currentId}SortOption`, 'Popularité');
+                break;
+
+                case 'Date' :
+                newSortedList = sortDate(currentPhotographerMedias);
+                localStorage.setItem(`photographer${currentId}SortOption`, 'Date');
+                break;
+            }
+            removeChildTags(mediaWrapper);
+            addMediaList(mediaWrapper, currentPhotographerData, newSortedList);
+        }
+
+        // Closing dropdown without selecting
+        window.addEventListener('click', closeDropDown);
+
+        function closeDropDown() {
+            if (sortMenu.style.display === 'block') {
+                sortMenu.style.display = 'none';
+            }
+        }
+
+        
+    });
+})

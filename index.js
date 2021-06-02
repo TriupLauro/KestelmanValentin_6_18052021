@@ -9,6 +9,27 @@ const tagItems = document.querySelectorAll('div.photograph-profile__tags__tag-it
 const photographersContainer = document.getElementsByClassName('photograph-wrapper')[0];
 
 
+// Event triggered on page launch
+window.addEventListener('load', () => {
+    readJsonData()
+    .then((fishEyeData) => {
+        
+        photographersList = fishEyeData.photographers;
+
+        // Click a tag in navigation event
+        navTags.forEach(tag => {
+            
+            tag.addEventListener('click', tagSelected);
+        });
+        
+        tagItems.forEach(tag => {
+            
+            tag.addEventListener('click', tagSelected);
+        });
+
+    })
+});
+
 // Remove all the content inside a container element
 function removeChildTags(container) {
     while(container.firstChild) {
@@ -75,29 +96,6 @@ function readJsonData () {
         return response.json();
     })
 }
-
-// Event triggered on page launch
-window.addEventListener('load', () => {
-    readJsonData()
-    .then((v) => {
-        let fishEyeData;
-        
-        fishEyeData = v;
-        photographersList = fishEyeData.photographers;
-
-    })
-});
-
-// Click a tag in navigation event
-navTags.forEach(tag => {
-    
-    tag.addEventListener('click', tagSelected);
-});
-
-tagItems.forEach(tag => {
-    
-    tag.addEventListener('click', tagSelected);
-});
 
 // Function called on clicking a tag
 function tagSelected(e) {
