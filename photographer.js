@@ -404,6 +404,7 @@ window.addEventListener('load', () => {
         const sortMenu = document.querySelector('div.sort-dropdown');
         const sortOptions = document.querySelectorAll('div.sort-dropdown__item');
         const selectedSorting = document.querySelector('span.sort-selected');
+        const sortMenuIcon = document.querySelector('div.sort-button i');
         
         const photographersList = fishEyeData.photographers;
         const mediaList = fishEyeData.media;
@@ -438,6 +439,8 @@ window.addEventListener('load', () => {
         sortBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             sortMenu.style.display = 'block';
+            sortMenuIcon.style.transform = 'rotate(180deg)';
+            sortMenuIcon.addEventListener('click', sortOptionSelected);
         });
         
         // The parameters for the callback function are passed to the optionElt object
@@ -486,12 +489,12 @@ window.addEventListener('load', () => {
                 option = e.target.textContent;
             }else{
                 
-                option = e.target.parentElement.textContent;
+                option = 'Popularité';
             }
             
             selectedSorting.textContent = option;
             
-            sortMenu.style.display = 'none';
+            closeDropDown();
             
             let newSortedList;
             switch(option) {
@@ -520,6 +523,8 @@ window.addEventListener('load', () => {
         function closeDropDown() {
             if (sortMenu.style.display === 'block') {
                 sortMenu.style.display = 'none';
+                sortMenuIcon.style.transform = 'rotate(0deg)';
+                sortMenuIcon.removeEventListener('click', sortOptionSelected);
             }
         }
 

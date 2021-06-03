@@ -336,7 +336,14 @@ main#content {
     position: absolute;
     right: 2rem;
     line-height: 3.75rem;
+    z-index: 2;
+    transition: transform 0.5s ease-in-out;
+    display: inline;
 }
+
+/* .sorting .sort-button:focus i {
+    transform: rotate(180deg);
+} */
 
 .sorting label {
     font-size: 1.2rem;
@@ -350,6 +357,15 @@ main#content {
     /* padding-right: 2.5rem; */
 }
 
+@keyframes grow-dropdown {
+    from {
+        transform: scaleY(0.3);
+    }    
+    to {
+        transform: scaleY(1);
+    }
+}
+
 .sorting .sort-dropdown {
     display: none;
     position: absolute;
@@ -361,6 +377,8 @@ main#content {
     padding-left: 1.2rem;
     box-sizing: border-box;
     border-radius: 0.3rem;
+    transform-origin: center top;
+    animation: grow-dropdown 0.2s linear;
 }
 
 
@@ -368,15 +386,33 @@ main#content {
     padding-right: 2.5rem;
 } */
 
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 
 .sorting .sort-dropdown__item {
     height: 3.75rem;
     line-height: 3.75rem;
     padding-left: 1rem;
+    animation: fade-in 0.3s 0.2s ease-in-out backwards;
 }
 
 .sorting .sort-dropdown__item:nth-child(2) {
     position: relative;
+}
+
+@keyframes vertical-grow-line {
+    from{
+        transform: scaleX(0)
+    } 
+    to {
+        transform: scaleX(1);
+    }
 }
 
 .sorting .sort-dropdown__item:nth-child(2)::before {
@@ -386,6 +422,8 @@ main#content {
     left: 0;
     width: 11rem;
     border-top: white solid 0.06rem;
+    transform-origin: left center;
+    animation: vertical-grow-line 0.3s 0.2s ease-in-out backwards;
 }
 
 .sorting .sort-dropdown__item:nth-child(2)::after {
@@ -395,6 +433,8 @@ main#content {
     left: 0;
     width: 11rem;
     border-bottom: white solid 0.06rem;
+    transform-origin: left center;
+    animation: vertical-grow-line 0.3s 0.2s ease-in-out backwards;
 }
 
 /* The photographs */
@@ -535,6 +575,17 @@ main#content {
     align-items: center;
 }
 
+@keyframes fade-in-top-form {
+    from {
+        transform: translateY(-25%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 form.modal {
     display: flex;
     flex-direction: column;
@@ -544,6 +595,8 @@ form.modal {
     
     position: relative;
     border-radius: 0.3rem;
+
+    animation: fade-in-top-form 1s backwards ease-in-out;
 }
 
 form.modal h1 {
@@ -631,6 +684,18 @@ form.modal input[type="submit"]{
     width: 100vw;
     height: 100vh;
     background-color: #fff;
+    z-index: 3;
+}
+
+@keyframes fade-in-top-lightbox {
+    from {
+        transform: translate(-50%, -75%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
 }
 
 .lightbox {
@@ -638,6 +703,7 @@ form.modal input[type="submit"]{
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    animation: fade-in-top-lightbox 1s backwards ease-in-out;
 }
 
 .lightbox__img {
