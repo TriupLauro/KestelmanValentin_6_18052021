@@ -632,6 +632,8 @@ form.modal input {
     margin: 0 auto;
     font-size: 2.25rem;
     border-radius: 0.3rem;
+
+    padding-left: 1rem;
 }
 
 form.modal textarea {
@@ -640,6 +642,9 @@ form.modal textarea {
     margin: 0 auto;
     border-radius: 0.3rem;
     font-size: 2.25rem;
+
+    padding-left: 1rem;
+    padding-top: 0.25rem;
 }
 
 form.modal input[type="submit"]{
@@ -658,6 +663,55 @@ form.modal input[type="submit"]{
     background-color: #DB8876;
     color: black;
 } */
+
+@media all and (max-width: 700px) {
+    
+    form.modal {
+        width: 100vw;
+        height: 100vh;
+    }
+    form.modal .close {
+        font-size: 1rem;
+        right: 1rem;
+        top: 1rem;
+    }
+    
+    form.modal h1 {
+        font-size: 2rem;
+        margin: 1rem 0;
+        padding-left: 1rem;
+        
+    }
+
+    form.modal input {
+        width: 90%;
+        height: 3.25rem;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+    }
+
+    form.modal label {
+        font-size: 1.5rem;
+        padding-left: 1rem;
+        color: #312E2E;
+
+    }
+
+    form.modal textarea {
+        width: 90%;
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    form.modal input[type="submit"]{
+        margin: 0;
+        align-self: center;
+        font-size: 1rem;
+        width: 10rem;
+        height: 2rem;
+    }
+
+}
 
 /* Loader */
 .loader {
@@ -743,4 +797,22 @@ form.modal input[type="submit"]{
     position: absolute;
     right: -6vw;
     top: 0;
+}
+
+@media all and (max-width: 1250px) {
+    .lightbox__img {
+        width: 18rem;
+        height: 15.5rem;
+    }
+
+    .lightbox__title {
+        font-size: 0.8rem;
+    }
+
+    .lightbox__previous, .lightbox__next, .lightbox__close {
+        
+        font-size: 0.75rem;
+        
+    }
+
 }
