@@ -17,11 +17,50 @@ const lightboxNext = document.querySelector('div.lightbox__next');
 
 lightboxClose.addEventListener('click', () => {
     lightboxBg.style.display = 'none';
+    unlockScroll();
 });
+
+function goToMediaIndex(index) {
+    const displayedMedia = document.querySelector('.lightbox__img');
+    const lightbox = document.querySelector('div.lightbox');
+
+    const newElt = document.querySelector(`.photo-container[data-index='${index}'] > *`);
+    
+    const newMediaHolderElt = document.querySelector(`.photo-container[data-index='${index}']`);
+    
+
+    const newTitleText = newMediaHolderElt.dataset.title;
+    
+    lightboxTitle.innerText = newTitleText;
+
+    if (newElt.tagName === 'IMG') {
+        
+        const newImage = document.createElement('img')
+        newImage.setAttribute('src', newElt.src);
+        newImage.classList.add('lightbox__img');
+        lightbox.removeChild(displayedMedia);
+        lightbox.insertBefore(newImage, lightbox.firstChild);
+        lightbox.dataset.index = index;
+
+    }
+
+    if (newElt.tagName === 'VIDEO') {
+
+        const newVideoElt = document.createElement('video');
+        const newVideoSourceElt = document.createElement('source')
+        newVideoSourceElt.setAttribute('src',newElt.firstChild.src);
+        newVideoElt.classList.add('lightbox__img');
+        newVideoElt.appendChild(newVideoSourceElt);
+        newVideoElt.toggleAttribute('controls');
+        lightbox.removeChild(displayedMedia);
+        lightbox.insertBefore(newVideoElt, lightbox.firstChild);
+        lightbox.dataset.index = index;
+    }
+}
 
 function goToPreviousMedia() {
     const mediaEltsList = document.querySelectorAll('div.photo-container');
-    const displayedMedia = document.querySelector('.lightbox__img');
+    
     const lightbox = document.querySelector('div.lightbox');
 
     let previousIndex;
@@ -32,45 +71,13 @@ function goToPreviousMedia() {
         previousIndex = lightbox.dataset.index - 1;
     }
 
-    
-    const previousElt = document.querySelector(`.photo-container[data-index='${previousIndex}'] > *`);
-    
-    const previousTitleElt = document.querySelector(`.photo-container[data-index='${previousIndex}'] > .photo-description`);
-    
-
-    const previousTitleText = previousTitleElt.innerText.slice(0, previousTitleElt.innerText.indexOf('\n'));
-    
-    lightboxTitle.innerText = previousTitleText;
-
-    if (previousElt.tagName === 'IMG') {
-        
-        const previousImage = document.createElement('img')
-        previousImage.setAttribute('src', previousElt.src);
-        previousImage.classList.add('lightbox__img');
-        lightbox.removeChild(displayedMedia);
-        lightbox.insertBefore(previousImage, lightbox.firstChild);
-        lightbox.dataset.index = previousIndex;
-
-    }
-
-    if (previousElt.tagName === 'VIDEO') {
-
-        const previousVideoElt = document.createElement('video');
-        const previousVideoSourceElt = document.createElement('source')
-        previousVideoSourceElt.setAttribute('src',previousElt.firstChild.src);
-        previousVideoElt.classList.add('lightbox__img');
-        previousVideoElt.appendChild(previousVideoSourceElt);
-        previousVideoElt.toggleAttribute('controls');
-        lightbox.removeChild(displayedMedia);
-        lightbox.insertBefore(previousVideoElt, lightbox.firstChild);
-        lightbox.dataset.index = previousIndex;
-    }
+    goToMediaIndex(previousIndex);
     
 }
 
 function goToNextMedia() {
     const mediaEltsList = document.querySelectorAll('div.photo-container');
-    const displayedMedia = document.querySelector('.lightbox__img');
+    
     const lightbox = document.querySelector('div.lightbox');
 
     let nextIndex;
@@ -82,35 +89,8 @@ function goToNextMedia() {
         nextIndex = parseInt(lightbox.dataset.index,10) + 1;
     }
 
-    const nextElt = document.querySelector(`.photo-container[data-index='${nextIndex}'] > *`);
-    const nextTitleElt = document.querySelector(`.photo-container[data-index='${nextIndex}'] > .photo-description`);
+    goToMediaIndex(nextIndex);
 
-    const nextTitleText = nextTitleElt.innerText.slice(0, nextTitleElt.innerText.indexOf('\n'));
-    
-    lightboxTitle.innerText = nextTitleText;
-
-    if (nextElt.tagName === 'IMG') {
-        
-        const nextImage = document.createElement('img');
-        nextImage.setAttribute('src', nextElt.src);
-        nextImage.classList.add('lightbox__img');
-        lightbox.removeChild(displayedMedia);
-        lightbox.insertBefore(nextImage, lightbox.firstChild);
-        lightbox.dataset.index = nextIndex;
-    }
-    
-    if (nextElt.tagName === 'VIDEO') {
-
-        const nextVideoElt = document.createElement('video');
-        const nextVideoSourceElt = document.createElement('source')
-        nextVideoSourceElt.setAttribute('src',nextElt.firstChild.src);
-        nextVideoElt.classList.add('lightbox__img');
-        nextVideoElt.appendChild(nextVideoSourceElt);
-        nextVideoElt.toggleAttribute('controls');
-        lightbox.removeChild(displayedMedia);
-        lightbox.insertBefore(nextVideoElt, lightbox.firstChild);
-        lightbox.dataset.index = nextIndex;
-    }
 }
 
 lightboxPrevious.addEventListener('click', goToPreviousMedia);
@@ -128,6 +108,13 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+function lockScroll() {
+    document.body.style.overflow = 'hidden';
+}
+
+function unlockScroll() {
+    document.body.style.overflow = '';
+}
 // Media classes, used by the media factory
 // Each of the two classes have theire respective appendMedia method to add the corrects DOM elements
 // given a container
@@ -161,8 +148,6 @@ class Photograph {
             const lastImage = document.querySelector('.lightbox__img');
             const lightbox = document.querySelector('div.lightbox')
             const mediaSrc = e.target.src
-            const dataHolder = e.target.parentElement
-            const mediaTitle = dataHolder.dataset.title;
             
 
             lightboxBg.style.display = 'block';
@@ -172,16 +157,16 @@ class Photograph {
             imageElt.setAttribute('src', mediaSrc);
             imageElt.classList.add('lightbox__img');
             lightbox.removeChild(lastImage);
-            imageElt.dataset.index = parseInt(dataHolder.dataset.index, 10);
-            lightbox.dataset.index = parseInt(dataHolder.dataset.index, 10);
+            
+            lightbox.dataset.index = index;
 
             lightbox.insertBefore(imageElt, lightbox.firstChild);
 
             
 
-            lightboxTitle.innerText = mediaTitle;
-            lightboxPrevious.lightboxTitleArgument = lightboxTitle;
+            lightboxTitle.innerText = this.title;
 
+            lockScroll();
 
         });
     }
@@ -219,28 +204,29 @@ class Video {
         
         container.appendChild(mediaContainerElt);
         
-        mediaContainerElt.addEventListener('click', (e) => {
+        mediaContainerElt.addEventListener('click', () => {
             
-            const ligthbox = document.querySelector('div.lightbox');
+            const lightbox = document.querySelector('div.lightbox');
             lightboxBg.style.display = 'block';
             const fullImage = document.querySelector('.lightbox__img');
-            const mediaHolder = e.target.parentElement;
-            const mediaTitle = mediaHolder.dataset.title;
+            
+            
 
             
-            ligthbox.removeChild(fullImage);
+            lightbox.removeChild(fullImage);
             const videoMedia = document.createElement('video');
             videoMedia.classList.add('lightbox__img');
             videoMedia.toggleAttribute('controls');
-            ligthbox.insertBefore(videoMedia, lightboxTitle);
+            lightbox.insertBefore(videoMedia, lightboxTitle);
             
             const videoSource = document.createElement('source');
             videoSource.setAttribute('src', mediaContainerElt.dataset.src);
             videoMedia.appendChild(videoSource);
             
-            lightboxTitle.innerText = mediaTitle;
+            lightboxTitle.innerText = this.title;
+            lightbox.dataset.index = index;
+            lockScroll();
 
-            videoMedia.dataset.index = parseInt(mediaHolder.dataset.index, 10);
 
         });
     }
@@ -273,11 +259,11 @@ function createMediaFrame(title, likes) {
 function mediaFactory(mediaObject, photographerObject) {
     let media;
     
-    if ('image' in mediaObject) {
+    if (Object.prototype.hasOwnProperty.call(mediaObject, 'image')) {
         media = new Photograph(mediaObject, photographerObject);
     }
 
-    if ('video' in mediaObject) {
+    if (Object.prototype.hasOwnProperty.call(mediaObject, 'video')) {
         media = new Video(mediaObject, photographerObject);
     }
     
@@ -344,10 +330,12 @@ function setPhotographerPrice (container = document.querySelector('div.stats__pr
 //Part relative to the modal form
 contactBtn.addEventListener('click', () => {
     modalbg.style.display = 'block';
+    lockScroll();
 });
 
 closebtn.addEventListener('click', () => {
     modalbg.style.display = 'none';
+    unlockScroll();
 });
 
 modalForm.addEventListener('submit', (e) => {
