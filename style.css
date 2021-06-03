@@ -509,7 +509,8 @@ main#content {
         height: 2.2rem;
         line-height: 2.2rem;
         margin-left: 0;
-        transform: translateX(-50%);
+        transform: translate(-50%, 0%);
+        transition: transform 0.3s ease-in-out;
     }
 
     .photographer-page .photograph-header .infos h1 {
@@ -651,6 +652,7 @@ form.modal input[type="submit"]{
     width: 10.7rem;
     margin-left: 2.25rem;
     margin-top: 1.7rem;
+    padding-left: 0;
     color: white;
     background-color: #911C1C;
     border: none;

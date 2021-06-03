@@ -338,9 +338,109 @@ closebtn.addEventListener('click', () => {
     unlockScroll();
 });
 
-modalForm.addEventListener('submit', (e) => {
+modalForm.addEventListener('submit', submitContactForm);
+
+function submitContactForm(e) {
     e.preventDefault();
-});
+    const firstNameElt = document.querySelector('#firstname');
+    const lastNameElt = document.querySelector('#lastname');
+    const emailElt = document.querySelector('#email');
+    const contactMsgElt = document.querySelector('#message');
+
+    const formDataObject = {
+        firstName : {
+            value : firstNameElt.value,
+            isValid : isNotEmptyString,
+            errorMsg : 'First Name must have at least one character'
+        },
+        lasstName : {
+            value : lastNameElt.value,
+            isValid : isNotEmptyString,
+            errorMsg : 'Last Name must have at least one character'
+        },
+        email : {
+            value : emailElt.value,
+            isValid : validEmailRegex,
+            errorMsg : 'Please enter a valid e-mail address'
+        },
+        message : {
+            value : contactMsgElt.value,
+            isValid : isNotEmptyString,
+            errorMsg : 'The message must have at least one character'
+        }
+    }
+
+    const errorMsgs = formDataErrorCollection(formDataObject);
+
+    if (errorMsgs.length > 0) {
+        console.log(errorMsgs);
+        return false;
+    }
+
+    const contentToDisplay = formDataValueCollection(formDataObject);
+
+    console.log(contentToDisplay);
+}
+
+function isNotEmptyString (value) {
+    return value !== '';
+}
+
+function validEmailRegex(value) {
+    return /[a-zA-Z0-9.-]+@[a-zA-Z0-9]+.[a-z]+/.test(value);
+}
+
+function formDataErrorCollection(objectToValidate) {
+    const errorMessagesList = [];
+
+    for (let [key,subObject] of Object.entries(objectToValidate)) {
+        if (!subObject.isValid(subObject.value)) {
+            errorMessagesList.push(`${key} error : ${subObject.errorMsg}`);
+        }
+    }
+
+    return errorMessagesList;
+    
+}
+
+function formDataValueCollection(validatedObject) {
+    const valueList = [];
+
+    for (let key of Object.keys(validatedObject)) {
+        valueList.push(validatedObject[key].value);
+    }
+
+    return valueList;
+}
+
+// Moving the contact button on mobile resolution
+
+let scrollingHappens;
+
+window.addEventListener('scroll', () => {
+    if(window.innerWidth <= 1100) {
+        
+        
+
+        window.clearTimeout(scrollingHappens);
+        window.requestAnimationFrame(hideContactBtn);
+
+        scrollingHappens = setTimeout(showContactBtn, 500);
+        
+    }
+})
+
+function hideContactBtn() {
+    
+    contactBtn.style.transform = 'translate(-50%, 200%)'
+    
+}
+
+function showContactBtn () {
+    contactBtn.style.transform = ''
+}
+
+// Three sorting functions
 
 function sortAlphabeticalOrder(mediaArray) {
     let titleArray = mediaArray.map((mediaItem) => mediaItem.title.toLowerCase());  
