@@ -511,11 +511,11 @@ window.addEventListener('load', () => {
         const loader = document.querySelector('div.loader');
     
         // Dom elements from the sorting menu
-        const sortBtn = document.querySelector('div.sort-button');
+        const sortBtn = document.querySelector('.sort-button');
         const sortMenu = document.querySelector('div.sort-dropdown');
         const sortOptions = document.querySelectorAll('div.sort-dropdown__item');
         const selectedSorting = document.querySelector('span.sort-selected');
-        const sortMenuIcon = document.querySelector('div.sort-button i');
+        const sortMenuIcon = document.querySelector('.sort-button i');
         
         const photographersList = fishEyeData.photographers;
         const mediaList = fishEyeData.media;

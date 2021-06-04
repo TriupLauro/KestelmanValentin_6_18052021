@@ -319,10 +319,11 @@ main#content {
 }
 
 .sorting .sort-button {
+    display: block;
     background-color: #901C1C;
     position: relative;
     color: white;
-    width: 11rem;
+    width: 13rem;
     padding: 0 1.2rem;
     font-size: 1.2rem;
     font-weight: 700;
@@ -330,11 +331,13 @@ main#content {
     line-height: 3.75rem;
     cursor: pointer;
     border-radius: 0.3rem;
+    border: none;
+    text-align: left;
 }
 
 .sorting .sort-button i {
     position: absolute;
-    right: 2rem;
+    right: 1.5rem;
     line-height: 3.75rem;
     z-index: 2;
     transition: transform 0.5s ease-in-out;
@@ -420,7 +423,7 @@ main#content {
     position: absolute;
     top: 0;
     left: 0;
-    width: 11rem;
+    width: 10.5rem;
     border-top: white solid 0.06rem;
     transform-origin: left center;
     animation: vertical-grow-line 0.3s 0.2s ease-in-out backwards;
@@ -431,7 +434,7 @@ main#content {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 11rem;
+    width: 10.5rem;
     border-bottom: white solid 0.06rem;
     transform-origin: left center;
     animation: vertical-grow-line 0.3s 0.2s ease-in-out backwards;
