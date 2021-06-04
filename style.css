@@ -824,3 +824,10 @@ form.modal input[type="submit"]{
     }
 
 }
+
+/* Accessiblity */
+.sr-only {
+    position: absolute;
+    width: 0;
+    overflow: hidden;
+}

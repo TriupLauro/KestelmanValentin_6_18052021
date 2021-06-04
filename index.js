@@ -75,14 +75,20 @@ function appendPhotographer(container, photographerObject) {
     for (let currentTag of photographerObject.tags) {
         let tagItemElt = document.createElement('div');
         tagItemElt.classList.add('photograph-profile__tags__tag-item');
+        const srOnlyText = document.createElement('span');
+        srOnlyText.textContent = 'Tag';
+        srOnlyText.classList.add('sr-only');
         tagItemElt.textContent = `#${currentTag}`;
+        tagItemElt.insertBefore(srOnlyText,tagItemElt.firstChild);
         if (currentTag === activeTag) {
             tagItemElt.dataset.selected = 'true';
         } else {
             tagItemElt.dataset.selected = 'false';
         }
+        tagItemElt.dataset.tag = currentTag;
         tagItemElt.addEventListener('click', tagSelected);
         photographerTagsElt.appendChild(tagItemElt);
+    
     }
 }
 
@@ -100,15 +106,15 @@ function readJsonData () {
 // Function called on clicking a tag
 function tagSelected(e) {
     
-    let rawTag = e.target.textContent;
-    let lowercaseTag = rawTag.toLowerCase().slice(1);
+    let tag = e.target.dataset.tag;
+    
     let filteredPhotographers;
-    if (activeTag === lowercaseTag) {
+    if (activeTag === tag) {
         filteredPhotographers = photographersList;
         activeTag = '';
     } else {
-        filteredPhotographers = photographersList.filter(photographer => photographer.tags.includes(lowercaseTag));
-        activeTag = lowercaseTag;
+        filteredPhotographers = photographersList.filter(photographer => photographer.tags.includes(tag));
+        activeTag = tag;
     }
     
     updateNavTags(navTags);
