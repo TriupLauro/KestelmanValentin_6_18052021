@@ -244,8 +244,9 @@ function createMediaFrame(title, likes) {
     const mediaLikesElt = document.createElement('span');
     mediaLikesElt.classList.add('photo-likes');
     mediaLikesElt.textContent = likes + ' ';
-    const likeIconElt = document.createElement('i');
-    likeIconElt.classList.add('fas','fa-heart');
+    const likeIconElt = createLikeIcon();
+    likeIconElt.classList.add('js-clickable-like');
+    likeIconElt.dataset.likesNumber = likes;
 
     mediaFrameElt.appendChild(mediaDescriptionElt);
     mediaDescriptionElt.appendChild(mediaLikesElt);
@@ -482,6 +483,28 @@ function sortPopularity(mediaArray) {
     return mediaArray.sort((a,b) => b.likes - a.likes);
 }
 
+function countLikes(accumulator, currentValue) {
+    return accumulator + currentValue;
+}
+
+function setTotalLikes(mediaArray) {
+    const likesElt = document.querySelector('div.stats__likes');
+    const likesArray = mediaArray.map((mediaItem) => mediaItem.likes);
+    const totalLikes = likesArray.reduce(countLikes);
+    const likeIcon = createLikeIcon();
+    
+
+    likesElt.innerText = `${totalLikes} `;
+    likesElt.dataset.totalLikes = totalLikes;
+    likesElt.appendChild(likeIcon);
+}
+
+function createLikeIcon() {
+    const likeIcon = document.createElement('i');
+    likeIcon.classList.add('fas', 'fa-heart');
+    return likeIcon
+}
+
 window.addEventListener('load', () => {
     readJsonData()
     .then((fishEyeData) => {
@@ -501,7 +524,14 @@ window.addEventListener('load', () => {
         const queryString = window.location.search;
         const currentId = new URLSearchParams(queryString).get('id');
         
+        if (currentId === null) {
+            throw new Error('Photographer Id not specified');
+        }
         const currentPhotographerData = photographersList.find(photographer => photographer.id === parseInt(currentId));
+        
+        if (currentPhotographerData === undefined) {
+            throw new Error('Wrong Id specified');
+        }
         const currentPhotographerMedias = mediaList.filter(media => media.photographerId === parseInt(currentId));
 
         const sortedPhotographersMedias = rememberSort(currentPhotographerMedias);
@@ -510,6 +540,7 @@ window.addEventListener('load', () => {
         setPhotographerHeader(photographerHeader, currentPhotographerData);
         const photographerPrice = document.querySelector('div.stats__price');
         setPhotographerPrice(photographerPrice, currentPhotographerData);
+        setTotalLikes(currentPhotographerMedias);
 
         const contactName = document.querySelector('span.modal-name');
         contactName.textContent = currentPhotographerData.name;
@@ -519,9 +550,54 @@ window.addEventListener('load', () => {
 
         loader.style.display = 'none';
         
+        // Incrementing likes
+        const likeIcons = document.querySelectorAll('i.js-clickable-like');
+        likeIcons.forEach(icon => {
+            icon.addEventListener('click', addOneLike);
+        });
         
+        function addOneLike(e) {
+            e.stopPropagation();
+            let likes = e.target.dataset.likesNumber;
+            
+            likes++;
+            const likesContainer = e.target.parentElement;
+            likesContainer.textContent = `${likes} `;
+            const likeIcon = createLikeIcon();
+            likeIcon.dataset.likesNumber = likes;
+            likeIcon.addEventListener('click', removeOneLike);
+            
+            likesContainer.appendChild(likeIcon);
+            updateTotalLikes(1);
 
-        
+        }
+
+        function removeOneLike(e) {
+            e.stopPropagation();
+            let likes = e.target.dataset.likesNumber;
+            likes--;
+
+            const likesContainer = e.target.parentElement;
+            likesContainer.textContent = `${likes} `;
+            const likeIcon = createLikeIcon();
+            likeIcon.dataset.likesNumber = likes;
+            likeIcon.addEventListener('click', addOneLike);
+            
+            likesContainer.appendChild(likeIcon);
+            updateTotalLikes(-1);
+
+        }
+
+        function updateTotalLikes(difference) {
+            const likesElt = document.querySelector('div.stats__likes');
+            let totalLikes = parseInt(likesElt.dataset.totalLikes,10);
+            totalLikes += difference;
+
+            const likeIcon = createLikeIcon();
+            likesElt.innerText = `${totalLikes} `;
+            likesElt.dataset.totalLikes = totalLikes;
+            likesElt.appendChild(likeIcon);
+        }
 
         // Events relative to the sorting drop down menu
         sortBtn.addEventListener('click', (e) => {
@@ -617,5 +693,16 @@ window.addEventListener('load', () => {
         }
 
         
+    })
+    .catch((error) => {
+        const loader = document.querySelector('div.loader');
+        const displayedMessage = document.querySelector('p.loader__msg');
+    
+        displayedMessage.innerText = error;
+        const hint = document.createElement('p');
+        hint.textContent = "Veuillez retourner sur la page d'accueil et sélectionnez un photographe disponible";
+        
+        loader.appendChild(hint);
+
     });
 })
