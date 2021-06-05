@@ -16,6 +16,9 @@ window.addEventListener('load', () => {
         
         photographersList = fishEyeData.photographers;
 
+        removeChildTags(photographersContainer);
+        addPhotographersList(photographersContainer, photographersList);
+
         // Click a tag in navigation event
         navTags.forEach(tag => {
             
@@ -120,8 +123,10 @@ function tagSelected(e) {
     updateNavTags(navTags);
 
     removeChildTags(photographersContainer);
-    for (let currentPhotographer of filteredPhotographers) {
-        appendPhotographer(photographersContainer, currentPhotographer);
+    addPhotographersList(photographersContainer, filteredPhotographers)
+
+    if (e.target.classList.contains('photograph-profile__tags__tag-item')) {
+        getCorrectFocus(e.target);
     }
 
 }
@@ -138,3 +143,24 @@ function updateNavTags(navTagsArray) {
     }
 }
 
+function addPhotographersList(container, photographerArray) {
+    for (let currentPhotographer of photographerArray) {
+        appendPhotographer(container, currentPhotographer);
+    }
+}
+
+function getCorrectFocus(clickedTag) {
+    const tagContainer = clickedTag.parentElement;
+    const description = tagContainer.previousSibling;
+    const correctAvatar = description.previousSibling;
+    const correctName = correctAvatar.text;
+    
+    const allh2 = document.querySelectorAll('h2');
+    for (let currenth2 of allh2) {
+        if (correctName === currenth2.innerText) {
+            const correctLink = currenth2.parentElement;
+            correctLink.focus();
+            return 
+        }
+    }
+}
