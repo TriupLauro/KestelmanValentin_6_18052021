@@ -403,6 +403,7 @@ main#content {
     line-height: 3.75rem;
     padding-left: 1rem;
     animation: fade-in 0.3s 0.2s ease-in-out backwards;
+    list-style: none;
 }
 
 .sorting .sort-dropdown__item:nth-child(2) {

@@ -49,14 +49,14 @@
             </div>
 
             <div class="sorting">
-                    <label for="sort">Trier par</label>
-                    <button class="sort-button">
+                    <label for="sort" id="sort-label">Trier par</label>
+                    <button id="sort" class="sort-button" role="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="sort-label">
                         <span class="sort-selected">Popularité</span><i class="fas fa-chevron-down"></i>
-                        <div name="sort" class="sort-dropdown">
-                            <div class="sort-dropdown__item">Popularité</div>
-                            <div class="sort-dropdown__item">Date</div>
-                            <div class="sort-dropdown__item">Titre</div>
-                        </div>
+                        <ul class="sort-dropdown" role="listbox">
+                            <li class="sort-dropdown__item" aria-selected="false" aria-labelledby="sort-label" tabindex="0" role="option">Popularité</li>
+                            <li class="sort-dropdown__item" aria-selected="false" aria-labelledby="sort-label" tabindex="0" role="option">Date</li>
+                            <li class="sort-dropdown__item" aria-selected="false" aria-labelledby="sort-label" tabindex="0" role="option">Titre</li>
+                        </ul>
                     </button>
             </div>
 

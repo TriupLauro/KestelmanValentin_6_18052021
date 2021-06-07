@@ -273,17 +273,6 @@ function mediaFactory(mediaObject, photographerObject) {
     return media;
 }
 
-// This function returns a promise, so we need to use .then after we call it
-function readJsonData () {
-    return fetch('database/FishEyeData.json')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("HTTP error " + response.status);
-        }
-        return response.json();
-    })
-}
-
 // Remove all the content inside a container element
 function removeChildTags(container) {
     while(container.firstChild) {
@@ -293,7 +282,7 @@ function removeChildTags(container) {
 
 // Update the information displayed on the photographer's page
 // It modify the existing html content without adding or removing tags
-function setPhotographerHeader(container = document.querySelector('photograph-header'), photographerObject) {
+function setPhotographerHeader(container = document.querySelector('.photograph-header'), photographerObject) {
     const displayedPhotographerInfos = container.querySelector('div.infos');
     const photographersPageTitle = displayedPhotographerInfos.querySelector('h1');
     const photographersLocalisation = displayedPhotographerInfos.querySelector('p.infos__text__localisation');
@@ -563,6 +552,24 @@ function preventClickOnParent(elt) {
     })
 }
 
+// Keyboard control
+document.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') {
+        document.activeElement.click();
+    }
+})
+
+// This function returns a promise, so we need to use .then after we call it
+function readJsonData () {
+    return fetch('database/FishEyeData.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("HTTP error " + response.status);
+            }
+            return response.json();
+        })
+}
+
 window.addEventListener('load', () => {
     readJsonData()
     .then((fishEyeData) => {
@@ -570,8 +577,8 @@ window.addEventListener('load', () => {
     
         // Dom elements from the sorting menu
         const sortBtn = document.querySelector('.sort-button');
-        const sortMenu = document.querySelector('div.sort-dropdown');
-        const sortOptions = document.querySelectorAll('div.sort-dropdown__item');
+        const sortMenu = document.querySelector('ul.sort-dropdown');
+        const sortOptions = document.querySelectorAll('li.sort-dropdown__item');
         const selectedSorting = document.querySelector('span.sort-selected');
         const sortMenuIcon = document.querySelector('.sort-button i');
         
@@ -614,6 +621,8 @@ window.addEventListener('load', () => {
             sortMenu.style.display = 'block';
             sortMenuIcon.style.transform = 'rotate(180deg)';
             sortMenuIcon.addEventListener('click', sortOptionSelected);
+
+            sortBtn.setAttribute('aria-expanded', 'true');
         });
 
         sortOptions.forEach(optionElt => {
@@ -627,24 +636,31 @@ window.addEventListener('load', () => {
             
                 localStorage.setItem(`photographer${currentId}SortOption`, 'Popularité');
                 sortedArray = sortPopularity(mediaArray);
+                const itemList = document.querySelectorAll('li.sort-dropdown__item');
+                updateAriaSelected(itemList,0)
             }else{
-                
+
+                const sortItemList = document.querySelectorAll('li.sort-dropdown__item');
+
                 const lastSortOption = localStorage.getItem(`photographer${currentId}SortOption`);
                 switch(lastSortOption) {
                     case 'Popularité' :
-                    sortedArray = sortPopularity(mediaArray);
-                    selectedSorting.textContent = 'Popularité';
-                    break;
-    
-                    case 'Titre' :
-                    sortedArray = sortAlphabeticalOrder(mediaArray);
-                    selectedSorting.textContent = 'Titre';
-                    break;
-    
+                        sortedArray = sortPopularity(mediaArray);
+                        selectedSorting.textContent = 'Popularité';
+                        updateAriaSelected(sortItemList,0);
+                        break;
+
                     case 'Date' :
-                    sortedArray = sortDate(mediaArray);
-                    selectedSorting.textContent = 'Date';
-                    break;
+                        sortedArray = sortDate(mediaArray);
+                        selectedSorting.textContent = 'Date';
+                        updateAriaSelected(sortItemList,1);
+                        break;
+
+                    case 'Titre' :
+                        sortedArray = sortAlphabeticalOrder(mediaArray);
+                        selectedSorting.textContent = 'Titre';
+                        updateAriaSelected(sortItemList,2);
+                        break;
                 }
             }
             return sortedArray;
@@ -656,7 +672,7 @@ window.addEventListener('load', () => {
 
             let option;
             
-            if (e.target.tagName === 'DIV') {
+            if (e.target.tagName === 'LI') {
                 
                 option = e.target.textContent;
             }else{
@@ -665,29 +681,43 @@ window.addEventListener('load', () => {
             }
             
             selectedSorting.textContent = option;
-            
+            const sortItemList = document.querySelectorAll('li.sort-dropdown__item');
+
             closeDropDown();
             
             let newSortedList;
             switch(option) {
-                case 'Titre' :
-                newSortedList = sortAlphabeticalOrder(currentPhotographerMedias);
-                localStorage.setItem(`photographer${currentId}SortOption`, 'Titre');
-                break;
 
                 case 'Popularité' :
-                newSortedList = sortPopularity(currentPhotographerMedias);
-                localStorage.setItem(`photographer${currentId}SortOption`, 'Popularité');
-                break;
+                    newSortedList = sortPopularity(currentPhotographerMedias);
+                    localStorage.setItem(`photographer${currentId}SortOption`, 'Popularité');
+                    updateAriaSelected(sortItemList,0);
+                    break;
 
                 case 'Date' :
-                newSortedList = sortDate(currentPhotographerMedias);
-                localStorage.setItem(`photographer${currentId}SortOption`, 'Date');
-                break;
+                    newSortedList = sortDate(currentPhotographerMedias);
+                    localStorage.setItem(`photographer${currentId}SortOption`, 'Date');
+                    updateAriaSelected(sortItemList,1);
+                    break;
+
+
+                case 'Titre' :
+                    newSortedList = sortAlphabeticalOrder(currentPhotographerMedias);
+                    localStorage.setItem(`photographer${currentId}SortOption`, 'Titre');
+                    updateAriaSelected(sortItemList,2);
+                    break;
+
             }
             removeChildTags(mediaWrapper);
             addMediaList(mediaWrapper, currentPhotographerData, newSortedList);
             setTotalLikes(currentPhotographerMedias);
+        }
+
+        function updateAriaSelected(itemList, selectedItemIndex) {
+            for (let item of itemList) {
+                item.setAttribute('aria-selected', 'false');
+            }
+            itemList[selectedItemIndex].setAttribute('aria-selected', 'true');
         }
 
         // Closing dropdown without selecting
@@ -698,6 +728,8 @@ window.addEventListener('load', () => {
                 sortMenu.style.display = 'none';
                 sortMenuIcon.style.transform = 'rotate(0deg)';
                 sortMenuIcon.removeEventListener('click', sortOptionSelected);
+
+                sortBtn.setAttribute('aria-expanded','false');
             }
         }
 
