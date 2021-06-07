@@ -247,6 +247,8 @@ function createMediaFrame(title, likes) {
     const likeIconElt = createLikeIcon();
     likeIconElt.classList.add('js-clickable-like');
     likeIconElt.dataset.likesNumber = likes;
+    makeLikeIconClickable(likeIconElt);
+    preventClickOnParent(mediaDescriptionElt);
 
     mediaFrameElt.appendChild(mediaDescriptionElt);
     mediaDescriptionElt.appendChild(mediaLikesElt);
@@ -505,6 +507,62 @@ function createLikeIcon() {
     return likeIcon
 }
 
+// Incrementing likes
+
+function makeLikeIconClickable(likeIcon) {
+    likeIcon.addEventListener('click', addOneLike);
+}
+
+function addOneLike(e) {
+    e.stopPropagation();
+    let likes = e.target.dataset.likesNumber;
+
+    likes++;
+    const likesContainer = e.target.parentElement;
+    likesContainer.textContent = `${likes} `;
+    const likeIcon = createLikeIcon();
+    likeIcon.dataset.likesNumber = likes;
+    likeIcon.dataset.localLiked = "true";
+    likeIcon.addEventListener('click', removeOneLike);
+
+    likesContainer.appendChild(likeIcon);
+    updateTotalLikes(1);
+}
+
+function removeOneLike(e) {
+    e.stopPropagation();
+    let likes = e.target.dataset.likesNumber;
+    likes--;
+
+    const likesContainer = e.target.parentElement;
+    likesContainer.textContent = `${likes} `;
+    const likeIcon = createLikeIcon();
+    likeIcon.dataset.likesNumber = likes;
+    likeIcon.dataset.localLiked = "false";
+    likeIcon.addEventListener('click', addOneLike);
+
+    likesContainer.appendChild(likeIcon);
+    updateTotalLikes(-1);
+
+}
+
+function updateTotalLikes(difference) {
+    const likesElt = document.querySelector('div.stats__likes');
+    let totalLikes = parseInt(likesElt.dataset.totalLikes,10);
+    totalLikes += difference;
+
+    const likeIcon = createLikeIcon();
+    likesElt.innerText = `${totalLikes} `;
+    likesElt.dataset.totalLikes = totalLikes;
+    likesElt.appendChild(likeIcon);
+}
+
+function preventClickOnParent(elt) {
+    elt.addEventListener('click', (e) => {
+        e.stopPropagation();
+    })
+}
+
 window.addEventListener('load', () => {
     readJsonData()
     .then((fishEyeData) => {
@@ -549,55 +607,6 @@ window.addEventListener('load', () => {
         addMediaList(mediaWrapper, currentPhotographerData, sortedPhotographersMedias);
 
         loader.style.display = 'none';
-        
-        // Incrementing likes
-        const likeIcons = document.querySelectorAll('i.js-clickable-like');
-        likeIcons.forEach(icon => {
-            icon.addEventListener('click', addOneLike);
-        });
-        
-        function addOneLike(e) {
-            e.stopPropagation();
-            let likes = e.target.dataset.likesNumber;
-            
-            likes++;
-            const likesContainer = e.target.parentElement;
-            likesContainer.textContent = `${likes} `;
-            const likeIcon = createLikeIcon();
-            likeIcon.dataset.likesNumber = likes;
-            likeIcon.addEventListener('click', removeOneLike);
-            
-            likesContainer.appendChild(likeIcon);
-            updateTotalLikes(1);
-
-        }
-
-        function removeOneLike(e) {
-            e.stopPropagation();
-            let likes = e.target.dataset.likesNumber;
-            likes--;
-
-            const likesContainer = e.target.parentElement;
-            likesContainer.textContent = `${likes} `;
-            const likeIcon = createLikeIcon();
-            likeIcon.dataset.likesNumber = likes;
-            likeIcon.addEventListener('click', addOneLike);
-            
-            likesContainer.appendChild(likeIcon);
-            updateTotalLikes(-1);
-
-        }
-
-        function updateTotalLikes(difference) {
-            const likesElt = document.querySelector('div.stats__likes');
-            let totalLikes = parseInt(likesElt.dataset.totalLikes,10);
-            totalLikes += difference;
-
-            const likeIcon = createLikeIcon();
-            likesElt.innerText = `${totalLikes} `;
-            likesElt.dataset.totalLikes = totalLikes;
-            likesElt.appendChild(likeIcon);
-        }
 
         // Events relative to the sorting drop down menu
         sortBtn.addEventListener('click', (e) => {
@@ -606,8 +615,7 @@ window.addEventListener('load', () => {
             sortMenuIcon.style.transform = 'rotate(180deg)';
             sortMenuIcon.addEventListener('click', sortOptionSelected);
         });
-        
-        // The parameters for the callback function are passed to the optionElt object
+
         sortOptions.forEach(optionElt => {
             optionElt.addEventListener('click', sortOptionSelected);
         })
@@ -679,6 +687,7 @@ window.addEventListener('load', () => {
             }
             removeChildTags(mediaWrapper);
             addMediaList(mediaWrapper, currentPhotographerData, newSortedList);
+            setTotalLikes(currentPhotographerMedias);
         }
 
         // Closing dropdown without selecting
