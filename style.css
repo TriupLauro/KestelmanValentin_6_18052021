@@ -312,52 +312,54 @@ main#content {
     right: 2rem;
 }
 
-/* Select form */
+/* Sorting dropdown */
 .sorting {
     display: flex;
     margin-top: 1.2rem;
 }
 
-.sorting .sort-button {
-    display: block;
-    background-color: #901C1C;
+.sorting .sort-container {
     position: relative;
     color: white;
+
+    font-size: 1.2rem;
+}
+
+.sorting .sort-button {
+
+    background-color: #901C1C;
+
+    color: white;
     width: 13rem;
-    padding: 0 1.2rem;
+    padding: 0 2.2rem;
     font-size: 1.2rem;
     font-weight: 700;
     height: 3.75rem;
-    line-height: 3.75rem;
+
     cursor: pointer;
     border-radius: 0.3rem;
     border: none;
     text-align: left;
+    /* Needed for font-weight fix*/
+    font-family: 'DM Sans',sans-serif;
 }
 
-.sorting .sort-button i {
+.sorting .sort-container i {
     position: absolute;
     right: 1.5rem;
+    top: 0;
     line-height: 3.75rem;
     z-index: 2;
     transition: transform 0.5s ease-in-out;
-    display: inline;
-}
 
-/* .sorting .sort-button:focus i {
-    transform: rotate(180deg);
-} */
+    color: white;
+}
 
 .sorting label {
     font-size: 1.2rem;
     margin-right: 1.5rem;
     font-weight: 700;
     line-height: 3.75rem;
-}
-
-.sorting .sort-selected {
-    padding-left: 1rem;
-    /* padding-right: 2.5rem; */
 }
 
 @keyframes grow-dropdown {
@@ -399,11 +401,16 @@ main#content {
 }
 
 .sorting .sort-dropdown__item {
-    height: 3.75rem;
+
     line-height: 3.75rem;
     padding-left: 1rem;
     animation: fade-in 0.3s 0.2s ease-in-out backwards;
     list-style: none;
+    cursor: pointer;
+}
+
+.sorting .sort-dropdown__item.sort-focus {
+    font-weight:700;
 }
 
 .sorting .sort-dropdown__item:nth-child(2) {

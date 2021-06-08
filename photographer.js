@@ -552,13 +552,6 @@ function preventClickOnParent(elt) {
     })
 }
 
-// Keyboard control
-document.addEventListener('keydown', (e) => {
-    if(e.key === 'Enter') {
-        document.activeElement.click();
-    }
-})
-
 // This function returns a promise, so we need to use .then after we call it
 function readJsonData () {
     return fetch('database/FishEyeData.json')
@@ -574,14 +567,14 @@ window.addEventListener('load', () => {
     readJsonData()
     .then((fishEyeData) => {
         const loader = document.querySelector('div.loader');
-    
+        const mainPage = document.querySelector('div.photographer-page');
         // Dom elements from the sorting menu
         const sortBtn = document.querySelector('.sort-button');
         const sortMenu = document.querySelector('ul.sort-dropdown');
         const sortOptions = document.querySelectorAll('li.sort-dropdown__item');
-        const selectedSorting = document.querySelector('span.sort-selected');
-        const sortMenuIcon = document.querySelector('.sort-button i');
-        
+        const selectedSorting = document.querySelector('.sort-selected');
+        const sortMenuIcon = document.querySelector('.sort-container i');
+
         const photographersList = fishEyeData.photographers;
         const mediaList = fishEyeData.media;
         
@@ -614,15 +607,18 @@ window.addEventListener('load', () => {
         addMediaList(mediaWrapper, currentPhotographerData, sortedPhotographersMedias);
 
         loader.style.display = 'none';
+        mainPage.setAttribute('aria-hidden', 'false');
 
         // Events relative to the sorting drop down menu
         sortBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             sortMenu.style.display = 'block';
+            sortMenu.focus();
             sortMenuIcon.style.transform = 'rotate(180deg)';
             sortMenuIcon.addEventListener('click', sortOptionSelected);
 
             sortBtn.setAttribute('aria-expanded', 'true');
+            updateAriaSelected(sortOptions, 0);
         });
 
         sortOptions.forEach(optionElt => {
@@ -636,30 +632,29 @@ window.addEventListener('load', () => {
             
                 localStorage.setItem(`photographer${currentId}SortOption`, 'Popularité');
                 sortedArray = sortPopularity(mediaArray);
-                const itemList = document.querySelectorAll('li.sort-dropdown__item');
-                updateAriaSelected(itemList,0)
+
             }else{
 
-                const sortItemList = document.querySelectorAll('li.sort-dropdown__item');
+
 
                 const lastSortOption = localStorage.getItem(`photographer${currentId}SortOption`);
                 switch(lastSortOption) {
                     case 'Popularité' :
                         sortedArray = sortPopularity(mediaArray);
                         selectedSorting.textContent = 'Popularité';
-                        updateAriaSelected(sortItemList,0);
+
                         break;
 
                     case 'Date' :
                         sortedArray = sortDate(mediaArray);
                         selectedSorting.textContent = 'Date';
-                        updateAriaSelected(sortItemList,1);
+
                         break;
 
                     case 'Titre' :
                         sortedArray = sortAlphabeticalOrder(mediaArray);
                         selectedSorting.textContent = 'Titre';
-                        updateAriaSelected(sortItemList,2);
+
                         break;
                 }
             }
@@ -681,7 +676,7 @@ window.addEventListener('load', () => {
             }
             
             selectedSorting.textContent = option;
-            const sortItemList = document.querySelectorAll('li.sort-dropdown__item');
+
 
             closeDropDown();
             
@@ -691,20 +686,20 @@ window.addEventListener('load', () => {
                 case 'Popularité' :
                     newSortedList = sortPopularity(currentPhotographerMedias);
                     localStorage.setItem(`photographer${currentId}SortOption`, 'Popularité');
-                    updateAriaSelected(sortItemList,0);
+
                     break;
 
                 case 'Date' :
                     newSortedList = sortDate(currentPhotographerMedias);
                     localStorage.setItem(`photographer${currentId}SortOption`, 'Date');
-                    updateAriaSelected(sortItemList,1);
+
                     break;
 
 
                 case 'Titre' :
                     newSortedList = sortAlphabeticalOrder(currentPhotographerMedias);
                     localStorage.setItem(`photographer${currentId}SortOption`, 'Titre');
-                    updateAriaSelected(sortItemList,2);
+
                     break;
 
             }
@@ -716,8 +711,54 @@ window.addEventListener('load', () => {
         function updateAriaSelected(itemList, selectedItemIndex) {
             for (let item of itemList) {
                 item.setAttribute('aria-selected', 'false');
+                item.classList.remove('sort-focus');
             }
             itemList[selectedItemIndex].setAttribute('aria-selected', 'true');
+            itemList[selectedItemIndex].classList.add('sort-focus');
+            const itemIdList = [];
+            itemList.forEach(item => itemIdList.push(item.id));
+
+            sortMenu.setAttribute('aria-activedescendant',itemIdList[selectedItemIndex]);
+        }
+
+        //Controlling the dropdown with the keyboard
+        window.addEventListener('keydown', (e) => {
+            if(sortMenu.style.display === 'block') {
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectNextSortOption();
+                }
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectPreviousSortOption();
+                }
+                if (e.key === 'Escape') {
+                    closeDropDown();
+                }
+                if (e.key === 'Enter') {
+                    const focusedSortItem = document.querySelector('li.sort-dropdown__item[aria-selected=true]');
+                    focusedSortItem.click();
+                }
+            }
+        })
+
+        function selectNextSortOption() {
+            const focusedSortItem = document.querySelector('li.sort-dropdown__item[aria-selected=true]');
+            let index = focusedSortItem.dataset.index;
+            if (index < sortOptions.length - 1) {
+                index++;
+                updateAriaSelected(sortOptions, index);
+            }
+        }
+
+        function selectPreviousSortOption() {
+            const focusedSortItem = document.querySelector('li.sort-dropdown__item[aria-selected=true]');
+            let index = focusedSortItem.dataset.index;
+            if (index > 0) {
+                index--;
+                updateAriaSelected(sortOptions, index);
+            }
         }
 
         // Closing dropdown without selecting
@@ -725,11 +766,12 @@ window.addEventListener('load', () => {
 
         function closeDropDown() {
             if (sortMenu.style.display === 'block') {
-                sortMenu.style.display = 'none';
-                sortMenuIcon.style.transform = 'rotate(0deg)';
+                sortMenu.style.display = '';
+                sortMenu.removeAttribute('aria-activedescendant');
+                sortMenuIcon.style.transform = '';
                 sortMenuIcon.removeEventListener('click', sortOptionSelected);
-
                 sortBtn.setAttribute('aria-expanded','false');
+
             }
         }
 
@@ -744,6 +786,6 @@ window.addEventListener('load', () => {
         hint.textContent = "Veuillez retourner sur la page d'accueil et sélectionnez un photographe disponible";
         
         loader.appendChild(hint);
-
+        throw error;
     });
 })

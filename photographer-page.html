@@ -16,7 +16,7 @@
         <p class="loader__msg"> Veuillez patienter...</p>
     </div>
 
-    <div class="photographer-page">
+    <div class="photographer-page" aria-hidden="true">
         <header>
             <a href="index.html">
                 <img src="images/logo_fisheye.png" alt="logo_fisheye">
@@ -50,14 +50,14 @@
 
             <div class="sorting">
                     <label for="sort" id="sort-label">Trier par</label>
-                    <button id="sort" class="sort-button" role="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="sort-label">
-                        <span class="sort-selected">Popularité</span><i class="fas fa-chevron-down"></i>
-                        <ul class="sort-dropdown" role="listbox">
-                            <li class="sort-dropdown__item" aria-selected="false" aria-labelledby="sort-label" tabindex="0" role="option">Popularité</li>
-                            <li class="sort-dropdown__item" aria-selected="false" aria-labelledby="sort-label" tabindex="0" role="option">Date</li>
-                            <li class="sort-dropdown__item" aria-selected="false" aria-labelledby="sort-label" tabindex="0" role="option">Titre</li>
+                    <div  class="sort-container">
+                        <button class="sort-selected sort-button" role="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="sort-label sort" id="sort">Popularité</button><i class="fas fa-chevron-down"></i>
+                        <ul class="sort-dropdown" role="listbox" tabindex="-1" aria-labelledby="sort-button">
+                            <li class="sort-dropdown__item" id="sort-option1" aria-selected="false"  role="option" data-index="0">Popularité</li>
+                            <li class="sort-dropdown__item" id="sort-option2" aria-selected="false"  role="option" data-index="1">Date</li>
+                            <li class="sort-dropdown__item" id="sort-option3" aria-selected="false"  role="option" data-index="2">Titre</li>
                         </ul>
-                    </button>
+                    </div>
             </div>
 
             <div class="photo-wrapper">
