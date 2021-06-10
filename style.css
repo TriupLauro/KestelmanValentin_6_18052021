@@ -351,7 +351,7 @@ main#content {
     line-height: 3.75rem;
     z-index: 2;
     transition: transform 0.5s ease-in-out;
-
+    cursor: pointer;
     color: white;
 }
 
