@@ -4,7 +4,7 @@ const mainPage = document.querySelector('div.photographer-page');
 // Dom elements from the modal form
 const contactBtn = document.querySelector('div.contact');
 const modalbg = document.querySelector('div.modalbg');
-const closebtn = document.querySelector('i.close');
+const closebtn = document.querySelector('button.close');
 const modalForm = document.querySelector('form.modal');
 
 // Dom of the media container
@@ -12,10 +12,10 @@ const mediaWrapper = document.querySelector('div.photo-wrapper');
 
 // Events for the lightbox modal
 const lightboxBg = document.querySelector('div.lightbox-bg');
-const lightboxClose = document.querySelector('div.lightbox__close');
+const lightboxClose = document.querySelector('button.lightbox__close');
 const lightboxTitle = document.querySelector('p.lightbox__title');
-const lightboxPrevious = document.querySelector('div.lightbox__previous');
-const lightboxNext = document.querySelector('div.lightbox__next');
+const lightboxPrevious = document.querySelector('button.lightbox__previous');
+const lightboxNext = document.querySelector('button.lightbox__next');
 
 lightboxClose.addEventListener('click', closeLightbox);
 
@@ -49,10 +49,11 @@ function goToMediaIndex(index) {
         const newImage = document.createElement('img')
         newImage.setAttribute('src', newElt.dataset.fullPath);
         newImage.classList.add('lightbox__img');
+        newImage.setAttribute('tabindex','0');
         lightbox.removeChild(displayedMedia);
         lightbox.insertBefore(newImage, lightbox.firstChild);
         lightbox.dataset.index = index;
-
+        newImage.focus();
     }
 
     if (newElt.tagName === 'VIDEO') {
@@ -66,6 +67,7 @@ function goToMediaIndex(index) {
         lightbox.removeChild(displayedMedia);
         lightbox.insertBefore(newVideoElt, lightbox.firstChild);
         lightbox.dataset.index = index;
+        newVideoElt.focus();
     }
 }
 
@@ -164,18 +166,19 @@ class Photograph {
         container.appendChild(mediaContainerElt);
         imageElt.addEventListener('click', (e) => {
 
-            mainPage.setAttribute('aria-hidden', 'true');
+
             const lastImage = document.querySelector('.lightbox__img');
             const lightbox = document.querySelector('div.lightbox')
             const mediaSrc = e.target.dataset.fullPath;
             
 
-            lightboxBg.style.display = 'block';
+
 
             
             const imageElt = document.createElement('img');
             imageElt.setAttribute('src', mediaSrc);
             imageElt.classList.add('lightbox__img');
+            imageElt.setAttribute('tabindex','0');
             lightbox.removeChild(lastImage);
             
             lightbox.dataset.index = index;
@@ -185,7 +188,9 @@ class Photograph {
             
 
             lightboxTitle.innerText = this.title;
-            lightboxClose.focus();
+            mainPage.setAttribute('aria-hidden', 'true');
+            lightboxBg.style.display = 'block';
+            imageElt.focus();
             lockScroll();
 
         });
@@ -323,9 +328,13 @@ function setPhotographerHeader(container = document.querySelector('.photograph-h
         let currentTagElement = document.createElement('div');
         currentTagElement.classList.add('infos__tags__item');
         currentTagElement.innerText = `#${tag}`;
+        const tagLabel = document.createElement('span');
+        tagLabel.innerText = 'Tag';
+        tagLabel.classList.add('sr-only');
+        photographersDisplayedTags.appendChild(tagLabel);
         photographersDisplayedTags.appendChild(currentTagElement);
     }
-    photographerDisplayedPortrait.setAttribute('src', `images/Sample_Photos/Photographers_ID_Photos/${photographerObject.portrait}`);
+    photographerDisplayedPortrait.setAttribute('src', `images/Sample_Photos/Photographers_ID_Photos/thumbnails/mini_${photographerObject.portrait}`);
 }
 
 // Adds all the media to the specified container using the factory
@@ -345,11 +354,16 @@ function setPhotographerPrice (container = document.querySelector('div.stats__pr
 //Part relative to the modal form
 contactBtn.addEventListener('click', () => {
     modalbg.style.display = 'block';
+    mainPage.setAttribute('aria-hidden', 'true');
+    const firstInput = document.querySelector('input#firstname');
+    firstInput.focus();
     lockScroll();
 });
 
 closebtn.addEventListener('click', () => {
     modalbg.style.display = 'none';
+    mainPage.setAttribute('aria-hidden','false');
+    contactBtn.focus();
     unlockScroll();
 });
 
@@ -368,7 +382,7 @@ function submitContactForm(e) {
             isValid : isNotEmptyString,
             errorMsg : 'First Name must have at least one character'
         },
-        lasstName : {
+        lastName : {
             value : lastNameElt.value,
             isValid : isNotEmptyString,
             errorMsg : 'Last Name must have at least one character'
@@ -395,6 +409,7 @@ function submitContactForm(e) {
     const contentToDisplay = formDataValueCollection(formDataObject);
 
     console.log(contentToDisplay);
+    contactBtn.focus();
 }
 
 function isNotEmptyString (value) {
@@ -592,6 +607,7 @@ window.addEventListener('load', () => {
     readJsonData()
     .then((fishEyeData) => {
         const loader = document.querySelector('div.loader');
+        const banner = document.querySelector('a#banner');
         // Dom elements from the sorting menu
         const sortBtn = document.querySelector('.sort-button');
         const sortMenu = document.querySelector('ul.sort-dropdown');
@@ -634,6 +650,7 @@ window.addEventListener('load', () => {
 
         loader.style.display = 'none';
         mainPage.style.display = '';
+        banner.focus();
 
         // Events relative to the sorting drop down menu
         sortBtn.addEventListener('click', displaySortMenu);

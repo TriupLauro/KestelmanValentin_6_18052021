@@ -30,6 +30,14 @@ window.addEventListener('load', () => {
             tag.addEventListener('click', tagSelected);
         });
 
+        // Make the go to content button appear
+        const goToContentBtn = document.querySelector('a.go-to-content');
+        document.addEventListener('scroll',goToContentAppears);
+
+        function goToContentAppears() {
+            goToContentBtn.style.transform = 'translate(-50%, 200%)';
+            document.removeEventListener('scroll', goToContentAppears);
+        }
     })
 });
 
@@ -49,7 +57,7 @@ function appendPhotographer(container, photographerObject) {
     photographerProfileAvatarElt.classList.add('photograph-profile__avatar');
     photographerProfileAvatarElt.setAttribute('href', `photographer-page.html?id=${photographerObject.id}`);
     const photographerPortraitElt = document.createElement('img');
-    photographerPortraitElt.setAttribute('src', `images/Sample_Photos/Photographers_ID_Photos/${photographerObject.portrait}`);
+    photographerPortraitElt.setAttribute('src', `images/Sample_Photos/Photographers_ID_Photos/thumbnails/mini_${photographerObject.portrait}`);
     const photographerNameElt = document.createElement('h2');
     photographerNameElt.textContent = `${photographerObject.name}`;
     const photographerDescriptionElt = document.createElement('div');
@@ -133,9 +141,9 @@ function tagSelected(e) {
 
 function updateNavTags(navTagsArray) {
     for (let currentTag of navTagsArray) {
-        let rawTag = currentTag.textContent;
-        let lowercaseTag = rawTag.toLowerCase().slice(1);
-        if (lowercaseTag === activeTag) {
+        let tag = currentTag.dataset.tag;
+
+        if (tag === activeTag) {
             currentTag.dataset.selected = 'true';
         } else {
             currentTag.dataset.selected = 'false';
