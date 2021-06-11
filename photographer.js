@@ -48,6 +48,7 @@ function goToMediaIndex(index) {
         
         const newImage = document.createElement('img')
         newImage.setAttribute('src', newElt.dataset.fullPath);
+        newImage.setAttribute('alt', newElt.alt);
         newImage.classList.add('lightbox__img');
         newImage.setAttribute('tabindex','0');
         lightbox.removeChild(displayedMedia);
@@ -146,6 +147,7 @@ class Photograph {
         this.fileName = photoObject.image;
         this.price = photoObject.price;
         this.title = photoObject.title;
+        this.alt = photoObject.altDescription;
     }
     appendMedia(container, index) {
         const mediaContainerElt = createMediaFrame(this.title, this.likes);
@@ -155,6 +157,7 @@ class Photograph {
         imageElt.dataset.fullPath = this.fullPath;
         this.thumbnailPath = `images/Sample_Photos/${this.folderName}/thumbnails/mini_${this.fileName}`;
         imageElt.setAttribute('src', this.thumbnailPath);
+        imageElt.setAttribute('alt', this.alt);
         imageElt.classList.add('js-thumbnail');
         imageElt.setAttribute('tabindex','-1');
         mediaContainerElt.insertBefore(imageElt,mediaContainerElt.firstChild);
@@ -177,6 +180,7 @@ class Photograph {
             
             const imageElt = document.createElement('img');
             imageElt.setAttribute('src', mediaSrc);
+            imageElt.setAttribute('alt', this.alt);
             imageElt.classList.add('lightbox__img');
             imageElt.setAttribute('tabindex','0');
             lightbox.removeChild(lastImage);

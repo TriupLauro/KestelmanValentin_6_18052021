@@ -70,7 +70,8 @@
       "tags": ["fashion"],
       "likes": 62,
       "date": "2011-12-08",
-      "price": 55
+      "price": 55,
+      "altDescription" : "Femme basanée avec sweater et jogging jaune. Panier de basket dans le fond sur sable."
     },
     {
       "id": 8520927,
@@ -80,7 +81,8 @@
       "tags": ["fashion"],
       "likes": 11,
       "date": "2011-11-06",
-      "price": 55
+      "price": 55,
+      "altDescription" : "Femme caucasienne blonde s'étirant une jambe, portant un haut et un pantalon assorti au motif de la jungle. Le tout sur pont routier vide."
     },
     {
       "id": 9025895,
@@ -90,7 +92,8 @@
       "tags": ["fashion"],
       "likes": 72,
       "date": "2013-08-12",
-      "price": 55
+      "price": 55,
+      "altDescription" : "Femme portant un manteau à rayures de couleurs Jaunes, Noires, Cyan et Blanche devant un mur de mosaïque grises et blanches"
     },
     {
       "id": 9275938,
@@ -100,7 +103,8 @@
       "tags": ["events"],
       "likes": 69,
       "date": "2018-02-22",
-      "price": 55
+      "price": 55,
+      "altDescription" : "Belvédère de mariage vide décoré avec de la végétation devant chaises couvertes par un voile"
     },
     {
       "id": 2053494,
@@ -110,7 +114,8 @@
       "tags": ["events"],
       "likes": 2,
       "date": "2020-05-25",
-      "price": 55
+      "price": 55,
+      "altDescription": "Personnes de dos sur fond extérieur flouté. De nombreuses étincelles floutées en fond."
     },
     {
       "id": 7324238,
@@ -120,7 +125,8 @@
       "tags": ["events"],
       "likes": 33,
       "date": "2019-06-12",
-      "price": 55
+      "price": 55,
+      "altDescription": "Salle de fête avec plafond doré et ballons dont deux qui forme les nombres 18 en or."
     },
     {
       "id": 8328953,
@@ -140,7 +146,8 @@
       "tags": ["art"],
       "likes": 88,
       "date": "2007-05-07",
-      "price": 55
+      "price": 55,
+      "altDescription": "Peinture recouvrant une fenêtre. Fond bleu, homme à moitié jaune et bleu clair, derrière un triangle au côtés blanc."
     },
     {
       "id": 8523492,
@@ -150,7 +157,8 @@
       "tags": ["art"],
       "likes": 24,
       "date": "2018-05-05",
-      "price": 55
+      "price": 55,
+      "altDescription": "Tunnel illuminé par des néons pourpres avec des murs tagués."
     },
     {
       "id": 75902334,
@@ -160,7 +168,8 @@
       "tags": ["art"],
       "likes": 75,
       "date": "2019-11-25",
-      "price": 55
+      "price": 55,
+      "altDescription": "Peinture murale d'une multitude de tête d'oiseaux regardant à gauche ou à droite étant soit rouge soit bleu et avec un trait jaune sur le cou."
     },
 
     {
@@ -171,7 +180,8 @@
       "tags": ["sport"],
       "likes": 52,
       "date": "2013-02-30",
-      "price": 70
+      "price": 70,
+      "altDescription": "Personnes vues de haut, ramant sur sol en salle de sport."
     },
     {
       "id": 92758372,
@@ -181,7 +191,8 @@
       "tags": ["fashion"],
       "likes": 58,
       "date": "2018-07-17",
-      "price": 70
+      "price": 70,
+      "altDescription": "Homme albinos avec habits blancs cassés et femme noire avec robe bleu pastel. Chacun a un bras levé comme pour former les deux moitiés d'un oiseau."
     },
     {
       "id": 32958383,
@@ -191,7 +202,8 @@
       "tags": ["fashion"],
       "likes": 11,
       "date": "2019-08-12",
-      "price": 70
+      "price": 70,
+      "altDescription": "Femme au teint basané avec lunettes de soleil portant un robe rouge soyeuse descendant un escalier en extérieur."
     },
     {
       "id": 928587383,
@@ -201,7 +213,8 @@
       "tags": ["events"],
       "likes": 2,
       "date": "2019-01-02",
-      "price": 70
+      "price": 70,
+      "altDescription": "Réunion de travail. Participant prenant des notes assis sur une table avec ordinateurs portables. Femme asiatique avec lunettes et cheveux longs debout parlant devant post-its jaunes et roses collés au mur."
     },
     {
       "id": 725639493,
@@ -211,7 +224,8 @@
       "tags": ["events"],
       "likes": 3,
       "date": "2019-05-20",
-      "price": 70
+      "price": 70,
+      "altDescription": "Réunion de présentation d'un nouveau produit. Les assistants sont assis sur un canapé ou des chaises. Homme en chemise bleu avec short blanc tenant une petite statue devant l'assistance."
     },
     {
       "id": 23394384,
@@ -221,7 +235,8 @@
       "tags": ["events"],
       "likes": 52,
       "date": "2019-07-18",
-      "price": 70
+      "price": 70,
+      "altDescription": "Photo en noir et blanc d'une musicienne reglant son synthétiseur sur scène."
     },
     {
       "id": 87367293,
@@ -231,7 +246,8 @@
       "tags": ["events"],
       "likes": 23,
       "date": "2018-02-22",
-      "price": 70
+      "price": 70,
+      "altDescription": "Chanteuse noire avec coupe afro, haut avec des fils or et blanc, tenant un micro sur scène."
     },
     {
       "id": 593834784,
@@ -241,7 +257,8 @@
       "tags": ["animals"],
       "likes": 52,
       "date": "2017-03-13",
-      "price": 70
+      "price": 70,
+      "altDescription": "Cerf avec fourure beige et bois visible regardant droit dans l'objectif. En fond, clairière floutée."
     },
     {
       "id": 83958935,
@@ -272,7 +289,8 @@
       "tags": ["travel"],
       "likes": 101,
       "date": "2017-04-03",
-      "price": 45
+      "price": 45,
+      "altDescription": "Grande source thermale avec de nombreuses personnes se baignant."
     },
     {
       "id": 73434243,
@@ -282,7 +300,8 @@
       "tags": ["travel"],
       "likes": 99,
       "date": "2018-04-30",
-      "price": 45
+      "price": 45,
+      "altDescription": "Route de campagne sinueuse au milieu d'une clairière avec de la végétation."
     },
     {
       "id": 23425523,
@@ -292,7 +311,8 @@
       "tags": ["travel"],
       "likes": 34,
       "date": "2016-04-05",
-      "price": 45
+      "price": 45,
+      "altDescription": "Pont metallique menant vers une forêt."
     },
     {
       "id": 23134513,
@@ -302,7 +322,8 @@
       "tags": ["travel"],
       "likes": 23,
       "date": "2017-03-18",
-      "price": 45
+      "price": 45,
+      "altDescription": "Proue d'une barque en bois ciré naviguant sur un cours d'eau avec au loin une montagne et de nombreux arbres en aval."
     },
     {
       "id": 92352352,
@@ -312,7 +333,8 @@
       "tags": ["portrait"],
       "likes": 66,
       "date": "2018-05-24",
-      "price": 45
+      "price": 45,
+      "altDescription": "Femme rousse avec des tâches de rousseur et du rouge à lèvre souriant vers l'objectif."
     },
     {
       "id": 34513453,
@@ -322,7 +344,8 @@
       "tags": ["portait"],
       "likes": 52,
       "date": "2017-04-21",
-      "price": 45
+      "price": 45,
+      "altDescription": "Photo en noir en blanc. Visage d'un homme regardant vers la droite avec des cheveux bouclés, une moustache taillée et un collier. Le reste de l'image est noir."
     },
     {
       "id": 23523533,
@@ -332,7 +355,8 @@
       "tags": ["portait"],
       "likes": 95,
       "date": "2018-11-02",
-      "price": 45
+      "price": 45,
+      "altDescription": "Photo en noir et blanc d'une femme noire aux sourcils blancs et aux cheveux courts et blancs."
     },
     {
       "id": 525834234,
@@ -342,7 +366,8 @@
       "tags": ["portait"],
       "likes": 25,
       "date": "2019-01-02",
-      "price": 45
+      "price": 45,
+      "altDescription": "Photo en noir et blanc d'un homme avec de nombreuses rides sur le visage tenant une cigarette allumée à la main."
     },
 
     {
@@ -353,7 +378,8 @@
       "tags": ["travel"],
       "likes": 88,
       "date": "2019-02-03",
-      "price": 45
+      "price": 45,
+      "altDescription": "Vue de montagne avec de la végétation de partout. Une personne seule se tenant au loin, sur la roche nue de la montagne."
     },
     {
       "id": 625025343,
@@ -363,7 +389,8 @@
       "tags": ["travel"],
       "likes": 85,
       "date": "2019-04-03",
-      "price": 45
+      "price": 45,
+      "altDescription": "Vue d'une ville sur une colline aux maisons de différentes couleurs pastels au bord de l'eau."
     },
     {
       "id": 2525345343,
@@ -373,7 +400,8 @@
       "tags": ["portait"],
       "likes": 34,
       "date": "2019-04-07",
-      "price": 45
+      "price": 45,
+      "altDescription": "Photo en noir et blanc, d'une petite fille blonde allongée sur le ventre, se tenant le visage avec ses mains et faisant la moue."
     },
     {
       "id": 2523434634,
@@ -383,7 +411,8 @@
       "tags": ["portait"],
       "likes": 63,
       "date": "2019-04-07",
-      "price": 45
+      "price": 45,
+      "altDescription": "Femme noire aux cheveux courts avec des lunettes et des boucles d'oreilles en diamant, nue dérrière un fauteil rouge."
     },
     {
       "id": 398847109,
@@ -393,7 +422,8 @@
       "tags": ["portait"],
       "likes": 55,
       "date": "2019-06-20",
-      "price": 45
+      "price": 45,
+      "altDescription": "Photo en noir et blanc du visage d'une femme regardant l'objectif de haut. Elle a les yeux mi-clos, du rouge à lèvre et un grain de beauté à côté de la bouche. Le reste de la photo est noir."
     },
     {
       "id": 2534342,
@@ -403,7 +433,8 @@
       "tags": ["events"],
       "likes": 25,
       "date": "2019-06-21",
-      "price": 45
+      "price": 45,
+      "altDescription": "Table rectangulaire en bois en bord de mer avec des verres, des couverts et des plats vides. De nombreuses chaises sur les côtés."
     },
     {
       "id": 65235234,
@@ -413,7 +444,8 @@
       "tags": ["events"],
       "likes": 52,
       "date": "2019-06-25",
-      "price": 45
+      "price": 45,
+      "altDescription": "Couple, debout sur un chemin de pierre, en habits de mariés se souriant en se tenant la hanche et le front posé sur le front de l'autre. Des grands rochers couverts de mousse en fond."
     },
     {
       "id": 23523434,
@@ -423,7 +455,8 @@
       "tags": ["events"],
       "likes": 77,
       "date": "2019-06-28",
-      "price": 45
+      "price": 45,
+      "altDescription": "Couple en habits de mariés dansant et se souriant. Au milieu d'arbre recouverts de guirlandes lumineuses jaunes avec des voiles accrochés au branches et formant une voûte. "
     },
     {
       "id": 5234343,
@@ -443,7 +476,8 @@
       "tags": ["animals"],
       "likes": 59,
       "date": "2019-07-02",
-      "price": 60
+      "price": 60,
+      "altDescription": "Petit oiseau sur une branche au plumage multicolore."
     },
 
     {
@@ -454,17 +488,19 @@
       "tags": ["travel"],
       "likes": 25,
       "date": "2019-04-03",
-      "price": 60
+      "price": 60,
+      "altDescription": "Village traditionel japonais avec maisons en bois. Au fond une grande tour au style traditionnel. En premier plan deux femmes en yakata de dos."
     },
     {
       "id": 2523434,
       "photographerId": 195,
-      "title": "Senset on Canals, Venice",
+      "title": "Sunset on Canals, Venice",
       "image": "Travel_SunsetonCanals.jpg",
       "tags": ["travel"],
       "likes": 53,
       "date": "2019-05-06",
-      "price": 60
+      "price": 60,
+      "altDescription": "Canal entourés d'immeubles aux couleurs pâles. De nombreuses barques et gondoles flottent sur le canal."
     },
     {
       "id": 95293534,
@@ -474,7 +510,8 @@
       "tags": ["travel"],
       "likes": 33,
       "date": "2019-05-12",
-      "price": 60
+      "price": 60,
+      "altDescription": "Lac refletant la montagne environnant avec ses nombreux arbres verts. Au loin le reste de la montagne."
     },
     {
       "id": 356234343,
@@ -484,7 +521,8 @@
       "tags": ["travel"],
       "likes": 53,
       "date": "2019-06-20",
-      "price": 60
+      "price": 60,
+      "altDescription": "Vélo posé sur une rambarde d'escalier sur un trottoir en pavé devant un lampadaire et un immeuble aux murs blancs avec une terasse rempli de verdure."
     },
     {
       "id": 235234343,
@@ -494,7 +532,8 @@
       "tags": ["travel"],
       "likes": 63,
       "date": "2019-06-26",
-      "price": 60
+      "price": 60,
+      "altDescription": "Porte avec un arc en haut dans un mur décoré par des motifs en bas-relief et donnant sur l'extérieur."
     },
     {
       "id": 6234234343,
@@ -504,7 +543,8 @@
       "tags": ["architecture"],
       "likes": 52,
       "date": "2019-06-30",
-      "price": 60
+      "price": 60,
+      "altDescription": "Monument aux murs dorés, surmonté de coupoles avec statue en haut, la grande coupole centrale est surmontée d'une étoile à six branches. A côté d'un immeuble en briques rouges."
     },
     {
       "id": 6525666253,
@@ -514,7 +554,8 @@
       "tags": ["architecture"],
       "likes": 63,
       "date": "2019-07-20",
-      "price": 60
+      "price": 60,
+      "altDescription": "De nombreux immeubles aux murs blancs avec un toit rouge disposés à différentes hauteurs sur une colline."
     },
     {
       "id": 98252523433,
@@ -524,7 +565,8 @@
       "tags": ["architecture"],
       "likes": 88,
       "date": "2020-01-05",
-      "price": 60
+      "price": 60,
+      "altDescription": "Campanile vue de bas avec de nombreux arcs voûtés soutenus par des piliers."
     },
     {
       "id": 9259398453,
@@ -544,7 +586,8 @@
       "tags": ["architecture"],
       "likes": 54,
       "date": "2020-05-05",
-      "price": 60
+      "price": 60,
+      "altDescription": "Immeubles en coin aux murs rouges et blancs avec un toir de tuiles bleus surmonté de cheminées."
     },
 
     {
@@ -565,7 +608,8 @@
       "tags": ["sport"],
       "likes": 101,
       "date": "2018-03-05",
-      "price": 65
+      "price": 65,
+      "altDescription": "Grimpeuse cherchant son prochain point d'appuie sur une roche rouge avec de la poudre bleu clair."
     },
     {
       "id": 235343222,
@@ -575,7 +619,8 @@
       "tags": ["sport"],
       "likes": 103,
       "date": "2018-03-10",
-      "price": 70
+      "price": 70,
+      "altDescription": "Surfeur vu depuis l'intérieur de la vague. L'eau est bleu claire avec de nombreuses gouttes et entoure totalement le surfeur."
     },
     {
       "id": 7775342343,
@@ -585,7 +630,8 @@
       "tags": ["sport"],
       "likes": 77,
       "date": "2018-04-16",
-      "price": 50
+      "price": 50,
+      "altDescription": "Skieur en l'air au dessus de la neige avec les skis en croix."
     },
     {
       "id": 9253445784,
@@ -595,7 +641,8 @@
       "tags": ["sport"],
       "likes": 88,
       "date": "2018-04-22",
-      "price": 65
+      "price": 65,
+      "altDescription": "Plusieurs coureuses sur le circuit de course d'un stade."
     },
     {
       "id": 22299394,
@@ -605,7 +652,8 @@
       "tags": ["sport"],
       "likes": 95,
       "date": "2018-04-27",
-      "price": 70
+      "price": 70,
+      "altDescription": "Skateur, torse nu avec un jean noir, faisant un saut avec son skate dans un skate parc en bord de mer."
     },
     {
       "id": 3452342633,
@@ -615,7 +663,8 @@
       "tags": ["architecture"],
       "likes": 52,
       "date": "2018-05-03",
-      "price": 75
+      "price": 75,
+      "altDescription": "Vue de l'intérieure d'un bâtiments intégralement blanc de forme arrondie, aux nombreuses terrasses sous un toit recouvert de motifs en verre laissant passer une lumière blanche."
     },
     {
       "id": 939234243,
@@ -625,7 +674,8 @@
       "tags": ["architecture"],
       "likes": 55,
       "date": "2018-05-10",
-      "price": 72
+      "price": 72,
+      "altDescription": "Bâtiment aux design comportant de nombreuses courbes avec au premier plan de l'eau reflètant la scène."
     },
     {
       "id": 222959233,
@@ -635,7 +685,8 @@
       "tags": ["architecture"],
       "likes": 85,
       "date": "2018-05-15",
-      "price": 71
+      "price": 71,
+      "altDescription": "Vue vers le ciel d'un bâtiment aux formes arrondis formant un fer à cheval."
     },
     {
       "id": 965933434,
@@ -645,7 +696,8 @@
       "tags": ["architecture"],
       "likes": 66,
       "date": "2018-05-20",
-      "price": 58
+      "price": 58,
+      "altDescription": "Vue vers le ciel, avec un espace en forme de croix, d'un bâtiment aux formes droites recouverts de vitre reflétant la lumière en jaune."
     },
     {
       "id": 777723343,
@@ -655,7 +707,8 @@
       "tags": ["architecture"],
       "likes": 79,
       "date": "2018-05-21",
-      "price": 80
+      "price": 80,
+      "altDescription": "Deux parties d'un bâtiment aux design arrondi avec des ponts arrondis qui les relies."
     }
   ]
 }
