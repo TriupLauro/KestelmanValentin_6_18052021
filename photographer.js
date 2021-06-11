@@ -332,6 +332,7 @@ function setPhotographerHeader(container = document.querySelector('.photograph-h
         let currentTagElement = document.createElement('div');
         currentTagElement.classList.add('infos__tags__item');
         currentTagElement.innerText = `#${tag}`;
+        currentTagElement.dataset.tag = tag;
         const tagLabel = document.createElement('span');
         tagLabel.innerText = 'Tag';
         tagLabel.classList.add('sr-only');
@@ -340,6 +341,9 @@ function setPhotographerHeader(container = document.querySelector('.photograph-h
     }
     photographerDisplayedPortrait.setAttribute('src', `images/Sample_Photos/Photographers_ID_Photos/thumbnails/mini_${photographerObject.portrait}`);
 }
+
+// Variable used to filter tags
+let activeTag = '';
 
 // Adds all the media to the specified container using the factory
 function addMediaList(container, currentPhotographerData, mediaArray) {
@@ -621,7 +625,6 @@ window.addEventListener('load', () => {
 
         const photographersList = fishEyeData.photographers;
         const mediaList = fishEyeData.media;
-        
 
         const queryString = window.location.search;
         const currentId = new URLSearchParams(queryString).get('id');
@@ -637,6 +640,7 @@ window.addEventListener('load', () => {
         const currentPhotographerMedias = mediaList.filter(media => media.photographerId === parseInt(currentId));
 
         const sortedPhotographersMedias = rememberSort(currentPhotographerMedias);
+        let filteredMedias = sortedPhotographersMedias;
 
         const photographerHeader = document.querySelector('div.photograph-header');
         setPhotographerHeader(photographerHeader, currentPhotographerData);
@@ -655,6 +659,38 @@ window.addEventListener('load', () => {
         loader.style.display = 'none';
         mainPage.style.display = '';
         banner.focus();
+
+        // Filter photos by tag
+        const tagsArray = document.querySelectorAll('div.infos__tags__item');
+
+        tagsArray.forEach(tagElt => tagElt.addEventListener('click', filterPhotosByTag));
+
+        function filterPhotosByTag(e) {
+            let clickedTag = e.target.dataset.tag;
+            if (clickedTag === activeTag) {
+                activeTag = '';
+                //Sorting the array may be needed
+                let option = selectedSorting.innerText;
+                filteredMedias = sortingChoice(currentPhotographerMedias, option);
+            }else{
+                //Since we cut an array already sorted, no need to sort here
+                activeTag = clickedTag;
+                filteredMedias = sortedPhotographersMedias.filter(media => media.tags.includes(clickedTag));
+            }
+            removeChildTags(mediaWrapper);
+            addMediaList(mediaWrapper, currentPhotographerData, filteredMedias);
+            updateTagDisplay();
+        }
+
+        function updateTagDisplay() {
+            tagsArray.forEach((tag) => {
+                if (tag.dataset.tag === activeTag) {
+                    tag.dataset.selected = 'true';
+                }else{
+                    tag.dataset.selected = 'false';
+                }
+            });
+        }
 
         // Events relative to the sorting drop down menu
         sortBtn.addEventListener('click', displaySortMenu);
@@ -687,28 +723,8 @@ window.addEventListener('load', () => {
 
             }else{
 
-
-
                 const lastSortOption = localStorage.getItem(`photographer${currentId}SortOption`);
-                switch(lastSortOption) {
-                    case 'Popularité' :
-                        sortedArray = sortPopularity(mediaArray);
-                        selectedSorting.textContent = 'Popularité';
-
-                        break;
-
-                    case 'Date' :
-                        sortedArray = sortDate(mediaArray);
-                        selectedSorting.textContent = 'Date';
-
-                        break;
-
-                    case 'Titre' :
-                        sortedArray = sortAlphabeticalOrder(mediaArray);
-                        selectedSorting.textContent = 'Titre';
-
-                        break;
-                }
+                sortedArray = sortingChoice(mediaArray, lastSortOption);
             }
             return sortedArray;
         }
@@ -731,35 +747,41 @@ window.addEventListener('load', () => {
 
 
             closeDropDown();
-            
+
+            let newSortedList = sortingChoice(filteredMedias, option);
+
+            window.requestAnimationFrame(() => {
+                removeChildTags(mediaWrapper);
+                addMediaList(mediaWrapper, currentPhotographerData, newSortedList);
+                setTotalLikes(currentPhotographerMedias);
+            });
+        }
+
+        function sortingChoice(mediaArray, choice) {
             let newSortedList;
-            switch(option) {
+            switch(choice) {
 
                 case 'Popularité' :
-                    newSortedList = sortPopularity(currentPhotographerMedias);
+                    newSortedList = sortPopularity(mediaArray);
                     localStorage.setItem(`photographer${currentId}SortOption`, 'Popularité');
 
                     break;
 
                 case 'Date' :
-                    newSortedList = sortDate(currentPhotographerMedias);
+                    newSortedList = sortDate(mediaArray);
                     localStorage.setItem(`photographer${currentId}SortOption`, 'Date');
 
                     break;
 
 
                 case 'Titre' :
-                    newSortedList = sortAlphabeticalOrder(currentPhotographerMedias);
+                    newSortedList = sortAlphabeticalOrder(mediaArray);
                     localStorage.setItem(`photographer${currentId}SortOption`, 'Titre');
 
                     break;
 
             }
-            window.requestAnimationFrame(() => {
-                removeChildTags(mediaWrapper);
-                addMediaList(mediaWrapper, currentPhotographerData, newSortedList);
-                setTotalLikes(currentPhotographerMedias);
-            });
+            return newSortedList;
         }
 
         function updateAriaSelected(itemList, selectedItemIndex) {

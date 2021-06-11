@@ -269,7 +269,7 @@ main#content {
     cursor: pointer;
 }
 
-.photographer-page .photograph-header .infos__tags__item:hover {
+.photographer-page .photograph-header .infos__tags__item:hover, .photographer-page .photograph-header .infos__tags__item[data-selected="true"] {
     background-color: #911c1c;
     border-color: #911C1C;
     color: white;
