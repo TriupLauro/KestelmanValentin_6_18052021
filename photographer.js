@@ -14,8 +14,8 @@ const mediaWrapper = document.querySelector('div.photo-wrapper');
 const lightboxBg = document.querySelector('div.lightbox-bg');
 const lightboxClose = document.querySelector('button.lightbox__close');
 const lightboxTitle = document.querySelector('p.lightbox__title');
-const lightboxPrevious = document.querySelector('button.lightbox__previous');
-const lightboxNext = document.querySelector('button.lightbox__next');
+const lightboxPrevious = document.querySelector('a.lightbox__previous');
+const lightboxNext = document.querySelector('a.lightbox__next');
 
 lightboxClose.addEventListener('click', closeLightbox);
 
@@ -134,7 +134,7 @@ function unlockScroll() {
     document.body.style.overflow = '';
 }
 // Media classes, used by the media factory
-// Each of the two classes have theire respective appendMedia method to add the corrects DOM elements
+// Each of the two classes have their respective appendMedia method to add the corrects DOM elements
 // given a container
 
 class Photograph {
@@ -368,7 +368,8 @@ contactBtn.addEventListener('click', () => {
     lockScroll();
 });
 
-closebtn.addEventListener('click', () => {
+closebtn.addEventListener('click', (e) => {
+    e.preventDefault();
     modalbg.style.display = 'none';
     mainPage.setAttribute('aria-hidden','false');
     contactBtn.focus();
@@ -537,7 +538,7 @@ function setTotalLikes(mediaArray) {
 }
 
 function createLikeIcon() {
-    const likeIcon = document.createElement('i');
+    const likeIcon = document.createElement('span');
     likeIcon.classList.add('fas', 'fa-heart');
     likeIcon.setAttribute('aria-label','likes');
     return likeIcon
@@ -621,7 +622,7 @@ window.addEventListener('load', () => {
         const sortMenu = document.querySelector('ul.sort-dropdown');
         const sortOptions = document.querySelectorAll('li.sort-dropdown__item');
         const selectedSorting = document.querySelector('.sort-selected');
-        const sortMenuIcon = document.querySelector('.sort-container i');
+        const sortMenuIcon = document.querySelector('.sort-container .fa-chevron-down');
 
         const photographersList = fishEyeData.photographers;
         const mediaList = fishEyeData.media;
@@ -813,6 +814,7 @@ window.addEventListener('load', () => {
                     closeDropDown();
                 }
                 if (e.key === 'Enter') {
+                    e.preventDefault();
                     const focusedSortItem = document.querySelector('li.sort-dropdown__item[aria-selected=true]');
                     focusedSortItem.click();
                 }
@@ -848,6 +850,7 @@ window.addEventListener('load', () => {
                     sortMenuIcon.style.transform = '';
                     sortMenuIcon.removeEventListener('click', sortOptionSelected);
                     sortBtn.setAttribute('aria-expanded','false');
+                    sortBtn.focus();
                 }
             })
         }

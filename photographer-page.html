@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -51,8 +51,8 @@
             <div class="sorting">
                     <label for="sort" id="sort-label">Trier par</label>
                     <div  class="sort-container">
-                        <button class="sort-selected sort-button" role="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="sort-label sort" id="sort">Popularité</button><i class="fas fa-chevron-down"></i>
-                        <ul class="sort-dropdown" role="listbox" tabindex="-1" aria-labelledby="sort-button">
+                        <button class="sort-selected sort-button" role="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="sort-label sort" id="sort">Popularité</button><span class="fas fa-chevron-down"></span>
+                        <ul class="sort-dropdown" role="listbox" tabindex="-1" aria-labelledby="sort">
                             <li class="sort-dropdown__item" id="sort-option1" aria-selected="false"  role="option" data-index="0">Popularité</li>
                             <li class="sort-dropdown__item" id="sort-option2" aria-selected="false"  role="option" data-index="1">Date</li>
                             <li class="sort-dropdown__item" id="sort-option3" aria-selected="false"  role="option" data-index="2">Titre</li>
@@ -80,7 +80,7 @@
                 <label for="message" id="message-label">Votre message</label>
                 <textarea name="message" id="message" cols="30" rows="10" aria-labelledby="message-label"></textarea>
                 <input type="submit" value="Envoyer" aria-label="Envoyer">
-                <button class="close" aria-label="Fermer la modale de contact"><i class="fas fa-times" ></i></button>
+                <button class="close" aria-label="Fermer la modale de contact"><span class="fas fa-times" ></span></button>
             </form>
         </div>
     </div>
@@ -89,9 +89,9 @@
         <div class="lightbox" role="dialog" aria-label="image closeup view">
             <img src="" alt="" class="lightbox__img" tabindex="0">
             <p class="lightbox__title">Mariage à la mer</p>
-            <button class="lightbox__previous" aria-label="Previous image"><i class="fas fa-chevron-left"></i></button>
-            <button class="lightbox__next" aria-label="Next image" ><i class="fas fa-chevron-right"></i></button>
-            <button class="lightbox__close" aria-label="Close dialog" ><i class="fas fa-times"></i></button>
+            <a class="lightbox__previous" aria-label="Previous image"><span class="fas fa-chevron-left"></span></a>
+            <a class="lightbox__next" aria-label="Next image" ><span class="fas fa-chevron-right"></span></a>
+            <button class="lightbox__close" aria-label="Close dialog" ><span class="fas fa-times"></span></button>
         </div>
     </div>
     

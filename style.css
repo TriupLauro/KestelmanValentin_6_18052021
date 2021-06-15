@@ -363,7 +363,7 @@ main#content {
     font-family: 'DM Sans',sans-serif;
 }
 
-.sorting .sort-container i {
+.sorting .sort-container .fa-chevron-down {
     position: absolute;
     right: 1.5rem;
     top: 0;
@@ -476,7 +476,7 @@ main#content {
 }
 
 .photographer-page .photo-container {
-    margin: 2rem 3.125rem;
+    margin: 2rem 3rem;
 }
 
 .photographer-page .photo-container img, .photographer-page .photo-container .play-btn, .photographer-page .photo-container video{
@@ -487,19 +487,6 @@ main#content {
     cursor: pointer;
 }
 
-.photographer-page .photo-container .play-btn {
-    background-color:black;
-    display: flex;
-    margin-bottom: 0.3rem;
-}
-
-.photographer-page .photo-container .play-btn i {
-    display: block;
-    color: white;
-    font-size: 10rem;
-    width: 10rem;
-    margin: auto;
-}
 .photographer-page .photo-description {
     color: #901C1C;
     display: flex;
@@ -509,7 +496,7 @@ main#content {
     margin-left: auto;
 }
 
-.photographer-page .photo-likes i {
+.photographer-page .photo-likes .fa-heart {
     cursor: pointer;
 }
 
@@ -636,10 +623,8 @@ form.modal {
     background-color: #DB8876;
     width: 42rem;
     height: 57rem;
-    
     position: relative;
     border-radius: 0.3rem;
-
     animation: fade-in-top-form 1s backwards ease-in-out;
 }
 
@@ -673,11 +658,9 @@ form.modal label {
 form.modal input {
     width: 37.6rem;
     height: 4.25rem;
-    
     margin: 0 auto;
     font-size: 2.25rem;
     border-radius: 0.3rem;
-
     padding-left: 1rem;
 }
 
@@ -704,11 +687,6 @@ form.modal input[type="submit"]{
     font-weight: 700;
     font-size: 1.1rem;
 }
-
-/* form.modal input[type="submit"]:hover {
-    background-color: #DB8876;
-    color: black;
-} */
 
 @media all and (max-width: 700px) {
     
