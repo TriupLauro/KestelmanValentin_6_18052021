@@ -62,9 +62,10 @@ function goToMediaIndex(index) {
         const newVideoElt = document.createElement('video');
         const newVideoSourceElt = document.createElement('source')
         newVideoSourceElt.setAttribute('src',newElt.firstChild.src);
-        newVideoElt.classList.add('lightbox__img');
+        newVideoElt.classList.add('lightbox__img','pointer');
         newVideoElt.appendChild(newVideoSourceElt);
-        newVideoElt.toggleAttribute('controls');
+        //newVideoElt.toggleAttribute('controls');
+        newVideoElt.addEventListener('click', toggleVideoPlay);
         lightbox.removeChild(displayedMedia);
         lightbox.insertBefore(newVideoElt, lightbox.firstChild);
         lightbox.dataset.index = index;
@@ -122,6 +123,17 @@ document.addEventListener('keydown', (e) => {
         }
         if (e.key === 'Escape') {
             closeLightbox();
+        }
+        //Toggle the play state of the video element
+        const displayedMedia = document.querySelector('.lightbox__img');
+        if (displayedMedia.tagName === 'VIDEO') {
+            if (e.key === 'Enter' || e.key === ' ') {
+                if (displayedMedia.paused) {
+                    displayedMedia.play();
+                }else{
+                    displayedMedia.pause();
+                }
+            }
         }
     }
 });
@@ -246,8 +258,8 @@ class Video {
             
             lightbox.removeChild(fullImage);
             const videoMedia = document.createElement('video');
-            videoMedia.classList.add('lightbox__img');
-            videoMedia.toggleAttribute('controls');
+            videoMedia.classList.add('lightbox__img','pointer');
+            //videoMedia.toggleAttribute('controls');
             lightbox.insertBefore(videoMedia, lightboxTitle);
             
             const videoSource = document.createElement('source');
@@ -258,9 +270,17 @@ class Video {
             lightbox.dataset.index = index;
             lightboxClose.focus();
             lockScroll();
-
+            videoMedia.addEventListener('click',toggleVideoPlay);
 
         });
+    }
+}
+
+function toggleVideoPlay(e) {
+    if (e.target.paused) {
+        e.target.play();
+    }else{
+        e.target.pause();
     }
 }
 

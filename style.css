@@ -851,3 +851,7 @@ form.modal input[type="submit"]{
     width: 0;
     overflow: hidden;
 }
+
+.pointer {
+    cursor: pointer;
+}
