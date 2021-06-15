@@ -223,11 +223,12 @@ main#content {
 .photographer-page header a img {
     width: 100%;
     height: 100%;
+    margin-left: 6.25rem;
 }
 
-.photographer-page {
+/*.photographer-page {
     margin: 0 6.25rem 2rem;
-}
+}*/
 
 .photographer-page .photograph-header {
     display : flex;
@@ -235,6 +236,7 @@ main#content {
     justify-content: flex-start;
     background-color: #fafafa;
     border-radius: 0.3rem;
+    margin: 0 6.25rem;
 }
 
 .photographer-page .photograph-header .infos h1 {
@@ -322,6 +324,7 @@ main#content {
 .sorting {
     display: flex;
     margin-top: 1.2rem;
+    margin-left: 6.25rem;
 }
 
 .sorting .sort-container {
@@ -458,11 +461,12 @@ main#content {
 .photographer-page .photo-wrapper {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: flex-start;
+    margin-left: 3.125rem;
 }
 
 .photographer-page .photo-container {
-    margin: 2rem 0;
+    margin: 2rem 3.125rem;
 }
 
 .photographer-page .photo-container img, .photographer-page .photo-container .play-btn, .photographer-page .photo-container video{
@@ -500,6 +504,13 @@ main#content {
 }
 
 /* Responsive for photographer's page */
+@media all and (max-width: 1405px) {
+    .photographer-page .photo-wrapper {
+        justify-content: center;
+    }
+
+}
+
 @media all and (max-width: 1100px) {
     .photographer-page {
         margin: 0 1.25rem 5rem;
@@ -561,17 +572,17 @@ main#content {
     }
 }
 
-@media all and (max-width: 740px) {
+@media all and (max-width: 993px) {
     .photographer-page .photograph-header {
-        margin-bottom: 2.8rem;
+        margin: 0 0 2.8rem 0;
     }
 
     .photographer-page .photo-wrapper {
-        justify-content: center;
+        margin-left: 0;
     }
 
     .photographer-page .photo-container {
-        margin: 0;
+        margin: 0 3.125rem;
     }
 
     .photographer-page .photo-description {
