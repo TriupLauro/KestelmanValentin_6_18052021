@@ -136,6 +136,13 @@ document.addEventListener('keydown', (e) => {
             }
         }
     }
+    //Let enter the lightbox with the keyboard
+    const focusedElement = document.activeElement;
+    if (focusedElement.classList.contains('js-thumbnail')) {
+        if (e.key === 'Enter') {
+            focusedElement.click();
+        }
+    }
 });
 
 function lockScroll() {
@@ -171,7 +178,7 @@ class Photograph {
         imageElt.setAttribute('src', this.thumbnailPath);
         imageElt.setAttribute('alt', this.alt);
         imageElt.classList.add('js-thumbnail');
-        imageElt.setAttribute('tabindex','-1');
+        imageElt.setAttribute('tabindex','0');
         mediaContainerElt.insertBefore(imageElt,mediaContainerElt.firstChild);
         mediaContainerElt.dataset.index = index;
         mediaContainerElt.dataset.title = this.title;
@@ -180,15 +187,9 @@ class Photograph {
 
         container.appendChild(mediaContainerElt);
         imageElt.addEventListener('click', (e) => {
-
-
             const lastImage = document.querySelector('.lightbox__img');
             const lightbox = document.querySelector('div.lightbox')
             const mediaSrc = e.target.dataset.fullPath;
-            
-
-
-
             
             const imageElt = document.createElement('img');
             imageElt.setAttribute('src', mediaSrc);
@@ -198,15 +199,12 @@ class Photograph {
             lightbox.removeChild(lastImage);
             
             lightbox.dataset.index = index;
-
             lightbox.insertBefore(imageElt, lightbox.firstChild);
 
-            
-
             lightboxTitle.innerText = this.title;
-            mainPage.setAttribute('aria-hidden', 'true');
             lightboxBg.style.display = 'block';
             imageElt.focus();
+            mainPage.setAttribute('aria-hidden', 'true');
             lockScroll();
 
         });
@@ -236,7 +234,7 @@ class Video {
         const videoElt = document.createElement('video');
         const videoSourceElt = document.createElement('source');
         videoSourceElt.setAttribute('src', this.fullPath);
-        videoElt.setAttribute('tabindex','-1');
+        videoElt.setAttribute('tabindex','0');
         videoElt.classList.add('js-thumbnail');
         videoElt.appendChild(videoSourceElt);
 
@@ -253,9 +251,6 @@ class Video {
             lightboxBg.style.display = 'block';
             const fullImage = document.querySelector('.lightbox__img');
             
-            
-
-            
             lightbox.removeChild(fullImage);
             const videoMedia = document.createElement('video');
             videoMedia.classList.add('lightbox__img','pointer');
@@ -268,7 +263,9 @@ class Video {
             
             lightboxTitle.innerText = this.title;
             lightbox.dataset.index = index;
-            lightboxClose.focus();
+            videoMedia.focus();
+            mainPage.setAttribute('aria-hidden','true');
+
             lockScroll();
             videoMedia.addEventListener('click',toggleVideoPlay);
 
@@ -636,7 +633,7 @@ window.addEventListener('load', () => {
     readJsonData()
     .then((fishEyeData) => {
         const loader = document.querySelector('div.loader');
-        const banner = document.querySelector('a#banner');
+        const header = document.querySelector('div.photograph-header');
         // Dom elements from the sorting menu
         const sortBtn = document.querySelector('.sort-button');
         const sortMenu = document.querySelector('ul.sort-dropdown');
@@ -679,7 +676,7 @@ window.addEventListener('load', () => {
 
         loader.style.display = 'none';
         mainPage.style.display = '';
-        banner.focus();
+        header.focus();
 
         // Filter photos by tag
         const tagsArray = document.querySelectorAll('div.infos__tags__item');
