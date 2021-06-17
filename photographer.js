@@ -475,21 +475,14 @@ let scrollingHappens;
 
 window.addEventListener('scroll', () => {
     if(window.innerWidth <= 1100) {
-        
-        
-
         window.clearTimeout(scrollingHappens);
-        window.requestAnimationFrame(hideContactBtn);
-
+        hideContactBtn();
         scrollingHappens = setTimeout(showContactBtn, 500);
-        
     }
 })
 
 function hideContactBtn() {
-    
     contactBtn.style.transform = 'translate(-50%, 200%)'
-    
 }
 
 function showContactBtn () {
@@ -669,10 +662,8 @@ window.addEventListener('load', () => {
         const contactName = document.querySelector('span.modal-name');
         contactName.textContent = currentPhotographerData.name;
 
-        window.requestAnimationFrame(() => {
-            removeChildTags(mediaWrapper);
-            addMediaList(mediaWrapper, currentPhotographerData, sortedPhotographersMedias);
-        });
+        removeChildTags(mediaWrapper);
+        addMediaList(mediaWrapper, currentPhotographerData, sortedPhotographersMedias);
 
         loader.style.display = 'none';
         mainPage.style.display = '';
@@ -735,12 +726,9 @@ window.addEventListener('load', () => {
         function rememberSort(mediaArray) {
             let sortedArray;
             if (!localStorage.getItem(`photographer${currentId}SortOption`)) {
-            
                 localStorage.setItem(`photographer${currentId}SortOption`, 'Popularité');
                 sortedArray = sortPopularity(mediaArray);
-
             }else{
-
                 const lastSortOption = localStorage.getItem(`photographer${currentId}SortOption`);
                 sortedArray = sortingChoice(mediaArray, lastSortOption);
             }
@@ -754,25 +742,19 @@ window.addEventListener('load', () => {
             let option;
             
             if (e.target.tagName === 'LI') {
-                
                 option = e.target.textContent;
             }else{
-                
                 option = 'Popularité';
             }
-            
-            selectedSorting.textContent = option;
-
 
             closeDropDown();
 
             let newSortedList = sortingChoice(filteredMedias, option);
 
-            window.requestAnimationFrame(() => {
-                removeChildTags(mediaWrapper);
-                addMediaList(mediaWrapper, currentPhotographerData, newSortedList);
-                setTotalLikes(currentPhotographerMedias);
-            });
+            removeChildTags(mediaWrapper);
+            addMediaList(mediaWrapper, currentPhotographerData, newSortedList);
+            setTotalLikes(currentPhotographerMedias);
+
         }
 
         function sortingChoice(mediaArray, choice) {
@@ -799,6 +781,7 @@ window.addEventListener('load', () => {
                     break;
 
             }
+            selectedSorting.textContent = choice;
             return newSortedList;
         }
 
@@ -860,16 +843,14 @@ window.addEventListener('load', () => {
         window.addEventListener('click', closeDropDown);
 
         function closeDropDown() {
-            window.requestAnimationFrame(()=> {
-                if (sortMenu.style.display === 'block') {
-                    sortMenu.style.display = '';
-                    sortMenu.removeAttribute('aria-activedescendant');
-                    sortMenuIcon.style.transform = '';
-                    sortMenuIcon.removeEventListener('click', sortOptionSelected);
-                    sortBtn.setAttribute('aria-expanded','false');
-                    sortBtn.focus();
-                }
-            })
+            if (sortMenu.style.display === 'block') {
+                sortMenu.style.display = '';
+                sortMenu.removeAttribute('aria-activedescendant');
+                sortMenuIcon.style.transform = '';
+                sortMenuIcon.removeEventListener('click', sortOptionSelected);
+                sortBtn.setAttribute('aria-expanded','false');
+                sortBtn.focus();
+            }
         }
 
         
