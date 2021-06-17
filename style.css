@@ -473,6 +473,7 @@ main#content {
     flex-wrap: wrap;
     justify-content: flex-start;
     margin-left: 3.125rem;
+    margin-bottom: 1.5rem;
 }
 
 .photographer-page .photo-container {
