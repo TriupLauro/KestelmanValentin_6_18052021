@@ -856,3 +856,8 @@ form.modal input[type="submit"]{
 .pointer {
     cursor: pointer;
 }
+
+/* Sorting challenge */
+.photo-container {
+    transition: transform 0.3s;
+}

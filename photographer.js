@@ -64,7 +64,6 @@ function goToMediaIndex(index) {
         newVideoSourceElt.setAttribute('src',newElt.firstChild.src);
         newVideoElt.classList.add('lightbox__img','pointer');
         newVideoElt.appendChild(newVideoSourceElt);
-        //newVideoElt.toggleAttribute('controls');
         newVideoElt.addEventListener('click', toggleVideoPlay);
         lightbox.removeChild(displayedMedia);
         lightbox.insertBefore(newVideoElt, lightbox.firstChild);
@@ -167,6 +166,7 @@ class Photograph {
         this.price = photoObject.price;
         this.title = photoObject.title;
         this.alt = photoObject.altDescription;
+        //this.localLiked = localLiked;
     }
     appendMedia(container, index) {
         const mediaContainerElt = createMediaFrame(this.title, this.likes);
@@ -179,12 +179,10 @@ class Photograph {
         imageElt.setAttribute('alt', this.alt);
         imageElt.classList.add('js-thumbnail');
         imageElt.setAttribute('tabindex','0');
-        mediaContainerElt.insertBefore(imageElt,mediaContainerElt.firstChild);
+        mediaContainerElt.insertBefore(imageElt, mediaContainerElt.firstChild);
         mediaContainerElt.dataset.index = index;
         mediaContainerElt.dataset.title = this.title;
-
-        
-
+        mediaContainerElt.dataset.mediaId = this.id;
         container.appendChild(mediaContainerElt);
         imageElt.addEventListener('click', (e) => {
             const lastImage = document.querySelector('.lightbox__img');
@@ -241,8 +239,9 @@ class Video {
         mediaContainerElt.insertBefore(videoElt, mediaContainerElt.firstChild);
         mediaContainerElt.dataset.index = index;
         mediaContainerElt.dataset.title = this.title;
+        mediaContainerElt.dataset.mediaId = this.id;
 
-        
+
         container.appendChild(mediaContainerElt);
         
         videoElt.addEventListener('click', () => {
@@ -371,6 +370,7 @@ function addMediaList(container, currentPhotographerData, mediaArray) {
         mediaObject.appendMedia(container, currentMediaIndex);
     }
 }
+
 
 function setPhotographerPrice (container = document.querySelector('div.stats__price'), photographerObject) {
     container.innerText = `${photographerObject.price}€ / jour`;
@@ -556,15 +556,21 @@ function createLikeIcon() {
 
 // Incrementing likes
 
+let filteredMedias;
+
 function makeLikeIconClickable(likeIcon) {
     likeIcon.addEventListener('click', addOneLike);
 }
 
+
 function addOneLike(e) {
     e.stopPropagation();
     let likes = e.target.dataset.likesNumber;
-
+    const likedMediaContainer = e.target.parentElement.parentElement.parentElement;
+    // Function for the challenge
+    checkDraw(likes, likedMediaContainer);
     likes++;
+
     const likesContainer = e.target.parentElement;
     likesContainer.textContent = `${likes} `;
     const likeIcon = createLikeIcon();
@@ -579,8 +585,8 @@ function addOneLike(e) {
 function removeOneLike(e) {
     e.stopPropagation();
     let likes = e.target.dataset.likesNumber;
+    //const likedMediaContainer = e.target.parentElement.parentElement.parentElement;
     likes--;
-
     const likesContainer = e.target.parentElement;
     likesContainer.textContent = `${likes} `;
     const likeIcon = createLikeIcon();
@@ -590,8 +596,8 @@ function removeOneLike(e) {
 
     likesContainer.appendChild(likeIcon);
     updateTotalLikes(-1);
-
 }
+
 
 function updateTotalLikes(difference) {
     const likesElt = document.querySelector('div.stats__likes');
@@ -600,8 +606,71 @@ function updateTotalLikes(difference) {
 
     const likeIcon = createLikeIcon();
     likesElt.innerText = `${totalLikes} `;
-    likesElt.dataset.totalLikes = totalLikes;
+    likesElt.dataset.totalLikes = totalLikes.toString(10);
     likesElt.appendChild(likeIcon);
+}
+
+// When one media becomes more popular after incrementing its likes
+
+function checkDraw(likes, clickedMedia) {
+    const drawsList = filteredMedias.filter(media => media.likes === parseInt(likes,10));
+    if (drawsList.length > 1) {
+        animateDraw(drawsList, clickedMedia);
+    }
+}
+
+function animateDraw(drawMediaArray, clickedMedia) {
+    const positionArray = [];
+    let clickedMediaCoords;
+    const drawMediaArrayElt = drawMediaArray.map(media => document.querySelector(`div.photo-container[data-media-id="${media.id}"]`));
+    drawMediaArrayElt.forEach(mediaElt => {
+        const mediaEltCoords = getPosition(mediaElt);
+        positionArray.push(mediaEltCoords);
+        if (mediaElt === clickedMedia) {
+            mediaElt.style.transform = 'scale(1.25)'
+            clickedMediaCoords = mediaEltCoords;
+        }else{
+            mediaElt.style.transform = 'scale(0.8)';
+        }
+    });
+    const firstPosition = positionArray[0];
+    const distanceFromFirst = subtractCoords(firstPosition, clickedMediaCoords);
+    setTimeout(addTranslation, 300, clickedMedia, distanceFromFirst.x*0.8, distanceFromFirst.y*0.8);
+    setTimeout(endAnimationDraw, 800, clickedMedia, distanceFromFirst.x, distanceFromFirst.y);
+    drawMediaArrayElt.forEach((mediaElt, index) => {
+        if (mediaElt !== clickedMedia) {
+            const distanceToTarget = subtractCoords(positionArray[index+1], positionArray[index]);
+            console.log(distanceToTarget);
+            setTimeout(addTranslation, 300, mediaElt, distanceToTarget.x*1.25, distanceToTarget.y*1.25);
+            setTimeout(endAnimationDraw, 800, mediaElt, distanceToTarget.x, distanceToTarget.y);
+        }
+    });
+    //setTimeout(popularityUpdateDom, 3600);
+}
+
+function getPosition(elt) {
+    const boundingObject = elt.getBoundingClientRect() ;
+    return {
+        x : boundingObject.x,
+        y : boundingObject.y
+    }
+}
+
+function subtractCoords(coords1, coords2) {
+    let difference = {};
+    // Fix if both coordinates are the same
+    if (coords1 === undefined) return {x:0,y:0}
+    const coordKeys = Object.keys(coords1);
+    coordKeys.forEach(key => difference[key] = coords1[key] - coords2[key]);
+    return difference;
+}
+
+function addTranslation(elt,x,y) {
+    elt.style.transform += ` translate(${x}px,${y}px)`;
+}
+
+function endAnimationDraw(mediaAnimated,x,y) {
+    mediaAnimated.style.transform = `translate(${x}px,${y}px)`;
 }
 
 function preventClickOnParent(elt) {
@@ -651,7 +720,7 @@ window.addEventListener('load', () => {
         const currentPhotographerMedias = mediaList.filter(media => media.photographerId === parseInt(currentId));
 
         const sortedPhotographersMedias = rememberSort(currentPhotographerMedias);
-        let filteredMedias = sortedPhotographersMedias;
+        filteredMedias = sortedPhotographersMedias;
 
         const photographerHeader = document.querySelector('div.photograph-header');
         setPhotographerHeader(photographerHeader, currentPhotographerData);
