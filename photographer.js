@@ -38,11 +38,9 @@ function goToMediaIndex(index) {
     const newElt = document.querySelector(`.photo-container[data-index='${index}'] > .js-thumbnail`);
     
     const newMediaHolderElt = document.querySelector(`.photo-container[data-index='${index}']`);
-    
 
-    const newTitleText = newMediaHolderElt.dataset.title;
-    
-    lightboxTitle.innerText = newTitleText;
+
+    lightboxTitle.innerText = newMediaHolderElt.dataset.title;
 
     if (newElt.tagName === 'IMG') {
         
@@ -166,10 +164,10 @@ class Photograph {
         this.price = photoObject.price;
         this.title = photoObject.title;
         this.alt = photoObject.altDescription;
-        //this.localLiked = localLiked;
+        this.localLiked = photoObject.localLiked;
     }
     appendMedia(container, index) {
-        const mediaContainerElt = createMediaFrame(this.title, this.likes);
+        const mediaContainerElt = createMediaFrame(this.title, this.likes, this.localLiked);
 
         const imageElt = document.createElement('img');
         this.fullPath = `images/Sample_Photos/${this.folderName}/${this.fileName}`;
@@ -221,10 +219,11 @@ class Video {
         this.fileName = videoObject.video;
         this.price = videoObject.price;
         this.title = videoObject.title;
+        this.localLiked = videoObject.localLiked;
     }
 
     appendMedia(container, index) {
-        const mediaContainerElt = createMediaFrame(this.title, this.likes);
+        const mediaContainerElt = createMediaFrame(this.title, this.likes, this.localLiked);
 
         this.fullPath = `images/Sample_Photos/${this.folderName}/${this.fileName}`
         mediaContainerElt.dataset.src = this.fullPath;
@@ -282,7 +281,7 @@ function toggleVideoPlay(e) {
 
 // Create, without adding it to the page, the frame with the titles and the likes
 // Ready but without the media itself
-function createMediaFrame(title, likes) {
+function createMediaFrame(title, likes, localLiked) {
     const mediaFrameElt = document.createElement('div');
     mediaFrameElt.classList.add('photo-container');
 
@@ -295,7 +294,7 @@ function createMediaFrame(title, likes) {
     const likeIconElt = createLikeIcon();
     likeIconElt.classList.add('js-clickable-like');
     likeIconElt.dataset.likesNumber = likes;
-    makeLikeIconClickable(likeIconElt);
+    makeLikeIconClickable(likeIconElt, localLiked);
     preventClickOnParent(mediaDescriptionElt);
 
     mediaFrameElt.appendChild(mediaDescriptionElt);
@@ -508,9 +507,7 @@ function sortAlphabeticalOrder(mediaArray) {
         return 0;
     });
     
-    let sortedObjectArray = sortedList.map((mediaItem) => mediaArray[mediaItem.index]);
-    
-    return sortedObjectArray;
+    return sortedList.map((mediaItem) => mediaArray[mediaItem.index]);
 }
 
 function sortDate(mediaArray) {
@@ -523,8 +520,7 @@ function sortDate(mediaArray) {
     
     let sortedList = dateArrayWithIndex.sort((a,b) => b.date - a.date);
     
-    let sortedObjectArray = sortedList.map((mediaItem) => mediaArray[mediaItem.index]);
-    return sortedObjectArray;
+    return sortedList.map((mediaItem) => mediaArray[mediaItem.index]);
 }
 
 function sortPopularity(mediaArray) {
@@ -558,26 +554,35 @@ function createLikeIcon() {
 
 let filteredMedias;
 
-function makeLikeIconClickable(likeIcon) {
-    likeIcon.addEventListener('click', addOneLike);
+function makeLikeIconClickable(likeIcon, localLiked) {
+    if (!localLiked) {
+        likeIcon.addEventListener('click', addOneLike);
+    }else{
+        likeIcon.addEventListener('click', removeOneLike);
+    }
 }
 
+function updateMediaObject(mediaObject, likes, localLiked) {
+    mediaObject.likes = likes;
+    mediaObject.localLiked = localLiked;
+}
 
 function addOneLike(e) {
     e.stopPropagation();
     let likes = e.target.dataset.likesNumber;
     const likedMediaContainer = e.target.parentElement.parentElement.parentElement;
+    const currentSortOption = document.querySelector('.sort-selected').textContent;
     // Function for the challenge
-    checkDraw(likes, likedMediaContainer);
+    if (currentSortOption === 'Popularité') checkDrawLiking(likes, likedMediaContainer);
     likes++;
-
+    const likedMediaObject = filteredMedias.find(media => media.id === parseInt(likedMediaContainer.dataset.mediaId,10));
+    updateMediaObject(likedMediaObject, likes, true);
     const likesContainer = e.target.parentElement;
     likesContainer.textContent = `${likes} `;
     const likeIcon = createLikeIcon();
     likeIcon.dataset.likesNumber = likes;
     likeIcon.dataset.localLiked = "true";
     likeIcon.addEventListener('click', removeOneLike);
-
     likesContainer.appendChild(likeIcon);
     updateTotalLikes(1);
 }
@@ -585,8 +590,12 @@ function addOneLike(e) {
 function removeOneLike(e) {
     e.stopPropagation();
     let likes = e.target.dataset.likesNumber;
-    //const likedMediaContainer = e.target.parentElement.parentElement.parentElement;
+    const unlikedMediaContainer = e.target.parentElement.parentElement.parentElement;
+    const currentSortOption = document.querySelector('.sort-selected').textContent;
+    if (currentSortOption === 'Popularité') checkDrawUnliking(likes, unlikedMediaContainer);
     likes--;
+    const unlikedMediaObject = filteredMedias.find(media => media.id === parseInt(unlikedMediaContainer.dataset.mediaId,10));
+    updateMediaObject(unlikedMediaObject, likes, false);
     const likesContainer = e.target.parentElement;
     likesContainer.textContent = `${likes} `;
     const likeIcon = createLikeIcon();
@@ -598,6 +607,11 @@ function removeOneLike(e) {
     updateTotalLikes(-1);
 }
 
+function preventClickOnParent(elt) {
+    elt.addEventListener('click', (e) => {
+        e.stopPropagation();
+    })
+}
 
 function updateTotalLikes(difference) {
     const likesElt = document.querySelector('div.stats__likes');
@@ -612,40 +626,37 @@ function updateTotalLikes(difference) {
 
 // When one media becomes more popular after incrementing its likes
 
-function checkDraw(likes, clickedMedia) {
+function checkDrawLiking(likes, clickedMedia) {
     const drawsList = filteredMedias.filter(media => media.likes === parseInt(likes,10));
     if (drawsList.length > 1) {
-        animateDraw(drawsList, clickedMedia);
+        getReadyToAnimateDrawLiking(drawsList, clickedMedia);
     }
 }
 
-function animateDraw(drawMediaArray, clickedMedia) {
-    const positionArray = [];
-    let clickedMediaCoords;
+let movingHappens;
+
+function getReadyToAnimateDrawLiking(drawMediaArray, clickedMedia,
+                                     growFactor = 1.25, totalTime = 800) {
     const drawMediaArrayElt = drawMediaArray.map(media => document.querySelector(`div.photo-container[data-media-id="${media.id}"]`));
-    drawMediaArrayElt.forEach(mediaElt => {
-        const mediaEltCoords = getPosition(mediaElt);
-        positionArray.push(mediaEltCoords);
-        if (mediaElt === clickedMedia) {
-            mediaElt.style.transform = 'scale(1.25)'
-            clickedMediaCoords = mediaEltCoords;
-        }else{
-            mediaElt.style.transform = 'scale(0.8)';
-        }
-    });
+    const positionArray = getPositionArray(drawMediaArrayElt);
     const firstPosition = positionArray[0];
+    const clickedMediaCoords = getPosition(clickedMedia);
     const distanceFromFirst = subtractCoords(firstPosition, clickedMediaCoords);
-    setTimeout(addTranslation, 300, clickedMedia, distanceFromFirst.x*0.8, distanceFromFirst.y*0.8);
-    setTimeout(endAnimationDraw, 800, clickedMedia, distanceFromFirst.x, distanceFromFirst.y);
-    drawMediaArrayElt.forEach((mediaElt, index) => {
-        if (mediaElt !== clickedMedia) {
-            const distanceToTarget = subtractCoords(positionArray[index+1], positionArray[index]);
-            console.log(distanceToTarget);
-            setTimeout(addTranslation, 300, mediaElt, distanceToTarget.x*1.25, distanceToTarget.y*1.25);
-            setTimeout(endAnimationDraw, 800, mediaElt, distanceToTarget.x, distanceToTarget.y);
-        }
+    if (distanceFromFirst.x === 0 && distanceFromFirst.y === 0) return false;
+
+    AnimateDecideBetweenLike(drawMediaArrayElt,clickedMedia,positionArray,distanceFromFirst,
+        growFactor, totalTime);
+    const photographerId = getPhotographerId();
+    window.clearTimeout(movingHappens);
+    reloadPhotographerData(photographerId).then(data => {
+        movingHappens = setTimeout(updateDOMAfterAnimateDraw, totalTime+300, data);
     });
-    //setTimeout(popularityUpdateDom, 3600);
+}
+
+function updateDOMAfterAnimateDraw(photographerData) {
+    filteredMedias = sortPopularity(filteredMedias);
+    removeChildTags(mediaWrapper);
+    addMediaList(mediaWrapper, photographerData, filteredMedias);
 }
 
 function getPosition(elt) {
@@ -656,8 +667,17 @@ function getPosition(elt) {
     }
 }
 
+function getPositionArray(mediaEltArray) {
+    const positionArray = [];
+    mediaEltArray.forEach(mediaElt => {
+        const mediaEltCoords = getPosition(mediaElt);
+        positionArray.push(mediaEltCoords);
+    });
+    return positionArray;
+}
+
 function subtractCoords(coords1, coords2) {
-    let difference = {};
+    const difference = {};
     // Fix if both coordinates are the same
     if (coords1 === undefined) return {x:0,y:0}
     const coordKeys = Object.keys(coords1);
@@ -669,14 +689,122 @@ function addTranslation(elt,x,y) {
     elt.style.transform += ` translate(${x}px,${y}px)`;
 }
 
+function AnimateDecideBetweenLike(
+    mediaEltArray, clickedMediaElt, positionArray, distanceForClickedElt,
+    growFactor = 1.25, totalTime = 800
+) {
+    const shrinkFactor = 1/growFactor;
+    const step2Time = totalTime*0.4;
+    const indexOfLikedElt = mediaEltArray.indexOf(clickedMediaElt);
+    mediaEltArray.forEach((elt,index) => {
+        if (elt === clickedMediaElt) {
+            elt.style.transform = `scale(${growFactor})`;
+            setTimeout(addTranslation, step2Time, elt, distanceForClickedElt.x*shrinkFactor, distanceForClickedElt.y*shrinkFactor);
+            setTimeout(endAnimationDraw, totalTime, elt, distanceForClickedElt.x, distanceForClickedElt.y);
+        }else{
+            if (index < indexOfLikedElt) {
+                elt.style.transform = `scale(${shrinkFactor})`;
+                const distanceToTarget = subtractCoords(positionArray[index+1], positionArray[index]);
+                setTimeout(addTranslation, step2Time, elt, distanceToTarget.x*growFactor, distanceToTarget.y*growFactor);
+                setTimeout(endAnimationDraw, totalTime, elt, distanceToTarget.x, distanceToTarget.y);
+            }
+        }
+    })
+} 
+
+// Animate the going back after unliking
+
+function checkDrawUnliking(likes, clickedMedia) {
+    const drawsList = filteredMedias.filter(media => media.likes === parseInt(likes,10));
+    if (drawsList.length > 1) {
+        getReadyToAnimateDrawUnliking(drawsList,clickedMedia);
+    }
+}
+
+function getReadyToAnimateDrawUnliking(drawMediaArray, clickedMedia,
+                                     growFactor = 1.25, totalTime = 800) {
+    const drawMediaArrayElt = drawMediaArray.map(media => document.querySelector(`div.photo-container[data-media-id="${media.id}"]`));
+    const positionArray = getPositionArray(drawMediaArrayElt);
+    const lastPosition = positionArray[positionArray.length - 1];
+    const clickedMediaCoords = getPosition(clickedMedia);
+    const distanceFromLast = subtractCoords(lastPosition, clickedMediaCoords);
+    if (distanceFromLast.x === 0 && distanceFromLast.y === 0) return false;
+
+    AnimateDecideBetweenUnlike(drawMediaArrayElt,clickedMedia,positionArray,distanceFromLast,
+        growFactor, totalTime);
+    const photographerId = getPhotographerId();
+    window.clearTimeout(movingHappens);
+    reloadPhotographerData(photographerId).then(data => {
+        movingHappens = setTimeout(updateDOMAfterAnimateDraw, totalTime+300, data);
+    });
+}
+
+function AnimateDecideBetweenUnlike(
+    mediaEltArray, clickedMediaElt, positionArray, distanceForClickedElt,
+    growFactor = 1.25, totalTime = 800
+) {
+    const shrinkFactor = 1/growFactor;
+    const step2Time = totalTime*0.4;
+    const indexOfLikedElt = mediaEltArray.indexOf(clickedMediaElt);
+    mediaEltArray.forEach((elt,index) => {
+        if (elt === clickedMediaElt) {
+            elt.style.transform = `scale(${shrinkFactor})`;
+            setTimeout(addTranslation, step2Time, elt, distanceForClickedElt.x*growFactor, distanceForClickedElt.y*growFactor);
+            setTimeout(endAnimationDraw, totalTime, elt, distanceForClickedElt.x, distanceForClickedElt.y);
+        }else{
+            if (index > indexOfLikedElt) {
+                elt.style.transform = `scale(${growFactor})`;
+                const distanceToTarget = subtractCoords(positionArray[index - 1], positionArray[index]);
+                setTimeout(addTranslation, step2Time, elt, distanceToTarget.x*shrinkFactor, distanceToTarget.y*shrinkFactor);
+                setTimeout(endAnimationDraw, totalTime, elt, distanceToTarget.x, distanceToTarget.y);
+            }
+        }
+    })
+}
+
 function endAnimationDraw(mediaAnimated,x,y) {
     mediaAnimated.style.transform = `translate(${x}px,${y}px)`;
 }
 
-function preventClickOnParent(elt) {
-    elt.addEventListener('click', (e) => {
-        e.stopPropagation();
-    })
+function getPhotographerId() {
+    const queryString = window.location.search;
+    return new URLSearchParams(queryString).get('id');
+}
+
+function reloadPhotographerData(photographerId) {
+    return readJsonData()
+        .then((fishEyeData) => {
+            return fishEyeData.photographers.find(photographer => photographer.id === parseInt(photographerId,10));
+        })
+}
+
+function sortingChoice(mediaArray, choice, photographerId) {
+    let newSortedList;
+    switch(choice) {
+
+        case 'Popularité' :
+            newSortedList = sortPopularity(mediaArray);
+            localStorage.setItem(`photographer${photographerId}SortOption`, 'Popularité');
+
+            break;
+
+        case 'Date' :
+            newSortedList = sortDate(mediaArray);
+            localStorage.setItem(`photographer${photographerId}SortOption`, 'Date');
+
+            break;
+
+
+        case 'Titre' :
+            newSortedList = sortAlphabeticalOrder(mediaArray);
+            localStorage.setItem(`photographer${photographerId}SortOption`, 'Titre');
+
+            break;
+
+    }
+    const selectedSorting = document.querySelector('.sort-selected');
+    selectedSorting.textContent = choice;
+    return newSortedList;
 }
 
 // This function returns a promise, so we need to use .then after we call it
@@ -706,20 +834,20 @@ window.addEventListener('load', () => {
         const photographersList = fishEyeData.photographers;
         const mediaList = fishEyeData.media;
 
-        const queryString = window.location.search;
-        const currentId = new URLSearchParams(queryString).get('id');
-        
+
+        const currentId = getPhotographerId();
+
         if (currentId === null) {
             throw new Error('Photographer Id not specified');
         }
         const currentPhotographerData = photographersList.find(photographer => photographer.id === parseInt(currentId));
-        
+
         if (currentPhotographerData === undefined) {
             throw new Error('Wrong Id specified');
         }
         const currentPhotographerMedias = mediaList.filter(media => media.photographerId === parseInt(currentId));
 
-        const sortedPhotographersMedias = rememberSort(currentPhotographerMedias);
+        const sortedPhotographersMedias = rememberSort(currentPhotographerMedias, currentId);
         filteredMedias = sortedPhotographersMedias;
 
         const photographerHeader = document.querySelector('div.photograph-header');
@@ -749,7 +877,7 @@ window.addEventListener('load', () => {
                 activeTag = '';
                 //Sorting the array may be needed
                 let option = selectedSorting.innerText;
-                filteredMedias = sortingChoice(currentPhotographerMedias, option);
+                filteredMedias = sortingChoice(currentPhotographerMedias, option, currentId);
             }else{
                 //Since we cut an array already sorted, no need to sort here
                 activeTag = clickedTag;
@@ -792,14 +920,14 @@ window.addEventListener('load', () => {
 
         }
 
-        function rememberSort(mediaArray) {
+        function rememberSort(mediaArray, photographerID) {
             let sortedArray;
-            if (!localStorage.getItem(`photographer${currentId}SortOption`)) {
-                localStorage.setItem(`photographer${currentId}SortOption`, 'Popularité');
+            if (!localStorage.getItem(`photographer${photographerID}SortOption`)) {
+                localStorage.setItem(`photographer${photographerID}SortOption`, 'Popularité');
                 sortedArray = sortPopularity(mediaArray);
             }else{
-                const lastSortOption = localStorage.getItem(`photographer${currentId}SortOption`);
-                sortedArray = sortingChoice(mediaArray, lastSortOption);
+                const lastSortOption = localStorage.getItem(`photographer${photographerID}SortOption`);
+                sortedArray = sortingChoice(mediaArray, lastSortOption, photographerID);
             }
             return sortedArray;
         }
@@ -818,40 +946,12 @@ window.addEventListener('load', () => {
 
             closeDropDown();
 
-            let newSortedList = sortingChoice(filteredMedias, option);
+            let newSortedList = sortingChoice(filteredMedias, option, currentId);
 
             removeChildTags(mediaWrapper);
             addMediaList(mediaWrapper, currentPhotographerData, newSortedList);
             setTotalLikes(currentPhotographerMedias);
 
-        }
-
-        function sortingChoice(mediaArray, choice) {
-            let newSortedList;
-            switch(choice) {
-
-                case 'Popularité' :
-                    newSortedList = sortPopularity(mediaArray);
-                    localStorage.setItem(`photographer${currentId}SortOption`, 'Popularité');
-
-                    break;
-
-                case 'Date' :
-                    newSortedList = sortDate(mediaArray);
-                    localStorage.setItem(`photographer${currentId}SortOption`, 'Date');
-
-                    break;
-
-
-                case 'Titre' :
-                    newSortedList = sortAlphabeticalOrder(mediaArray);
-                    localStorage.setItem(`photographer${currentId}SortOption`, 'Titre');
-
-                    break;
-
-            }
-            selectedSorting.textContent = choice;
-            return newSortedList;
         }
 
         function updateAriaSelected(itemList, selectedItemIndex) {
@@ -921,6 +1021,8 @@ window.addEventListener('load', () => {
                 sortBtn.focus();
             }
         }
+        // Part relative to the challenge
+
 
         
     })
