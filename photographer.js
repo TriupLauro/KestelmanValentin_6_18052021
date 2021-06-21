@@ -2,7 +2,7 @@
 const mainPage = document.querySelector('div.photographer-page');
 
 // Dom elements from the modal form
-const contactBtn = document.querySelector('div.contact');
+const contactBtn = document.querySelector('button.contact');
 const modalbg = document.querySelector('div.modalbg');
 const closebtn = document.querySelector('button.close');
 const modalForm = document.querySelector('form.modal');
@@ -328,7 +328,7 @@ function removeChildTags(container) {
 }
 
 // Update the information displayed on the photographer's page
-// It modify the existing html content without adding or removing tags
+// It modify the existing html content without adding or removing html tags
 function setPhotographerHeader(container = document.querySelector('.photograph-header'), photographerObject) {
     const displayedPhotographerInfos = container.querySelector('div.infos');
     const photographersPageTitle = displayedPhotographerInfos.querySelector('h1');
@@ -378,8 +378,8 @@ function setPhotographerPrice (container = document.querySelector('div.stats__pr
 //Part relative to the modal form
 contactBtn.addEventListener('click', () => {
     modalbg.style.display = 'block';
-    mainPage.setAttribute('aria-hidden', 'true');
     const firstInput = document.querySelector('input#firstname');
+    mainPage.setAttribute('aria-hidden', 'true');
     firstInput.focus();
     lockScroll();
 });
@@ -771,6 +771,7 @@ function getPhotographerId() {
     return new URLSearchParams(queryString).get('id');
 }
 
+// Returns a promise
 function reloadPhotographerData(photographerId) {
     return readJsonData()
         .then((fishEyeData) => {
@@ -1021,9 +1022,6 @@ window.addEventListener('load', () => {
                 sortBtn.focus();
             }
         }
-        // Part relative to the challenge
-
-
         
     })
     .catch((error) => {
