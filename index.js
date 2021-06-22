@@ -1,34 +1,120 @@
+// Refactorisation  with OOP
+class PhotographerGallery {
+    constructor(photographersList) {
+        this.AllPhotographers = photographersList;
+        this.navTagsDOM = document.querySelectorAll('div.nav-tag-item');
+        this.photographersContainer = document.getElementsByClassName('photograph-wrapper')[0];
+        this.activeTag = '';
+    }
 
-// Global variables
-let photographersList;
-let activeTag = '';
+    updatePhotographers(photographersList) {
+        removeChildTags(this.photographersContainer);
+        this.addPhotographersList(this.photographersContainer, photographersList)
+    }
 
-// Dom elements
-const navTags = document.querySelectorAll('div.nav-tag-item');
-const tagItems = document.querySelectorAll('div.photograph-profile__tags__tag-item');
-const photographersContainer = document.getElementsByClassName('photograph-wrapper')[0];
+    attachListenerToNavTags() {
+        this.navTagsDOM.forEach(tag => {
+            tag.addEventListener('click', this.tagSelected);
+        });
+    }
 
+    updateNavTags(navTagsArray = this.navTagsDOM) {
+        for (let currentTag of navTagsArray) {
+            let tag = currentTag.dataset.tag;
+            if (tag === this.activeTag) {
+                currentTag.dataset.selected = 'true';
+            } else {
+                currentTag.dataset.selected = 'false';
+            }
+        }
+    }
+
+    tagSelected(e) {
+        let tag = e.target.dataset.tag;
+        let filteredPhotographers;
+        if (this.activeTag === tag) {
+            filteredPhotographers = this.AllPhotographers;
+            this.activeTag = '';
+        } else {
+            filteredPhotographers = this.AllPhotographers.filter(photographer => photographer.tags.includes(tag));
+            this.activeTag = tag;
+        }
+        this.updateNavTags(this.navTagsDOM);
+        this.updatePhotographers(filteredPhotographers)
+        if (e.target.classList.contains('photograph-profile__tags__tag-item')) {
+            getCorrectFocus(e.target);
+        }
+    }
+
+    addPhotographersList(container = this.photographersContainer, photographerArray = this.AllPhotographers) {
+        for (let currentPhotographer of photographerArray) {
+            this.appendPhotographer(container, currentPhotographer);
+        }
+    }
+
+    appendPhotographer(container, photographerObject) {
+        // We create all the element for the photographer profile on the homepage
+        // And then append them to the specified container
+        const photographerProfileElt = document.createElement('div');
+        photographerProfileElt.classList.add('photograph-profile');
+        const photographerProfileAvatarElt = document.createElement('a');
+        photographerProfileAvatarElt.classList.add('photograph-profile__avatar');
+        photographerProfileAvatarElt.setAttribute('href', `photographer-page.html?id=${photographerObject.id}`);
+        const photographerPortraitElt = document.createElement('img');
+        photographerPortraitElt.setAttribute('src', `images/Sample_Photos/Photographers_ID_Photos/thumbnails/mini_${photographerObject.portrait}`);
+        const photographerNameElt = document.createElement('h2');
+        photographerNameElt.textContent = `${photographerObject.name}`;
+        const photographerDescriptionElt = document.createElement('div');
+        photographerDescriptionElt.classList.add('photograph-profile__description');
+        const photographerLocalisationElt = document.createElement('p');
+        photographerLocalisationElt.classList.add('photograph-profile__localisation');
+        photographerLocalisationElt.textContent = `${photographerObject.city}, ${photographerObject.country}`;
+        const photographerSloganElt = document.createElement('p');
+        photographerSloganElt.classList.add('photograph-profile__slogan');
+        photographerSloganElt.textContent = photographerObject.tagline;
+        const photographerPriceElt = document.createElement('p');
+        photographerPriceElt.classList.add('photograph-profile__price');
+        photographerPriceElt.textContent = `${photographerObject.price}€/jour`;
+        const photographerTagsElt = document.createElement('div');
+        photographerTagsElt.classList.add('photograph-profile__tags');
+
+        container.appendChild(photographerProfileElt);
+        photographerProfileElt.appendChild(photographerProfileAvatarElt);
+        photographerProfileAvatarElt.appendChild(photographerPortraitElt);
+        photographerProfileAvatarElt.appendChild(photographerNameElt);
+        photographerProfileElt.appendChild(photographerDescriptionElt);
+        photographerDescriptionElt.appendChild(photographerLocalisationElt);
+        photographerDescriptionElt.appendChild(photographerSloganElt);
+        photographerDescriptionElt.appendChild(photographerPriceElt);
+        photographerProfileElt.appendChild(photographerTagsElt);
+        for (let currentTag of photographerObject.tags) {
+            let tagItemElt = document.createElement('div');
+            tagItemElt.classList.add('photograph-profile__tags__tag-item');
+            const srOnlyText = document.createElement('span');
+            srOnlyText.textContent = 'Tag';
+            srOnlyText.classList.add('sr-only');
+            tagItemElt.textContent = `#${currentTag}`;
+            tagItemElt.insertBefore(srOnlyText,tagItemElt.firstChild);
+            if (currentTag === this.activeTag) {
+                tagItemElt.dataset.selected = 'true';
+            } else {
+                tagItemElt.dataset.selected = 'false';
+            }
+            tagItemElt.dataset.tag = currentTag;
+            tagItemElt.addEventListener('click', this.tagSelected);
+            photographerTagsElt.appendChild(tagItemElt);
+        }
+    }
+}
 
 // Event triggered on page launch
 window.addEventListener('load', () => {
     readJsonData()
     .then((fishEyeData) => {
         
-        photographersList = fishEyeData.photographers;
-
-        removeChildTags(photographersContainer);
-        addPhotographersList(photographersContainer, photographersList);
-
-        // Click a tag in navigation event
-        navTags.forEach(tag => {
-            
-            tag.addEventListener('click', tagSelected);
-        });
-        
-        tagItems.forEach(tag => {
-            
-            tag.addEventListener('click', tagSelected);
-        });
+        const displayedGallery = new PhotographerGallery(fishEyeData.photographers);
+        displayedGallery.addPhotographersList();
+        displayedGallery.attachListenerToNavTags();
 
         // Make the go to content button appear
         const goToContentBtn = document.querySelector('a.go-to-content');
@@ -48,61 +134,6 @@ function removeChildTags(container) {
     }
 }
 
-function appendPhotographer(container, photographerObject) {
-    // We create all the element for the photographer profile on the homepage
-    // And then append them to the specified container
-    const photographerProfileElt = document.createElement('div');
-    photographerProfileElt.classList.add('photograph-profile');
-    const photographerProfileAvatarElt = document.createElement('a');
-    photographerProfileAvatarElt.classList.add('photograph-profile__avatar');
-    photographerProfileAvatarElt.setAttribute('href', `photographer-page.html?id=${photographerObject.id}`);
-    const photographerPortraitElt = document.createElement('img');
-    photographerPortraitElt.setAttribute('src', `images/Sample_Photos/Photographers_ID_Photos/thumbnails/mini_${photographerObject.portrait}`);
-    const photographerNameElt = document.createElement('h2');
-    photographerNameElt.textContent = `${photographerObject.name}`;
-    const photographerDescriptionElt = document.createElement('div');
-    photographerDescriptionElt.classList.add('photograph-profile__description');
-    const photographerLocalisationElt = document.createElement('p');
-    photographerLocalisationElt.classList.add('photograph-profile__localisation');
-    photographerLocalisationElt.textContent = `${photographerObject.city}, ${photographerObject.country}`;
-    const photographerSloganElt = document.createElement('p');
-    photographerSloganElt.classList.add('photograph-profile__slogan');
-    photographerSloganElt.textContent = photographerObject.tagline;
-    const photographerPriceElt = document.createElement('p');
-    photographerPriceElt.classList.add('photograph-profile__price');
-    photographerPriceElt.textContent = `${photographerObject.price}€/jour`;
-    const photographerTagsElt = document.createElement('div');
-    photographerTagsElt.classList.add('photograph-profile__tags');
-
-    container.appendChild(photographerProfileElt);
-    photographerProfileElt.appendChild(photographerProfileAvatarElt);
-    photographerProfileAvatarElt.appendChild(photographerPortraitElt);
-    photographerProfileAvatarElt.appendChild(photographerNameElt);
-    photographerProfileElt.appendChild(photographerDescriptionElt);
-    photographerDescriptionElt.appendChild(photographerLocalisationElt);
-    photographerDescriptionElt.appendChild(photographerSloganElt);
-    photographerDescriptionElt.appendChild(photographerPriceElt);
-    photographerProfileElt.appendChild(photographerTagsElt);
-    for (let currentTag of photographerObject.tags) {
-        let tagItemElt = document.createElement('div');
-        tagItemElt.classList.add('photograph-profile__tags__tag-item');
-        const srOnlyText = document.createElement('span');
-        srOnlyText.textContent = 'Tag';
-        srOnlyText.classList.add('sr-only');
-        tagItemElt.textContent = `#${currentTag}`;
-        tagItemElt.insertBefore(srOnlyText,tagItemElt.firstChild);
-        if (currentTag === activeTag) {
-            tagItemElt.dataset.selected = 'true';
-        } else {
-            tagItemElt.dataset.selected = 'false';
-        }
-        tagItemElt.dataset.tag = currentTag;
-        tagItemElt.addEventListener('click', tagSelected);
-        photographerTagsElt.appendChild(tagItemElt);
-    
-    }
-}
-
 // This function returns a promise, so we need to use .then after we call it
 function readJsonData () {
     return fetch('database/FishEyeData.json')
@@ -114,49 +145,7 @@ function readJsonData () {
     })
 }
 
-// Function called on clicking a tag
-function tagSelected(e) {
-    
-    let tag = e.target.dataset.tag;
-    
-    let filteredPhotographers;
-    if (activeTag === tag) {
-        filteredPhotographers = photographersList;
-        activeTag = '';
-    } else {
-        filteredPhotographers = photographersList.filter(photographer => photographer.tags.includes(tag));
-        activeTag = tag;
-    }
-    
-    updateNavTags(navTags);
-
-    removeChildTags(photographersContainer);
-    addPhotographersList(photographersContainer, filteredPhotographers)
-
-    if (e.target.classList.contains('photograph-profile__tags__tag-item')) {
-        getCorrectFocus(e.target);
-    }
-
-}
-
-function updateNavTags(navTagsArray) {
-    for (let currentTag of navTagsArray) {
-        let tag = currentTag.dataset.tag;
-
-        if (tag === activeTag) {
-            currentTag.dataset.selected = 'true';
-        } else {
-            currentTag.dataset.selected = 'false';
-        }
-    }
-}
-
-function addPhotographersList(container, photographerArray) {
-    for (let currentPhotographer of photographerArray) {
-        appendPhotographer(container, currentPhotographer);
-    }
-}
-
+// Focus on the photographer profile where the tag was clicked
 function getCorrectFocus(clickedTag) {
     const tagContainer = clickedTag.parentElement;
     const description = tagContainer.previousSibling;
