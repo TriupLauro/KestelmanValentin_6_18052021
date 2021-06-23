@@ -166,6 +166,7 @@ class Photograph {
         this.alt = photoObject.altDescription;
         this.localLiked = photoObject.localLiked;
     }
+
     appendMedia(container, index) {
         const mediaContainerElt = createMediaFrame(this.title, this.likes, this.localLiked);
 
@@ -182,6 +183,7 @@ class Photograph {
         mediaContainerElt.dataset.title = this.title;
         mediaContainerElt.dataset.mediaId = this.id;
         container.appendChild(mediaContainerElt);
+
         imageElt.addEventListener('click', (e) => {
             const lastImage = document.querySelector('.lightbox__img');
             const lightbox = document.querySelector('div.lightbox')
@@ -329,7 +331,7 @@ function removeChildTags(container) {
 
 // Update the information displayed on the photographer's page
 // It modify the existing html content without adding or removing html tags
-function setPhotographerHeader(container = document.querySelector('.photograph-header'), photographerObject) {
+/*function setPhotographerHeader(container = document.querySelector('.photograph-header'), photographerObject) {
     const displayedPhotographerInfos = container.querySelector('div.infos');
     const photographersPageTitle = displayedPhotographerInfos.querySelector('h1');
     const photographersLocalisation = displayedPhotographerInfos.querySelector('p.infos__text__localisation');
@@ -355,10 +357,10 @@ function setPhotographerHeader(container = document.querySelector('.photograph-h
         photographersDisplayedTags.appendChild(currentTagElement);
     }
     photographerDisplayedPortrait.setAttribute('src', `images/Sample_Photos/Photographers_ID_Photos/thumbnails/mini_${photographerObject.portrait}`);
-}
+}*/
 
 // Variable used to filter tags
-let activeTag = '';
+//let activeTag = '';
 
 // Adds all the media to the specified container using the factory
 function addMediaList(container, currentPhotographerData, mediaArray) {
@@ -371,9 +373,9 @@ function addMediaList(container, currentPhotographerData, mediaArray) {
 }
 
 
-function setPhotographerPrice (container = document.querySelector('div.stats__price'), photographerObject) {
+/*function setPhotographerPrice (container = document.querySelector('div.stats__price'), photographerObject) {
     container.innerText = `${photographerObject.price}€ / jour`;
-}
+}*/
 
 //Part relative to the modal form
 contactBtn.addEventListener('click', () => {
@@ -531,7 +533,7 @@ function countLikes(accumulator, currentValue) {
     return accumulator + currentValue;
 }
 
-function setTotalLikes(mediaArray) {
+/*function setTotalLikes(mediaArray) {
     const likesElt = document.querySelector('div.stats__likes');
     const likesArray = mediaArray.map((mediaItem) => mediaItem.likes);
     const totalLikes = likesArray.reduce(countLikes);
@@ -541,7 +543,7 @@ function setTotalLikes(mediaArray) {
     likesElt.innerText = `${totalLikes} `;
     likesElt.dataset.totalLikes = totalLikes;
     likesElt.appendChild(likeIcon);
-}
+}*/
 
 function createLikeIcon() {
     const likeIcon = document.createElement('span');
@@ -819,22 +821,147 @@ function readJsonData () {
         })
 }
 
+// Refactoring with OOP
+class PhotographerGlobalObject {
+    constructor(photographerData, photographerMedia,
+                headerDOM = document.querySelector('div.photograph-header'),
+                statsDOM = document.querySelector('.stats') ) {
+
+        this.headerContainer = headerDOM;
+        this.displayedInfos = this.headerContainer.querySelector('div.infos');
+        this.photographerTitleDOM = this.displayedInfos.querySelector('h1');
+        this.photographerLocalisation = this.displayedInfos.querySelector('p.infos__text__localisation');
+        this.photographerLine = this.displayedInfos.querySelector('p.infos__text__slogan');
+        this.photographerDisplayedTags = this.displayedInfos.querySelector('div.infos__tags');
+        this.photographerDisplayedPortrait = this.headerContainer.querySelector('img.avatar');
+
+        this.statsContainer = statsDOM;
+        this.priceContainer = this.statsContainer.querySelector('.stats__price');
+        this.likesContainer = this.statsContainer.querySelector('.stats__likes');
+
+        this.photographerData = photographerData;
+        this.mediaArray = photographerMedia;
+
+        //this.activeTag = '';
+    }
+
+    setPhotographerHeader() {
+
+        document.title = `Page du photographe ${this.photographerData.name}`;
+        this.photographerTitleDOM.innerText = this.photographerData.name;
+        this.photographerLocalisation.innerText = `${this.photographerData.city}, ${this.photographerData.country}`;
+        this.photographerLine.innerText = this.photographerData.tagline;
+
+        removeChildTags(this.photographerDisplayedTags);
+
+        for (let tag of this.photographerData.tags) {
+            let currentTagElement = document.createElement('div');
+            currentTagElement.classList.add('infos__tags__item');
+            currentTagElement.innerText = `#${tag}`;
+            currentTagElement.dataset.tag = tag;
+            const tagLabel = document.createElement('span');
+            tagLabel.innerText = 'Tag';
+            tagLabel.classList.add('sr-only');
+            this.photographerDisplayedTags.appendChild(tagLabel);
+            this.photographerDisplayedTags.appendChild(currentTagElement);
+        }
+
+        this.photographerDisplayedPortrait.setAttribute('src', `images/Sample_Photos/Photographers_ID_Photos/thumbnails/mini_${this.photographerData.portrait}`);
+    }
+
+    setPhotographerPrice () {
+        this.priceContainer.innerText = `${this.photographerData.price}€ / jour`;
+    }
+
+    setTotalLikes() {
+        const likesArray = this.mediaArray.map((mediaItem) => mediaItem.likes);
+        const totalLikes = likesArray.reduce(countLikes);
+        const likeIcon = createLikeIcon();
+
+        this.likesContainer.innerText = `${totalLikes} `;
+        this.likesContainer.dataset.totalLikes = totalLikes;
+        this.likesContainer.appendChild(likeIcon);
+    }
+
+    focusOnHeader() {
+        this.headerContainer.focus();
+    }
+
+}
+
+class MediaGallery {
+    constructor(photographerData, mediaData,
+                containerDOM = document.querySelector('.photo-wrapper')) {
+        this.mediaContainer = containerDOM;
+        this.photographerData = photographerData;
+        this.mediaData = mediaData;
+
+        //this.activeTag = '';
+    }
+
+    sortMedias(sortOption, mediaArray = this.mediaData) {
+        const  resArray = sortingChoice(mediaArray, sortOption, this.photographerData.id);
+        filteredMedias = resArray;
+        return resArray;
+    }
+
+    rememberSort(option = 'Popularité', mediaArray = this.mediaData) {
+        if (!localStorage.getItem(`photographer${this.photographerData.id}SortOption`)) {
+            localStorage.setItem(`photographer${this.photographerData.id}SortOption`, 'Popularité');
+        }else{
+            option = localStorage.getItem(`photographer${this.photographerData.id}SortOption`);
+        }
+        const sortedArray = this.sortMedias(option, mediaArray);
+        filteredMedias = sortedArray;
+        this.addMediaListToGallery(sortedArray);
+    }
+
+    addMediaToGallery(mediaObject, index, container = this.mediaContainer) {
+        mediaObject.appendMedia(container, index);
+    }
+
+    addMediaListToGallery(mediaArray = this.mediaData, container = this.mediaContainer, currentPhotographerData = this.photographerData) {
+        console.log('Intern array', mediaArray);
+        removeChildTags(container);
+        for (let currentMediaIndex in mediaArray) {
+            let mediaObject = this.mediaFactory(mediaArray[currentMediaIndex], currentPhotographerData);
+            this.addMediaToGallery(mediaObject, currentMediaIndex, container);
+        }
+    }
+
+    mediaFactory(mediaObject, photographerObject) {
+        let media;
+
+        if (Object.prototype.hasOwnProperty.call(mediaObject, 'image')) {
+            media = new Photograph(mediaObject, photographerObject);
+        }
+
+        if (Object.prototype.hasOwnProperty.call(mediaObject, 'video')) {
+            media = new Video(mediaObject, photographerObject);
+        }
+
+        return media;
+    }
+
+
+
+}
+
 window.addEventListener('load', () => {
     mainPage.style.display = 'none';
     readJsonData()
     .then((fishEyeData) => {
         const loader = document.querySelector('div.loader');
-        const header = document.querySelector('div.photograph-header');
+        // const header = document.querySelector('div.photograph-header');
         // Dom elements from the sorting menu
-        const sortBtn = document.querySelector('.sort-button');
-        const sortMenu = document.querySelector('ul.sort-dropdown');
-        const sortOptions = document.querySelectorAll('li.sort-dropdown__item');
-        const selectedSorting = document.querySelector('.sort-selected');
-        const sortMenuIcon = document.querySelector('.sort-container .fa-chevron-down');
+        //const sortBtn = document.querySelector('.sort-button');
+        //const sortMenu = document.querySelector('ul.sort-dropdown');
+        //const sortOptions = document.querySelectorAll('li.sort-dropdown__item');
+        //const selectedSorting = document.querySelector('.sort-selected');
+        //const sortMenuIcon = document.querySelector('.sort-container .fa-chevron-down');
 
         const photographersList = fishEyeData.photographers;
         const mediaList = fishEyeData.media;
-
 
         const currentId = getPhotographerId();
 
@@ -848,48 +975,197 @@ window.addEventListener('load', () => {
         }
         const currentPhotographerMedias = mediaList.filter(media => media.photographerId === parseInt(currentId));
 
-        const sortedPhotographersMedias = rememberSort(currentPhotographerMedias, currentId);
-        filteredMedias = sortedPhotographersMedias;
+        //const sortedPhotographersMedias = rememberSort(currentPhotographerMedias, currentId);
+        //filteredMedias = sortedPhotographersMedias;
 
-        const photographerHeader = document.querySelector('div.photograph-header');
-        setPhotographerHeader(photographerHeader, currentPhotographerData);
-        const photographerPrice = document.querySelector('div.stats__price');
-        setPhotographerPrice(photographerPrice, currentPhotographerData);
-        setTotalLikes(currentPhotographerMedias);
+
+        const displayedInfoObject = new PhotographerGlobalObject(currentPhotographerData, currentPhotographerMedias);
+        displayedInfoObject.setPhotographerHeader();
+        displayedInfoObject.setPhotographerPrice();
+        displayedInfoObject.setTotalLikes();
 
         const contactName = document.querySelector('span.modal-name');
         contactName.textContent = currentPhotographerData.name;
 
-        removeChildTags(mediaWrapper);
-        addMediaList(mediaWrapper, currentPhotographerData, sortedPhotographersMedias);
+        const mediaGallery = new MediaGallery(currentPhotographerData, currentPhotographerMedias);
+        mediaGallery.rememberSort();
 
         loader.style.display = 'none';
         mainPage.style.display = '';
-        header.focus();
+        displayedInfoObject.focusOnHeader();
+
+        //Sorting menu
+        class SortingDropDown {
+            constructor(currentOption) {
+                this.sortBtn = document.querySelector('.sort-button');
+                this.sortMenu = document.querySelector('ul.sort-dropdown');
+                this.sortOptions = document.querySelectorAll('li.sort-dropdown__item');
+                this.selectedSorting = document.querySelector('.sort-selected');
+                this.sortMenuIcon = document.querySelector('.sort-container .fa-chevron-down');
+                this.currentOption = currentOption;
+                this.menuExpanded = false;
+            }
+
+            displaySortMenu(e) {
+                e.stopPropagation();
+
+                this.sortMenu.style.display = 'block';
+                this.sortMenu.focus();
+                this.sortMenuIcon.style.transform = 'rotate(180deg)';
+                this.sortMenuIcon.addEventListener('click', this.sortOptionSelected.bind(this));
+                this.menuExpanded = true;
+                this.sortBtn.setAttribute('aria-expanded', 'true');
+                this.updateAriaSelected(this.sortOptions, 0);
+
+            }
+
+            closeDropDown() {
+                if (this.sortMenu.style.display === 'block') {
+                    this.sortMenu.style.display = '';
+                    this.sortMenu.removeAttribute('aria-activedescendant');
+                    this.sortMenuIcon.style.transform = '';
+                    this.sortMenuIcon.removeEventListener('click', this.sortOptionSelected);
+                    this.sortBtn.setAttribute('aria-expanded', 'false');
+                    this.sortBtn.focus();
+                    this.menuExpanded = false;
+                }
+            }
+
+            sortOptionSelected(e) {
+                e.stopPropagation();
+
+                if (e.target.tagName === 'LI') {
+                    this.currentOption = e.target.textContent;
+                }else{
+                    this.currentOption = 'Popularité';
+                }
+
+                this.closeDropDown();
+                this.updateDisplayedChoice(this.currentOption);
+                const sortedArray = mediaGallery.sortMedias(this.currentOption);
+                mediaGallery.addMediaListToGallery(sortedArray);
+
+            }
+
+            updateAriaSelected(itemList, selectedItemIndex) {
+                for (let item of itemList) {
+                    item.setAttribute('aria-selected', 'false');
+                    item.classList.remove('sort-focus');
+                }
+                itemList[selectedItemIndex].setAttribute('aria-selected', 'true');
+                itemList[selectedItemIndex].classList.add('sort-focus');
+                const itemIdList = [];
+                itemList.forEach(item => itemIdList.push(item.id));
+
+                this.sortMenu.setAttribute('aria-activedescendant',itemIdList[selectedItemIndex]);
+            }
+
+            selectNextSortOption() {
+                const focusedSortItem = document.querySelector('li.sort-dropdown__item[aria-selected=true]');
+                let index = focusedSortItem.dataset.index;
+                if (index < this.sortOptions.length - 1) {
+                    index++;
+                    this.updateAriaSelected(this.sortOptions, index);
+                }
+            }
+
+            selectPreviousSortOption() {
+                const focusedSortItem = document.querySelector('li.sort-dropdown__item[aria-selected=true]');
+                let index = focusedSortItem.dataset.index;
+                if (index > 0) {
+                    index--;
+                    this.updateAriaSelected(this.sortOptions, index);
+                }
+            }
+
+            updateDisplayedChoice(option) {
+                this.selectedSorting.innerText = option;
+            }
+
+            rememberChoice() {
+                if(localStorage.getItem(`photographer${mediaGallery.photographerData.id}SortOption`)) {
+                    this.updateDisplayedChoice(localStorage.getItem(`photographer${mediaGallery.photographerData.id}SortOption`));
+                }else{
+                    this.updateDisplayedChoice('Popularité');
+                }
+            }
+
+            attachListenerToSortBtn() {
+                this.sortBtn.addEventListener('click', this.displaySortMenu.bind(this));
+                this.sortMenuIcon.addEventListener('click', this.displaySortMenu.bind(this));
+            }
+
+            attachListenerToSortOptions() {
+                this.sortOptions.forEach(optionElt => {
+                    optionElt.addEventListener('click', this.sortOptionSelected.bind(this));
+                });
+            }
+
+            attachListenersToKeyBoard() {
+                window.addEventListener('keydown', this.keyboardEvents.bind(this));
+            }
+
+            keyboardEvents(e) {
+                if(this.menuExpanded) {
+
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        this.selectNextSortOption();
+                    }
+
+                    if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        this.selectPreviousSortOption();
+                    }
+
+                    if (e.key === 'Escape') {
+                        this.closeDropDown();
+                    }
+
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const focusedSortItem = document.querySelector('li.sort-dropdown__item[aria-selected=true]');
+                        focusedSortItem.click();
+                    }
+                }
+            }
+
+            attachListenerClickOutside() {
+                window.addEventListener('click', this.closeDropDown.bind(this));
+            }
+
+        }
+
+        const DropDownObject = new SortingDropDown();
+        DropDownObject.rememberChoice();
+        DropDownObject.attachListenerToSortBtn();
+        DropDownObject.attachListenerClickOutside();
+        DropDownObject.attachListenerToSortOptions();
+        DropDownObject.attachListenersToKeyBoard();
 
         // Filter photos by tag
-        const tagsArray = document.querySelectorAll('div.infos__tags__item');
+        //const tagsArray = document.querySelectorAll('div.infos__tags__item');
 
-        tagsArray.forEach(tagElt => tagElt.addEventListener('click', filterPhotosByTag));
+        //tagsArray.forEach(tagElt => tagElt.addEventListener('click', filterPhotosByTag));
 
-        function filterPhotosByTag(e) {
+        /*function filterPhotosByTag(e) {
             let clickedTag = e.target.dataset.tag;
+
             if (clickedTag === activeTag) {
                 activeTag = '';
                 //Sorting the array may be needed
                 let option = selectedSorting.innerText;
-                filteredMedias = sortingChoice(currentPhotographerMedias, option, currentId);
+                mediaGallery.sortMedias(option);
             }else{
                 //Since we cut an array already sorted, no need to sort here
                 activeTag = clickedTag;
-                filteredMedias = sortedPhotographersMedias.filter(media => media.tags.includes(clickedTag));
+                //filteredMedias = sortedPhotographersMedias.filter(media => media.tags.includes(clickedTag));
             }
-            removeChildTags(mediaWrapper);
-            addMediaList(mediaWrapper, currentPhotographerData, filteredMedias);
+            mediaGallery.addMediaListToGallery();
             updateTagDisplay();
-        }
+        }*/
 
-        function updateTagDisplay() {
+        /*function updateTagDisplay() {
             tagsArray.forEach((tag) => {
                 if (tag.dataset.tag === activeTag) {
                     tag.dataset.selected = 'true';
@@ -897,10 +1173,10 @@ window.addEventListener('load', () => {
                     tag.dataset.selected = 'false';
                 }
             });
-        }
+        }*/
 
         // Events relative to the sorting drop down menu
-        sortBtn.addEventListener('click', displaySortMenu);
+        /*sortBtn.addEventListener('click', displaySortMenu);
         sortMenuIcon.addEventListener('click', displaySortMenu);
 
         sortOptions.forEach(optionElt => {
@@ -919,9 +1195,9 @@ window.addEventListener('load', () => {
             sortBtn.setAttribute('aria-expanded', 'true');
             updateAriaSelected(sortOptions, 0);
 
-        }
+        }*/
 
-        function rememberSort(mediaArray, photographerID) {
+        /*function rememberSort(mediaArray, photographerID) {
             let sortedArray;
             if (!localStorage.getItem(`photographer${photographerID}SortOption`)) {
                 localStorage.setItem(`photographer${photographerID}SortOption`, 'Popularité');
@@ -931,10 +1207,10 @@ window.addEventListener('load', () => {
                 sortedArray = sortingChoice(mediaArray, lastSortOption, photographerID);
             }
             return sortedArray;
-        }
+        }*/
 
         // Functions for drop down menu and sorting items
-        function sortOptionSelected(e) {
+        /*function sortOptionSelected(e) {
             e.stopPropagation();
 
             let option;
@@ -953,9 +1229,9 @@ window.addEventListener('load', () => {
             addMediaList(mediaWrapper, currentPhotographerData, newSortedList);
             setTotalLikes(currentPhotographerMedias);
 
-        }
+        }*/
 
-        function updateAriaSelected(itemList, selectedItemIndex) {
+        /*function updateAriaSelected(itemList, selectedItemIndex) {
             for (let item of itemList) {
                 item.setAttribute('aria-selected', 'false');
                 item.classList.remove('sort-focus');
@@ -966,10 +1242,10 @@ window.addEventListener('load', () => {
             itemList.forEach(item => itemIdList.push(item.id));
 
             sortMenu.setAttribute('aria-activedescendant',itemIdList[selectedItemIndex]);
-        }
+        }*/
 
         //Controlling the dropdown with the keyboard
-        window.addEventListener('keydown', (e) => {
+        /*window.addEventListener('keydown', (e) => {
             if(sortMenu.style.display === 'block') {
 
                 if (e.key === 'ArrowDown') {
@@ -989,9 +1265,9 @@ window.addEventListener('load', () => {
                     focusedSortItem.click();
                 }
             }
-        })
+        })*/
 
-        function selectNextSortOption() {
+        /*function selectNextSortOption() {
             const focusedSortItem = document.querySelector('li.sort-dropdown__item[aria-selected=true]');
             let index = focusedSortItem.dataset.index;
             if (index < sortOptions.length - 1) {
@@ -1007,12 +1283,12 @@ window.addEventListener('load', () => {
                 index--;
                 updateAriaSelected(sortOptions, index);
             }
-        }
+        }*/
 
         // Closing dropdown without selecting
-        window.addEventListener('click', closeDropDown);
+        //window.addEventListener('click', closeDropDown);
 
-        function closeDropDown() {
+        /*function closeDropDown() {
             if (sortMenu.style.display === 'block') {
                 sortMenu.style.display = '';
                 sortMenu.removeAttribute('aria-activedescendant');
@@ -1021,7 +1297,7 @@ window.addEventListener('load', () => {
                 sortBtn.setAttribute('aria-expanded','false');
                 sortBtn.focus();
             }
-        }
+        }*/
         
     })
     .catch((error) => {

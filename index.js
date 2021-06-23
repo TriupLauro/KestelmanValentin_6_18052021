@@ -1,20 +1,20 @@
-// Refactorisation  with OOP
+// Refactoring  with OOP
 class PhotographerGallery {
-    constructor(photographersList) {
+    constructor(photographersList, containerDOM = document.getElementsByClassName('photograph-wrapper')[0]) {
         this.AllPhotographers = photographersList;
         this.navTagsDOM = document.querySelectorAll('div.nav-tag-item');
-        this.photographersContainer = document.getElementsByClassName('photograph-wrapper')[0];
+        this.photographersContainer = containerDOM;
         this.activeTag = '';
     }
 
-    updatePhotographers(photographersList) {
-        removeChildTags(this.photographersContainer);
+    updatePhotographers(photographersList = this.AllPhotographers) {
+        this.removeChildTags(this.photographersContainer);
         this.addPhotographersList(this.photographersContainer, photographersList)
     }
 
     attachListenerToNavTags() {
         this.navTagsDOM.forEach(tag => {
-            tag.addEventListener('click', this.tagSelected);
+            tag.addEventListener('click', this.tagSelected.bind(this));
         });
     }
 
@@ -31,12 +31,11 @@ class PhotographerGallery {
 
     tagSelected(e) {
         let tag = e.target.dataset.tag;
-        let filteredPhotographers;
+        let filteredPhotographers = this.AllPhotographers;
         if (this.activeTag === tag) {
-            filteredPhotographers = this.AllPhotographers;
             this.activeTag = '';
         } else {
-            filteredPhotographers = this.AllPhotographers.filter(photographer => photographer.tags.includes(tag));
+            filteredPhotographers = filteredPhotographers.filter(photographer => photographer.tags.includes(tag));
             this.activeTag = tag;
         }
         this.updateNavTags(this.navTagsDOM);
@@ -101,8 +100,53 @@ class PhotographerGallery {
                 tagItemElt.dataset.selected = 'false';
             }
             tagItemElt.dataset.tag = currentTag;
-            tagItemElt.addEventListener('click', this.tagSelected);
+            tagItemElt.addEventListener('click', this.tagSelected.bind(this));
             photographerTagsElt.appendChild(tagItemElt);
+        }
+    }
+
+    removeChildTags(container) {
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+    }
+
+    displayPhotographers() {
+        console.log(this.AllPhotographers);
+    }
+}
+
+/*// Remove all the content inside a container element
+function removeChildTags(container) {
+    while(container.firstChild) {
+        container.removeChild(container.firstChild);
+    }
+}*/
+
+// This function returns a promise, so we need to use .then after we call it
+function readJsonData () {
+    return fetch('database/FishEyeData.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("HTTP error " + response.status);
+            }
+            return response.json();
+        })
+}
+
+// Focus on the photographer profile where the tag was clicked
+function getCorrectFocus(clickedTag) {
+    const tagContainer = clickedTag.parentElement;
+    const description = tagContainer.previousSibling;
+    const correctAvatar = description.previousSibling;
+    const correctName = correctAvatar.text;
+
+    const allh2 = document.querySelectorAll('h2');
+    for (let currenth2 of allh2) {
+        if (correctName === currenth2.innerText) {
+            const correctLink = currenth2.parentElement;
+            correctLink.focus();
+            return
         }
     }
 }
@@ -111,10 +155,10 @@ class PhotographerGallery {
 window.addEventListener('load', () => {
     readJsonData()
     .then((fishEyeData) => {
-        
         const displayedGallery = new PhotographerGallery(fishEyeData.photographers);
-        displayedGallery.addPhotographersList();
+        displayedGallery.updatePhotographers();
         displayedGallery.attachListenerToNavTags();
+        displayedGallery.displayPhotographers();
 
         // Make the go to content button appear
         const goToContentBtn = document.querySelector('a.go-to-content');
@@ -127,37 +171,3 @@ window.addEventListener('load', () => {
     })
 });
 
-// Remove all the content inside a container element
-function removeChildTags(container) {
-    while(container.firstChild) {
-        container.removeChild(container.firstChild);
-    }
-}
-
-// This function returns a promise, so we need to use .then after we call it
-function readJsonData () {
-    return fetch('database/FishEyeData.json')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("HTTP error " + response.status);
-        }
-        return response.json();
-    })
-}
-
-// Focus on the photographer profile where the tag was clicked
-function getCorrectFocus(clickedTag) {
-    const tagContainer = clickedTag.parentElement;
-    const description = tagContainer.previousSibling;
-    const correctAvatar = description.previousSibling;
-    const correctName = correctAvatar.text;
-    
-    const allh2 = document.querySelectorAll('h2');
-    for (let currenth2 of allh2) {
-        if (correctName === currenth2.innerText) {
-            const correctLink = currenth2.parentElement;
-            correctLink.focus();
-            return 
-        }
-    }
-}
