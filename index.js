@@ -111,9 +111,6 @@ class PhotographerGallery {
         }
     }
 
-    displayPhotographers() {
-        console.log(this.AllPhotographers);
-    }
 }
 
 /*// Remove all the content inside a container element
@@ -158,7 +155,6 @@ window.addEventListener('load', () => {
         const displayedGallery = new PhotographerGallery(fishEyeData.photographers);
         displayedGallery.updatePhotographers();
         displayedGallery.attachListenerToNavTags();
-        displayedGallery.displayPhotographers();
 
         // Make the go to content button appear
         const goToContentBtn = document.querySelector('a.go-to-content');
