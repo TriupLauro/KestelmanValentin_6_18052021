@@ -1,146 +1,8 @@
 //DOM element of the page without the modals
 const mainPage = document.querySelector('div.photographer-page');
 
-// Dom elements from the modal form
-const contactBtn = document.querySelector('button.contact');
-const modalbg = document.querySelector('div.modalbg');
-const closebtn = document.querySelector('button.close');
-const modalForm = document.querySelector('form.modal');
-
 // Dom of the media container
 const mediaWrapper = document.querySelector('div.photo-wrapper');
-
-// Events for the lightbox modal
-//const lightboxBg = document.querySelector('div.lightbox-bg');
-//const lightboxClose = document.querySelector('button.lightbox__close');
-//const lightboxTitle = document.querySelector('p.lightbox__title');
-//const lightboxPrevious = document.querySelector('a.lightbox__previous');
-//const lightboxNext = document.querySelector('a.lightbox__next');
-
-//lightboxClose.addEventListener('click', closeLightbox);
-
-/*function closeLightbox() {
-    mainPage.setAttribute('aria-hidden', 'false');
-    const mediaDataHolder = document.querySelector('.lightbox');
-
-    const lastIndex = mediaDataHolder.dataset.index;
-    const eltToFocus = document.querySelector(`.photo-container[data-index='${lastIndex}'] .js-thumbnail`);
-    eltToFocus.focus();
-    lightboxBg.style.display = 'none';
-
-    unlockScroll();
-}*/
-
-/*function goToMediaIndex(index) {
-    const displayedMedia = document.querySelector('.lightbox__img');
-    const lightbox = document.querySelector('div.lightbox');
-
-    const newElt = document.querySelector(`.photo-container[data-index='${index}'] > .js-thumbnail`);
-    
-    const newMediaHolderElt = document.querySelector(`.photo-container[data-index='${index}']`);
-
-
-    lightboxTitle.innerText = newMediaHolderElt.dataset.title;
-
-    if (newElt.tagName === 'IMG') {
-        
-        const newImage = document.createElement('img')
-        newImage.setAttribute('src', newElt.dataset.fullPath);
-        newImage.setAttribute('alt', newElt.alt);
-        newImage.classList.add('lightbox__img');
-        newImage.setAttribute('tabindex','0');
-        lightbox.removeChild(displayedMedia);
-        lightbox.insertBefore(newImage, lightbox.firstChild);
-        lightbox.dataset.index = index;
-        newImage.focus();
-    }
-
-    if (newElt.tagName === 'VIDEO') {
-
-        const newVideoElt = document.createElement('video');
-        const newVideoSourceElt = document.createElement('source')
-        newVideoSourceElt.setAttribute('src',newElt.firstChild.src);
-        newVideoElt.classList.add('lightbox__img','pointer');
-        newVideoElt.appendChild(newVideoSourceElt);
-        newVideoElt.addEventListener('click', toggleVideoPlay);
-        lightbox.removeChild(displayedMedia);
-        lightbox.insertBefore(newVideoElt, lightbox.firstChild);
-        lightbox.dataset.index = index;
-        newVideoElt.focus();
-    }
-}*/
-
-/*function goToPreviousMedia() {
-    const mediaEltsList = document.querySelectorAll('div.photo-container');
-    
-    const lightbox = document.querySelector('div.lightbox');
-
-    let previousIndex;
-    
-    if (lightbox.dataset.index === '0') {
-        previousIndex = mediaEltsList.length - 1;
-    }else{
-        previousIndex = lightbox.dataset.index - 1;
-    }
-
-    goToMediaIndex(previousIndex);
-    
-}
-
-function goToNextMedia() {
-    const mediaEltsList = document.querySelectorAll('div.photo-container');
-    
-    const lightbox = document.querySelector('div.lightbox');
-
-    let nextIndex;
-    
-    if (parseInt(lightbox.dataset.index,10) === (mediaEltsList.length - 1)) {
-        nextIndex = 0;
-        
-    }else{
-        nextIndex = parseInt(lightbox.dataset.index,10) + 1;
-    }
-
-    goToMediaIndex(nextIndex);
-
-}*/
-
-//lightboxPrevious.addEventListener('click', goToPreviousMedia);
-
-//lightboxNext.addEventListener('click', goToNextMedia);
-
-// Control the lightbox modal with the keyboard
-/*document.addEventListener('keydown', (e) => {
-    if (lightboxBg.style.display === 'block') {
-        if (e.key === 'ArrowLeft') {
-            goToPreviousMedia();
-        }
-        if (e.key === 'ArrowRight') {
-            goToNextMedia();
-        }
-        if (e.key === 'Escape') {
-            closeLightbox();
-        }
-        //Toggle the play state of the video element
-        const displayedMedia = document.querySelector('.lightbox__img');
-        if (displayedMedia.tagName === 'VIDEO') {
-            if (e.key === 'Enter' || e.key === ' ') {
-                if (displayedMedia.paused) {
-                    displayedMedia.play();
-                }else{
-                    displayedMedia.pause();
-                }
-            }
-        }
-    }
-    //Let enter the lightbox with the keyboard
-    const focusedElement = document.activeElement;
-    if (focusedElement.classList.contains('js-thumbnail')) {
-        if (e.key === 'Enter') {
-            focusedElement.click();
-        }
-    }
-});*/
 
 function lockScroll() {
     document.body.style.overflow = 'hidden';
@@ -182,30 +44,8 @@ class Photograph {
         mediaContainerElt.dataset.index = index;
         mediaContainerElt.dataset.title = this.title;
         mediaContainerElt.dataset.mediaId = this.id;
+
         container.appendChild(mediaContainerElt);
-
-        /*imageElt.addEventListener('click', (e) => {
-            const lastImage = document.querySelector('.lightbox__img');
-            const lightbox = document.querySelector('div.lightbox')
-            const mediaSrc = e.target.dataset.fullPath;
-            
-            const imageElt = document.createElement('img');
-            imageElt.setAttribute('src', mediaSrc);
-            imageElt.setAttribute('alt', this.alt);
-            imageElt.classList.add('lightbox__img');
-            imageElt.setAttribute('tabindex','0');
-            lightbox.removeChild(lastImage);
-            
-            lightbox.dataset.index = index;
-            lightbox.insertBefore(imageElt, lightbox.firstChild);
-
-            lightboxTitle.innerText = this.title;
-            lightboxBg.style.display = 'block';
-            imageElt.focus();
-            mainPage.setAttribute('aria-hidden', 'true');
-            lockScroll();
-
-        });*/
     }
 }
 
@@ -242,34 +82,7 @@ class Video {
         mediaContainerElt.dataset.title = this.title;
         mediaContainerElt.dataset.mediaId = this.id;
 
-
         container.appendChild(mediaContainerElt);
-        
-        /*videoElt.addEventListener('click', () => {
-
-            const lightbox = document.querySelector('div.lightbox');
-            lightboxBg.style.display = 'block';
-            const fullImage = document.querySelector('.lightbox__img');
-            
-            lightbox.removeChild(fullImage);
-            const videoMedia = document.createElement('video');
-            videoMedia.classList.add('lightbox__img','pointer');
-            //videoMedia.toggleAttribute('controls');
-            lightbox.insertBefore(videoMedia, lightboxTitle);
-            
-            const videoSource = document.createElement('source');
-            videoSource.setAttribute('src', mediaContainerElt.dataset.src);
-            videoMedia.appendChild(videoSource);
-            
-            lightboxTitle.innerText = this.title;
-            lightbox.dataset.index = index;
-            videoMedia.focus();
-            mainPage.setAttribute('aria-hidden','true');
-
-            lockScroll();
-            videoMedia.addEventListener('click',toggleVideoPlay);
-
-        });*/
     }
 }
 
@@ -329,39 +142,6 @@ function removeChildTags(container) {
     }
 }
 
-// Update the information displayed on the photographer's page
-// It modify the existing html content without adding or removing html tags
-/*function setPhotographerHeader(container = document.querySelector('.photograph-header'), photographerObject) {
-    const displayedPhotographerInfos = container.querySelector('div.infos');
-    const photographersPageTitle = displayedPhotographerInfos.querySelector('h1');
-    const photographersLocalisation = displayedPhotographerInfos.querySelector('p.infos__text__localisation');
-    const photographersLine = displayedPhotographerInfos.querySelector('p.infos__text__slogan');
-    const photographersDisplayedTags = displayedPhotographerInfos.querySelector('div.infos__tags');
-    const photographerDisplayedPortrait = container.querySelector('img.avatar');
-    
-
-    document.title = `Page du photographe ${photographerObject.name}`;
-    photographersPageTitle.innerText = photographerObject.name;
-    photographersLocalisation.innerText = `${photographerObject.city}, ${photographerObject.country}`;
-    photographersLine.innerText = photographerObject.tagline;
-    removeChildTags(photographersDisplayedTags);
-    for (let tag of photographerObject.tags) {
-        let currentTagElement = document.createElement('div');
-        currentTagElement.classList.add('infos__tags__item');
-        currentTagElement.innerText = `#${tag}`;
-        currentTagElement.dataset.tag = tag;
-        const tagLabel = document.createElement('span');
-        tagLabel.innerText = 'Tag';
-        tagLabel.classList.add('sr-only');
-        photographersDisplayedTags.appendChild(tagLabel);
-        photographersDisplayedTags.appendChild(currentTagElement);
-    }
-    photographerDisplayedPortrait.setAttribute('src', `images/Sample_Photos/Photographers_ID_Photos/thumbnails/mini_${photographerObject.portrait}`);
-}*/
-
-// Variable used to filter tags
-//let activeTag = '';
-
 // Adds all the media to the specified container using the factory
 function addMediaList(container, currentPhotographerData, mediaArray) {
     
@@ -373,71 +153,8 @@ function addMediaList(container, currentPhotographerData, mediaArray) {
 }
 
 
-/*function setPhotographerPrice (container = document.querySelector('div.stats__price'), photographerObject) {
-    container.innerText = `${photographerObject.price}€ / jour`;
-}*/
-
 //Part relative to the modal form
-contactBtn.addEventListener('click', () => {
-    modalbg.style.display = 'block';
-    const firstInput = document.querySelector('input#firstname');
-    mainPage.setAttribute('aria-hidden', 'true');
-    firstInput.focus();
-    lockScroll();
-});
-
-closebtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    modalbg.style.display = 'none';
-    mainPage.setAttribute('aria-hidden','false');
-    contactBtn.focus();
-    unlockScroll();
-});
-
-modalForm.addEventListener('submit', submitContactForm);
-
-function submitContactForm(e) {
-    e.preventDefault();
-    const firstNameElt = document.querySelector('#firstname');
-    const lastNameElt = document.querySelector('#lastname');
-    const emailElt = document.querySelector('#email');
-    const contactMsgElt = document.querySelector('#message');
-
-    const formDataObject = {
-        firstName : {
-            value : firstNameElt.value,
-            isValid : isNotEmptyString,
-            errorMsg : 'First Name must have at least one character'
-        },
-        lastName : {
-            value : lastNameElt.value,
-            isValid : isNotEmptyString,
-            errorMsg : 'Last Name must have at least one character'
-        },
-        email : {
-            value : emailElt.value,
-            isValid : validEmailRegex,
-            errorMsg : 'Please enter a valid e-mail address'
-        },
-        message : {
-            value : contactMsgElt.value,
-            isValid : isNotEmptyString,
-            errorMsg : 'The message must have at least one character'
-        }
-    }
-
-    const errorMsgs = formDataErrorCollection(formDataObject);
-
-    if (errorMsgs.length > 0) {
-        console.log(errorMsgs);
-        return false;
-    }
-
-    const contentToDisplay = formDataValueCollection(formDataObject);
-
-    console.log(contentToDisplay);
-    contactBtn.focus();
-}
+const contactBtn = document.querySelector('button.contact');
 
 function isNotEmptyString (value) {
     return value !== '';
@@ -445,29 +162,6 @@ function isNotEmptyString (value) {
 
 function validEmailRegex(value) {
     return /[a-zA-Z0-9.-]+@[a-zA-Z0-9]+.[a-z]+/.test(value);
-}
-
-function formDataErrorCollection(objectToValidate) {
-    const errorMessagesList = [];
-
-    for (let [key,subObject] of Object.entries(objectToValidate)) {
-        if (!subObject.isValid(subObject.value)) {
-            errorMessagesList.push(`${key} error : ${subObject.errorMsg}`);
-        }
-    }
-
-    return errorMessagesList;
-    
-}
-
-function formDataValueCollection(validatedObject) {
-    const valueList = [];
-
-    for (let key of Object.keys(validatedObject)) {
-        valueList.push(validatedObject[key].value);
-    }
-
-    return valueList;
 }
 
 // Moving the contact button on mobile resolution
@@ -561,18 +255,6 @@ function sortingChoice(mediaArray, choice, photographerId) {
 function countLikes(accumulator, currentValue) {
     return accumulator + currentValue;
 }
-
-/*function setTotalLikes(mediaArray) {
-    const likesElt = document.querySelector('div.stats__likes');
-    const likesArray = mediaArray.map((mediaItem) => mediaItem.likes);
-    const totalLikes = likesArray.reduce(countLikes);
-    const likeIcon = createLikeIcon();
-    
-
-    likesElt.innerText = `${totalLikes} `;
-    likesElt.dataset.totalLikes = totalLikes;
-    likesElt.appendChild(likeIcon);
-}*/
 
 function createLikeIcon() {
     const likeIcon = document.createElement('span');
@@ -836,8 +518,6 @@ class PhotographerGlobalObject {
 
         this.photographerData = photographerData;
         this.mediaArray = photographerMedia;
-
-        //this.activeTag = '';
     }
 
     setPhotographerHeader() {
@@ -970,8 +650,8 @@ window.addEventListener('load', () => {
                 this.sortMenu.focus();
                 this.sortMenuIcon.style.transform = 'rotate(180deg)';
                 this.sortMenuIcon.removeEventListener('click', this.clickHandleIconExpand);
-                this.handleIconClick = this.sortOptionSelected.bind(this);
-                this.sortMenuIcon.addEventListener('click', this.handleIconClick);
+                this.handleIconClickSortSelect = this.sortOptionSelected.bind(this);
+                this.sortMenuIcon.addEventListener('click', this.handleIconClickSortSelect);
                 this.menuExpanded = true;
                 this.sortBtn.setAttribute('aria-expanded', 'true');
                 this.updateAriaSelected(this.sortOptions, 0);
@@ -979,11 +659,11 @@ window.addEventListener('load', () => {
             }
 
             closeDropDown() {
-                if (this.sortMenu.style.display === 'block') {
+                if (this.menuExpanded) {
                     this.sortMenu.style.display = '';
                     this.sortMenu.removeAttribute('aria-activedescendant');
                     this.sortMenuIcon.style.transform = '';
-                    this.sortMenuIcon.removeEventListener('click', this.handleIconClick);
+                    this.sortMenuIcon.removeEventListener('click', this.handleIconClickSortSelect);
                     this.sortMenuIcon.addEventListener('click', this.clickHandleIconExpand);
                     this.sortBtn.setAttribute('aria-expanded', 'false');
                     this.sortBtn.focus();
@@ -1344,6 +1024,106 @@ window.addEventListener('load', () => {
             }
         }
 
+        class ContactForm {
+            constructor(contactBtn = document.querySelector('button.contact'),
+                        modalbg = document.querySelector('div.modalbg'),
+                        closebtn = document.querySelector('button.close'),
+                        modalForm = document.querySelector('form.modal')) {
+                this.contactBtn = contactBtn;
+                this.modalbg = modalbg;
+                this.closebtn = closebtn;
+                this.modalForm = modalForm;
+            }
+
+            displayModalForm() {
+                this.modalbg.style.display = 'block';
+                const firstInput = document.querySelector('input#firstname');
+                mainPage.setAttribute('aria-hidden', 'true');
+                firstInput.focus();
+                lockScroll();
+            }
+
+            exitModalForm(e) {
+                e.preventDefault();
+                this.modalbg.style.display = 'none';
+                mainPage.setAttribute('aria-hidden','false');
+                this.contactBtn.focus();
+                unlockScroll();
+            }
+
+            submitContactForm(e) {
+                e.preventDefault();
+                const firstNameElt = document.querySelector('#firstname');
+                const lastNameElt = document.querySelector('#lastname');
+                const emailElt = document.querySelector('#email');
+                const contactMsgElt = document.querySelector('#message');
+
+                const formDataObject = {
+                    firstName : {
+                        value : firstNameElt.value,
+                        isValid : isNotEmptyString,
+                        errorMsg : 'First Name must have at least one character'
+                    },
+                    lastName : {
+                        value : lastNameElt.value,
+                        isValid : isNotEmptyString,
+                        errorMsg : 'Last Name must have at least one character'
+                    },
+                    email : {
+                        value : emailElt.value,
+                        isValid : validEmailRegex,
+                        errorMsg : 'Please enter a valid e-mail address'
+                    },
+                    message : {
+                        value : contactMsgElt.value,
+                        isValid : isNotEmptyString,
+                        errorMsg : 'The message must have at least one character'
+                    }
+                }
+
+                const errorMsgs = this.formDataErrorCollection(formDataObject);
+
+                if (errorMsgs.length > 0) {
+                    console.log(errorMsgs);
+                    return false;
+                }
+
+                const contentToDisplay = this.formDataValueCollection(formDataObject);
+
+                console.log(contentToDisplay);
+                this.contactBtn.focus();
+            }
+
+            formDataErrorCollection(objectToValidate) {
+                const errorMessagesList = [];
+
+                for (let [key,subObject] of Object.entries(objectToValidate)) {
+                    if (!subObject.isValid(subObject.value)) {
+                        errorMessagesList.push(`${key} error : ${subObject.errorMsg}`);
+                    }
+                }
+
+                return errorMessagesList;
+            }
+
+            formDataValueCollection(validatedObject) {
+                const valueList = [];
+
+                for (let key of Object.keys(validatedObject)) {
+                    valueList.push(validatedObject[key].value);
+                }
+
+                return valueList;
+            }
+
+            attachListenersToContactForm () {
+                this.contactBtn.addEventListener('click', this.displayModalForm.bind(this));
+                this.closebtn.addEventListener('click', this.exitModalForm.bind(this));
+                this.modalForm.addEventListener('submit', this.submitContactForm.bind(this));
+            }
+
+        }
+
         //*---------------------------------------------------------------------------------------*
 
         // Checks for invalid data
@@ -1361,10 +1141,6 @@ window.addEventListener('load', () => {
             throw new Error('Wrong Id specified');
         }
         const currentPhotographerMedias = mediaList.filter(media => media.photographerId === parseInt(currentId));
-
-        //const sortedPhotographersMedias = rememberSort(currentPhotographerMedias, currentId);
-        //filteredMedias = sortedPhotographersMedias;
-
 
         const displayedInfoObject = new PhotographerGlobalObject(currentPhotographerData, currentPhotographerMedias);
         displayedInfoObject.setPhotographerHeader();
@@ -1397,159 +1173,8 @@ window.addEventListener('load', () => {
         lightboxObject.attachListenerToControlBtns();
         lightboxObject.attachListenerToThumbnails();
 
-        //const tagsArray = document.querySelectorAll('div.infos__tags__item');
-        //tagsArray.forEach(tagElt => tagElt.addEventListener('click', filterPhotosByTag));
-
-        /*function filterPhotosByTag(e) {
-            let clickedTag = e.target.dataset.tag;
-
-            if (clickedTag === activeTag) {
-                activeTag = '';
-                //Sorting the array may be needed
-                let option = selectedSorting.innerText;
-                mediaGalleryObject.sortMedias(option);
-            }else{
-                //Since we cut an array already sorted, no need to sort here
-                activeTag = clickedTag;
-                //filteredMedias = sortedPhotographersMedias.filter(media => media.tags.includes(clickedTag));
-            }
-            mediaGalleryObject.addMediaListToGallery();
-            updateTagDisplay();
-        }*/
-
-        /*function updateTagDisplay() {
-            tagsArray.forEach((tag) => {
-                if (tag.dataset.tag === activeTag) {
-                    tag.dataset.selected = 'true';
-                }else{
-                    tag.dataset.selected = 'false';
-                }
-            });
-        }*/
-
-        // Events relative to the sorting drop down menu
-        /*sortBtn.addEventListener('click', displaySortMenu);
-        sortMenuIcon.addEventListener('click', displaySortMenu);
-
-        sortOptions.forEach(optionElt => {
-            optionElt.addEventListener('click', sortOptionSelected);
-        })
-
-
-        function displaySortMenu(e) {
-            e.stopPropagation();
-
-            sortMenu.style.display = 'block';
-            sortMenu.focus();
-            sortMenuIcon.style.transform = 'rotate(180deg)';
-            sortMenuIcon.addEventListener('click', sortOptionSelected);
-
-            sortBtn.setAttribute('aria-expanded', 'true');
-            updateAriaSelected(sortOptions, 0);
-
-        }*/
-
-        /*function rememberSort(mediaArray, photographerID) {
-            let sortedArray;
-            if (!localStorage.getItem(`photographer${photographerID}SortOption`)) {
-                localStorage.setItem(`photographer${photographerID}SortOption`, 'Popularité');
-                sortedArray = sortPopularity(mediaArray);
-            }else{
-                const lastSortOption = localStorage.getItem(`photographer${photographerID}SortOption`);
-                sortedArray = sortingChoice(mediaArray, lastSortOption, photographerID);
-            }
-            return sortedArray;
-        }*/
-
-        // Functions for drop down menu and sorting items
-        /*function sortOptionSelected(e) {
-            e.stopPropagation();
-
-            let option;
-            
-            if (e.target.tagName === 'LI') {
-                option = e.target.textContent;
-            }else{
-                option = 'Popularité';
-            }
-
-            closeDropDown();
-
-            let newSortedList = sortingChoice(filteredMedias, option, currentId);
-
-            removeChildTags(mediaWrapper);
-            addMediaList(mediaWrapper, currentPhotographerData, newSortedList);
-            setTotalLikes(currentPhotographerMedias);
-
-        }*/
-
-        /*function updateAriaSelected(itemList, selectedItemIndex) {
-            for (let item of itemList) {
-                item.setAttribute('aria-selected', 'false');
-                item.classList.remove('sort-focus');
-            }
-            itemList[selectedItemIndex].setAttribute('aria-selected', 'true');
-            itemList[selectedItemIndex].classList.add('sort-focus');
-            const itemIdList = [];
-            itemList.forEach(item => itemIdList.push(item.id));
-
-            sortMenu.setAttribute('aria-activedescendant',itemIdList[selectedItemIndex]);
-        }*/
-
-        //Controlling the dropdown with the keyboard
-        /*window.addEventListener('keydown', (e) => {
-            if(sortMenu.style.display === 'block') {
-
-                if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    selectNextSortOption();
-                }
-                if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    selectPreviousSortOption();
-                }
-                if (e.key === 'Escape') {
-                    closeDropDown();
-                }
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const focusedSortItem = document.querySelector('li.sort-dropdown__item[aria-selected=true]');
-                    focusedSortItem.click();
-                }
-            }
-        })*/
-
-        /*function selectNextSortOption() {
-            const focusedSortItem = document.querySelector('li.sort-dropdown__item[aria-selected=true]');
-            let index = focusedSortItem.dataset.index;
-            if (index < sortOptions.length - 1) {
-                index++;
-                updateAriaSelected(sortOptions, index);
-            }
-        }
-
-        function selectPreviousSortOption() {
-            const focusedSortItem = document.querySelector('li.sort-dropdown__item[aria-selected=true]');
-            let index = focusedSortItem.dataset.index;
-            if (index > 0) {
-                index--;
-                updateAriaSelected(sortOptions, index);
-            }
-        }*/
-
-        // Closing dropdown without selecting
-        //window.addEventListener('click', closeDropDown);
-
-        /*function closeDropDown() {
-            if (sortMenu.style.display === 'block') {
-                sortMenu.style.display = '';
-                sortMenu.removeAttribute('aria-activedescendant');
-                sortMenuIcon.style.transform = '';
-                sortMenuIcon.removeEventListener('click', sortOptionSelected);
-                sortBtn.setAttribute('aria-expanded','false');
-                sortBtn.focus();
-            }
-        }*/
+        const contactObject = new ContactForm();
+        contactObject.attachListenersToContactForm();
         
     })
     .catch((error) => {
