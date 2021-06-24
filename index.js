@@ -1,13 +1,13 @@
 // Refactoring  with OOP
 class PhotographerGallery {
     constructor(photographersList, containerDOM = document.getElementsByClassName('photograph-wrapper')[0]) {
-        this.AllPhotographers = photographersList;
+        this.allPhotographers = photographersList;
         this.navTagsDOM = document.querySelectorAll('div.nav-tag-item');
         this.photographersContainer = containerDOM;
         this.activeTag = '';
     }
 
-    updatePhotographers(photographersList = this.AllPhotographers) {
+    updatePhotographers(photographersList = this.allPhotographers) {
         this.removeChildTags(this.photographersContainer);
         this.addPhotographersList(this.photographersContainer, photographersList)
     }
@@ -31,7 +31,7 @@ class PhotographerGallery {
 
     tagSelected(e) {
         let tag = e.target.dataset.tag;
-        let filteredPhotographers = this.AllPhotographers;
+        let filteredPhotographers = this.allPhotographers;
         if (this.activeTag === tag) {
             this.activeTag = '';
         } else {
@@ -41,11 +41,11 @@ class PhotographerGallery {
         this.updateNavTags(this.navTagsDOM);
         this.updatePhotographers(filteredPhotographers)
         if (e.target.classList.contains('photograph-profile__tags__tag-item')) {
-            getCorrectFocus(e.target);
+            this.getCorrectFocus(e.target);
         }
     }
 
-    addPhotographersList(container = this.photographersContainer, photographerArray = this.AllPhotographers) {
+    addPhotographersList(container = this.photographersContainer, photographerArray = this.allPhotographers) {
         for (let currentPhotographer of photographerArray) {
             this.appendPhotographer(container, currentPhotographer);
         }
@@ -111,6 +111,20 @@ class PhotographerGallery {
         }
     }
 
+    getCorrectFocus(clickedTag) {
+        const tagContainer = clickedTag.parentElement;
+        const description = tagContainer.previousSibling;
+        const correctAvatar = description.previousSibling;
+        const correctName = correctAvatar.text;
+        const allh2 = this.photographersContainer.querySelectorAll('h2');
+        for (let currenth2 of allh2) {
+            if (correctName === currenth2.innerText) {
+                const correctLink = currenth2.parentElement;
+                correctLink.focus();
+                return
+            }
+        }
+    }
 }
 
 /*// Remove all the content inside a container element
@@ -132,7 +146,7 @@ function readJsonData () {
 }
 
 // Focus on the photographer profile where the tag was clicked
-function getCorrectFocus(clickedTag) {
+/*function getCorrectFocus(clickedTag) {
     const tagContainer = clickedTag.parentElement;
     const description = tagContainer.previousSibling;
     const correctAvatar = description.previousSibling;
@@ -146,7 +160,7 @@ function getCorrectFocus(clickedTag) {
             return
         }
     }
-}
+}*/
 
 // Event triggered on page launch
 window.addEventListener('load', () => {
