@@ -2,7 +2,7 @@
 const mainPage = document.querySelector('div.photographer-page');
 
 // Dom of the media container
-const mediaWrapper = document.querySelector('div.photo-wrapper');
+//const mediaWrapper = document.querySelector('div.photo-wrapper');
 
 function lockScroll() {
     document.body.style.overflow = 'hidden';
@@ -96,7 +96,7 @@ function toggleVideoPlay(e) {
 
 // Create, without adding it to the page, the frame with the titles and the likes
 // Ready but without the media itself
-function createMediaFrame(title, likes, localLiked) {
+function createMediaFrame(title, likes, localLiked = false) {
     const mediaFrameElt = document.createElement('div');
     mediaFrameElt.classList.add('photo-container');
 
@@ -109,8 +109,9 @@ function createMediaFrame(title, likes, localLiked) {
     const likeIconElt = createLikeIcon();
     likeIconElt.classList.add('js-clickable-like');
     likeIconElt.dataset.likesNumber = likes;
-    makeLikeIconClickable(likeIconElt, localLiked);
-    preventClickOnParent(mediaDescriptionElt);
+    likeIconElt.dataset.localLiked = localLiked.toString();
+    //makeLikeIconClickable(likeIconElt, localLiked);
+    //preventClickOnParent(mediaDescriptionElt);
 
     mediaFrameElt.appendChild(mediaDescriptionElt);
     mediaDescriptionElt.appendChild(mediaLikesElt);
@@ -121,7 +122,7 @@ function createMediaFrame(title, likes, localLiked) {
 
 // The factory that create the appropriate media object, just by checking the presence
 // of a video or image key in the object extracted from the JSON file
-function mediaFactory(mediaObject, photographerObject) {
+/*function mediaFactory(mediaObject, photographerObject) {
     let media;
     
     if (Object.prototype.hasOwnProperty.call(mediaObject, 'image')) {
@@ -133,7 +134,7 @@ function mediaFactory(mediaObject, photographerObject) {
     }
     
     return media;
-}
+}*/
 
 // Remove all the content inside a container element
 function removeChildTags(container) {
@@ -143,14 +144,14 @@ function removeChildTags(container) {
 }
 
 // Adds all the media to the specified container using the factory
-function addMediaList(container, currentPhotographerData, mediaArray) {
+/*function addMediaList(container, currentPhotographerData, mediaArray) {
     
     for (let currentMediaIndex in mediaArray) {
         let mediaObject = mediaFactory(mediaArray[currentMediaIndex], currentPhotographerData);
         
         mediaObject.appendMedia(container, currentMediaIndex);
     }
-}
+}*/
 
 
 //Part relative to the modal form
@@ -265,22 +266,17 @@ function createLikeIcon() {
 
 // Incrementing likes
 
-let filteredMedias;
+//let filteredMedias;
 
-function makeLikeIconClickable(likeIcon, localLiked) {
+/*function makeLikeIconClickable(likeIcon, localLiked) {
     if (!localLiked) {
         likeIcon.addEventListener('click', addOneLike);
     }else{
         likeIcon.addEventListener('click', removeOneLike);
     }
-}
+}*/
 
-function updateMediaObject(mediaObject, likes, localLiked) {
-    mediaObject.likes = likes;
-    mediaObject.localLiked = localLiked;
-}
-
-function addOneLike(e) {
+/*function addOneLike(e) {
     e.stopPropagation();
     let likes = e.target.dataset.likesNumber;
     const likedMediaContainer = e.target.parentElement.parentElement.parentElement;
@@ -318,15 +314,15 @@ function removeOneLike(e) {
 
     likesContainer.appendChild(likeIcon);
     updateTotalLikes(-1);
-}
+}*/
 
-function preventClickOnParent(elt) {
+/*function preventClickOnParent(elt) {
     elt.addEventListener('click', (e) => {
         e.stopPropagation();
     })
-}
+}*/
 
-function updateTotalLikes(difference) {
+/*function updateTotalLikes(difference) {
     const likesElt = document.querySelector('div.stats__likes');
     let totalLikes = parseInt(likesElt.dataset.totalLikes,10);
     totalLikes += difference;
@@ -335,20 +331,20 @@ function updateTotalLikes(difference) {
     likesElt.innerText = `${totalLikes} `;
     likesElt.dataset.totalLikes = totalLikes.toString(10);
     likesElt.appendChild(likeIcon);
-}
+}*/
 
 // When one media becomes more popular after incrementing its likes
 
-function checkDrawLiking(likes, clickedMedia) {
+/*function checkDrawLiking(likes, clickedMedia) {
     const drawsList = filteredMedias.filter(media => media.likes === parseInt(likes,10));
     if (drawsList.length > 1) {
         getReadyToAnimateDrawLiking(drawsList, clickedMedia);
     }
-}
+}*/
 
-let movingHappens;
+//let movingHappens;
 
-function getReadyToAnimateDrawLiking(drawMediaArray, clickedMedia,
+/*function getReadyToAnimateDrawLiking(drawMediaArray, clickedMedia,
                                      growFactor = 1.25, totalTime = 800) {
     const drawMediaArrayElt = drawMediaArray.map(media => document.querySelector(`div.photo-container[data-media-id="${media.id}"]`));
     const positionArray = getPositionArray(drawMediaArrayElt);
@@ -364,9 +360,9 @@ function getReadyToAnimateDrawLiking(drawMediaArray, clickedMedia,
     reloadPhotographerData(photographerId).then(data => {
         movingHappens = setTimeout(updateDOMAfterAnimateDraw, totalTime+300, data);
     });
-}
+}*/
 
-function updateDOMAfterAnimateDraw(photographerData) {
+/*function updateDOMAfterAnimateDraw(photographerData) {
     filteredMedias = sortPopularity(filteredMedias);
     removeChildTags(mediaWrapper);
     addMediaList(mediaWrapper, photographerData, filteredMedias);
@@ -474,17 +470,17 @@ function endAnimationDraw(mediaAnimated,x,y) {
     mediaAnimated.style.transform = `translate(${x}px,${y}px)`;
 }
 
-function getPhotographerId() {
-    const queryString = window.location.search;
-    return new URLSearchParams(queryString).get('id');
-}
-
 // Returns a promise
 function reloadPhotographerData(photographerId) {
     return readJsonData()
         .then((fishEyeData) => {
             return fishEyeData.photographers.find(photographer => photographer.id === parseInt(photographerId,10));
         })
+}*/
+
+function getPhotographerId() {
+    const queryString = window.location.search;
+    return new URLSearchParams(queryString).get('id');
 }
 
 // This function returns a promise, so we need to use .then after we call it
@@ -559,6 +555,17 @@ class PhotographerGlobalObject {
         this.likesContainer.appendChild(likeIcon);
     }
 
+    updateTotalLikes(difference) {
+        const likesElt = this.likesContainer;
+        let totalLikes = parseInt(likesElt.dataset.totalLikes,10);
+        totalLikes += difference;
+
+        const likeIcon = createLikeIcon();
+        likesElt.innerText = `${totalLikes} `;
+        likesElt.dataset.totalLikes = totalLikes.toString(10);
+        likesElt.appendChild(likeIcon);
+    }
+
     focusOnHeader() {
         this.headerContainer.focus();
     }
@@ -576,10 +583,7 @@ class MediaGallery {
 
     sortMedias(sortOption, mediaArray = this.mediaData) {
         const  resArray = sortingChoice(mediaArray, sortOption, this.photographerData.id);
-        filteredMedias = resArray;
-        /*if (filterObject !== undefined) {
-            filterObject.filteredMedias = resArray;
-        }*/
+        this.mediaData = resArray;
         return resArray;
     }
 
@@ -590,8 +594,8 @@ class MediaGallery {
             option = localStorage.getItem(`photographer${this.photographerData.id}SortOption`);
         }
         const sortedArray = this.sortMedias(option, mediaArray);
-        filteredMedias = sortedArray;
         this.addMediaListToGallery(sortedArray);
+        return sortedArray;
     }
 
     addMediaToGallery(mediaObject, index, container = this.mediaContainer) {
@@ -824,7 +828,8 @@ class Lightbox {
 
 //Sorting menu
 class SortingDropDown {
-    constructor(mediaGallery, filterObject, lightboxObject) {
+    constructor(mediaGallery, lightboxObject, photographerObject, activeTag = '',
+                filterTagsDOM = document.querySelectorAll('div.infos__tags__item')) {
         this.sortBtn = document.querySelector('.sort-button');
         this.sortMenu = document.querySelector('ul.sort-dropdown');
         this.sortOptions = document.querySelectorAll('li.sort-dropdown__item');
@@ -832,17 +837,59 @@ class SortingDropDown {
         this.sortMenuIcon = document.querySelector('.sort-container .fa-chevron-down');
         this.menuExpanded = false;
         this.mediaGallery = mediaGallery;
-        this.filterObject = filterObject;
         this.lightboxObject = lightboxObject;
+        this.photographerObject = photographerObject;
+        this.activeTag = activeTag;
+        this.tagNodeList = filterTagsDOM;
+        this.filteredMedias = this.mediaGallery.mediaData;
 
         //Remembers last option to display and sort
-        if (!localStorage.getItem(`photographer${this.mediaGallery.photographerData.id}SortOption`)) {
-            localStorage.setItem(`photographer${this.mediaGallery.photographerData.id}SortOption`, 'Popularité');
+        if (!localStorage.getItem(`photographer${this.photographerObject.photographerData.id}SortOption`)) {
+            localStorage.setItem(`photographer${this.photographerObject.photographerData.id}SortOption`, 'Popularité');
             this.currentOption = 'Popularité';
         }else{
-            this.currentOption = localStorage.getItem(`photographer${this.mediaGallery.photographerData.id}SortOption`);
+            this.currentOption = localStorage.getItem(`photographer${this.photographerObject.photographerData.id}SortOption`);
         }
     }
+
+    // Part relative to filter
+
+    updateTagDisplay() {
+        this.tagNodeList.forEach((tag) => {
+            if (tag.dataset.tag === this.activeTag) {
+                tag.dataset.selected = 'true';
+            } else {
+                tag.dataset.selected = 'false';
+            }
+        });
+    }
+
+    filterPhotosByTag(e) {
+        let clickedTag = e.target.dataset.tag;
+
+        if (clickedTag === this.activeTag) {
+            this.activeTag = '';
+            //Sorting the array may be needed
+            let option = this.currentOption;
+            this.filteredMedias = this.mediaGallery.sortMedias(option);
+        }else{
+            //Since we cut an array already sorted, no need to sort here
+            this.activeTag = clickedTag;
+            this.filteredMedias = this.mediaGallery.mediaData.filter(media => media.tags.includes(clickedTag));
+        }
+        this.mediaGallery.addMediaListToGallery(this.filteredMedias);
+        this.lightboxObject.attachListenerToThumbnails();
+        this.attachListenerToLikeIcons();
+        this.updateTagDisplay();
+    }
+
+    attachListenerToMediaTags() {
+        this.tagNodeList.forEach(tagElt => {
+            tagElt.addEventListener('click', this.filterPhotosByTag.bind(this))
+        });
+    }
+
+    //Part relative to sorting
 
     displaySortMenu(e) {
         e.stopPropagation();
@@ -883,9 +930,11 @@ class SortingDropDown {
 
         this.closeDropDown();
         this.updateDisplayedChoice(this.currentOption);
-        const filteredArray = this.filterObject.filteredMedias;
+        const filteredArray = this.filteredMedias;
         const sortedArray = this.mediaGallery.sortMedias(this.currentOption, filteredArray);
+        this.filteredMedias = sortedArray;
         this.mediaGallery.addMediaListToGallery(sortedArray);
+        this.attachListenerToLikeIcons();
         this.lightboxObject.attachListenerToThumbnails();
     }
 
@@ -977,6 +1026,192 @@ class SortingDropDown {
     attachListenerClickOutside() {
         window.addEventListener('click', this.closeDropDown.bind(this));
     }
+
+    // Like and thumbnail animations
+
+    makeLikeIconClickable(likeIcon) {
+        let localLiked = (likeIcon.dataset.localLiked === 'true');
+        if (!localLiked) {
+            likeIcon.addEventListener('click', this.addOneLike.bind(this));
+        }else{
+            likeIcon.addEventListener('click', this.removeOneLike.bind(this));
+        }
+    }
+
+    attachListenerToLikeIcons() {
+        const likeIconsElt = this.mediaGallery.mediaContainer.querySelectorAll('.js-clickable-like');
+        likeIconsElt.forEach(icon => this.makeLikeIconClickable(icon));
+    }
+
+    addOneLike(e) {
+        e.stopPropagation();
+        let likes = e.target.dataset.likesNumber;
+        const likedMediaContainer = e.target.parentElement.parentElement.parentElement;
+        const currentSortOption = this.currentOption;
+        // Function for the challenge
+        if (currentSortOption === 'Popularité') this.checkDrawLiking(likes, likedMediaContainer);
+        likes++;
+        const likedMediaObject = this.filteredMedias.find(media => media.id === parseInt(likedMediaContainer.dataset.mediaId,10));
+        likedMediaObject.likes = likes;
+        likedMediaObject.localLiked = true;
+        const likesContainer = e.target.parentElement;
+        likesContainer.textContent = `${likes} `;
+        const likeIcon = createLikeIcon();
+        likeIcon.dataset.likesNumber = likes;
+        likeIcon.dataset.localLiked = "true";
+        likeIcon.addEventListener('click', this.removeOneLike.bind(this));
+        likesContainer.appendChild(likeIcon);
+        this.photographerObject.updateTotalLikes(1);
+    }
+
+    removeOneLike(e) {
+        e.stopPropagation();
+        let likes = e.target.dataset.likesNumber;
+        const unlikedMediaContainer = e.target.parentElement.parentElement.parentElement;
+        const currentSortOption = this.currentOption;
+        if (currentSortOption === 'Popularité') this.checkDrawUnliking(likes, unlikedMediaContainer);
+        likes--;
+        const unlikedMediaObject = this.filteredMedias.find(media => media.id === parseInt(unlikedMediaContainer.dataset.mediaId,10));
+        unlikedMediaObject.likes = likes;
+        unlikedMediaObject.localLiked = false;
+        const likesContainer = e.target.parentElement;
+        likesContainer.textContent = `${likes} `;
+        const likeIcon = createLikeIcon();
+        likeIcon.dataset.likesNumber = likes;
+        likeIcon.dataset.localLiked = "false";
+        likeIcon.addEventListener('click', this.addOneLike.bind(this));
+        likesContainer.appendChild(likeIcon);
+        this.photographerObject.updateTotalLikes(-1);
+    }
+
+    checkDrawLiking(likes, clickedMedia) {
+        const drawsList = this.filteredMedias.filter(media => media.likes === parseInt(likes,10));
+        if (drawsList.length > 1) {
+            this.getReadyToAnimateDrawLiking(drawsList, clickedMedia);
+        }
+    }
+
+    checkDrawUnliking(likes, clickedMedia) {
+        const drawsList = this.filteredMedias.filter(media => media.likes === parseInt(likes,10));
+        if (drawsList.length > 1) {
+            this.getReadyToAnimateDrawUnliking(drawsList,clickedMedia);
+        }
+    }
+
+    getReadyToAnimateDrawLiking(drawMediaArray, clickedMedia,
+                                growFactor = 1.25, totalTime = 800) {
+        const drawMediaArrayElt = drawMediaArray.map(media => this.mediaGallery.mediaContainer.querySelector(`div.photo-container[data-media-id="${media.id}"]`));
+        const positionArray = this.getPositionArray(drawMediaArrayElt);
+        const firstPosition = positionArray[0];
+        const clickedMediaCoords = this.getPosition(clickedMedia);
+        const distanceFromFirst = this.getDistance(firstPosition, clickedMediaCoords);
+        if (distanceFromFirst.x === 0 && distanceFromFirst.y === 0) return false;
+
+        this.AnimateDecideBetweenLike(drawMediaArrayElt,clickedMedia,positionArray,distanceFromFirst,
+            growFactor, totalTime);
+        window.clearTimeout(this.movingHappens);
+        this.movingHappens = setTimeout(this.updateDOMAfterAnimate.bind(this), totalTime+300,
+            this.filteredMedias, this.mediaGallery.mediaContainer, this.mediaGallery.photographerData);
+    }
+
+    getReadyToAnimateDrawUnliking(drawMediaArray, clickedMedia,
+                                  growFactor = 1.25, totalTime = 800) {
+        const drawMediaArrayElt = drawMediaArray.map(media => document.querySelector(`div.photo-container[data-media-id="${media.id}"]`));
+        const positionArray = this.getPositionArray(drawMediaArrayElt);
+        const lastPosition = positionArray[positionArray.length - 1];
+        const clickedMediaCoords = this.getPosition(clickedMedia);
+        const distanceFromLast = this.getDistance(lastPosition, clickedMediaCoords);
+        if (distanceFromLast.x === 0 && distanceFromLast.y === 0) return false;
+
+        this.AnimateDecideBetweenUnlike(drawMediaArrayElt, clickedMedia, positionArray, distanceFromLast,
+            growFactor, totalTime);
+        window.clearTimeout(this.movingHappens);
+        this.movingHappens = setTimeout(this.updateDOMAfterAnimate.bind(this), totalTime+300,
+            this.filteredMedias);
+    }
+
+    updateDOMAfterAnimate(mediaArray, container, photographerData) {
+        const sortedArray = sortPopularity(mediaArray)
+        this.filteredMedias = sortedArray;
+        this.mediaGallery.addMediaListToGallery(sortedArray, container, photographerData);
+        this.attachListenerToLikeIcons();
+    }
+
+    AnimateDecideBetweenLike(
+        mediaEltArray, clickedMediaElt, positionArray, distanceForClickedElt,
+        growFactor = 1.25, totalTime = 800
+    ) {
+        const shrinkFactor = 1/growFactor;
+        const step2Time = totalTime*0.4;
+        const indexOfLikedElt = mediaEltArray.indexOf(clickedMediaElt);
+        mediaEltArray.forEach((elt,index) => {
+            if (elt === clickedMediaElt) {
+                elt.style.transform = `scale(${growFactor})`;
+                setTimeout(this.addTranslation, step2Time, elt, distanceForClickedElt.x*shrinkFactor, distanceForClickedElt.y*shrinkFactor);
+                setTimeout(this.endAnimationDraw, totalTime, elt, distanceForClickedElt.x, distanceForClickedElt.y);
+            }else{
+                if (index < indexOfLikedElt) {
+                    elt.style.transform = `scale(${shrinkFactor})`;
+                    const distanceToTarget = this.getDistance(positionArray[index+1], positionArray[index]);
+                    setTimeout(this.addTranslation, step2Time, elt, distanceToTarget.x*growFactor, distanceToTarget.y*growFactor);
+                    setTimeout(this.endAnimationDraw, totalTime, elt, distanceToTarget.x, distanceToTarget.y);
+                }
+            }
+        });
+    }
+
+    AnimateDecideBetweenUnlike(
+        mediaEltArray, clickedMediaElt, positionArray, distanceForClickedElt,
+        growFactor = 1.25, totalTime = 800
+    ) {
+        const shrinkFactor = 1/growFactor;
+        const step2Time = totalTime*0.4;
+        const indexOfLikedElt = mediaEltArray.indexOf(clickedMediaElt);
+        mediaEltArray.forEach((elt,index) => {
+            if (elt === clickedMediaElt) {
+                elt.style.transform = `scale(${shrinkFactor})`;
+                setTimeout(this.addTranslation, step2Time, elt, distanceForClickedElt.x*growFactor, distanceForClickedElt.y*growFactor);
+                setTimeout(this.endAnimationDraw, totalTime, elt, distanceForClickedElt.x, distanceForClickedElt.y);
+            }else{
+                if (index > indexOfLikedElt) {
+                    elt.style.transform = `scale(${growFactor})`;
+                    const distanceToTarget = this.getDistance(positionArray[index - 1], positionArray[index]);
+                    setTimeout(this.addTranslation, step2Time, elt, distanceToTarget.x*shrinkFactor, distanceToTarget.y*shrinkFactor);
+                    setTimeout(this.endAnimationDraw, totalTime, elt, distanceToTarget.x, distanceToTarget.y);
+                }
+            }
+        });
+    }
+
+    endAnimationDraw(mediaAnimated,x,y) {
+        mediaAnimated.style.transform = `translate(${x}px,${y}px)`;
+    }
+
+    addTranslation(elt,x,y) {
+        elt.style.transform += ` translate(${x}px,${y}px)`;
+    }
+
+    getPosition(elt) {
+        const boundingObject = elt.getBoundingClientRect() ;
+        return {
+            x : boundingObject.x,
+            y : boundingObject.y
+        }
+    }
+
+    getDistance(coords1, coords2) {
+        const difference = {};
+        // Fix if both coordinates are the same
+        if (coords1 === undefined) return {x:0,y:0}
+        const coordKeys = Object.keys(coords1);
+        coordKeys.forEach(key => difference[key] = coords1[key] - coords2[key]);
+        return difference;
+    }
+
+    getPositionArray(mediaEltArray) {
+        return mediaEltArray.map(mediaElt => this.getPosition(mediaElt));
+    }
+
 }
 
 class ContactForm {
@@ -1079,63 +1314,19 @@ class ContactForm {
 
 }
 
-// Filter photos by tag
-
-class MediaFilter {
-    constructor(mediaGalleryObject, activeTag = '',
-                filterTagsDOM = document.querySelectorAll('div.infos__tags__item')) {
-        this.activeTag = activeTag;
-        this.tagNodeList = filterTagsDOM;
-        this.filteredMedias = mediaGalleryObject.mediaData;
-    }
-
-    updateTagDisplay() {
-        this.tagNodeList.forEach((tag) => {
-            if (tag.dataset.tag === this.activeTag) {
-                tag.dataset.selected = 'true';
-            } else {
-                tag.dataset.selected = 'false';
-            }
-        });
-    }
-
-}
+// Class for the interaction of all the classes
 
 class PhotographerPage {
     constructor(currentPhotographerData, currentPhotographerMedias) {
+        this.photographerObject = new PhotographerGlobalObject(currentPhotographerData, currentPhotographerMedias);
         this.mediaGallery = new MediaGallery(currentPhotographerData, currentPhotographerMedias);
-        this.filterObject = new MediaFilter(this.mediaGallery);
         this.lightBoxObject = new Lightbox(this.mediaGallery);
         this.dropDownObject = new SortingDropDown(this.mediaGallery,
-            this.filterObject, this.lightBoxObject);
+            this.lightBoxObject, this.photographerObject);
         this.contactObject = new ContactForm();
-        this.photographerObject = new PhotographerGlobalObject(currentPhotographerData, currentPhotographerMedias);
     }
 
     //Needed all instances of media gallery, lightbox object and drop down object
-    filterPhotosByTag(e) {
-        let clickedTag = e.target.dataset.tag;
-
-        if (clickedTag === this.filterObject.activeTag) {
-            this.filterObject.activeTag = '';
-            //Sorting the array may be needed
-            let option = this.dropDownObject.currentOption;
-            this.filterObject.filteredMedias = this.mediaGallery.sortMedias(option);
-        }else{
-            //Since we cut an array already sorted, no need to sort here
-            this.filterObject.activeTag = clickedTag;
-            this.filterObject.filteredMedias = this.mediaGallery.mediaData.filter(media => media.tags.includes(clickedTag));
-        }
-        this.mediaGallery.addMediaListToGallery(this.filterObject.filteredMedias);
-        this.lightBoxObject.attachListenerToThumbnails();
-        this.filterObject.updateTagDisplay();
-    }
-
-    attachListenerToMediaTags() {
-        this.filterObject.tagNodeList.forEach(tagElt => {
-            tagElt.addEventListener('click', this.filterPhotosByTag.bind(this))
-        });
-    }
 
     initializePage() {
         this.photographerObject.setPhotographerHeader();
@@ -1145,14 +1336,16 @@ class PhotographerPage {
         this.mediaGallery.rememberSort();
 
         this.dropDownObject.rememberChoice();
+        this.dropDownObject.attachListenerToLikeIcons();
         this.dropDownObject.attachListenerToSortBtn();
         this.dropDownObject.attachListenerClickOutside();
         this.dropDownObject.attachListenerToSortOptions();
         this.dropDownObject.attachListenersToKeyBoard();
 
-        this.filterObject.tagNodeList =
+
+        this.dropDownObject.tagNodeList =
             this.photographerObject.headerContainer.querySelectorAll('.infos__tags__item');
-        this.attachListenerToMediaTags();
+        this.dropDownObject.attachListenerToMediaTags();
 
         this.lightBoxObject.attachListenersToKeyboard();
         this.lightBoxObject.attachListenerToControlBtns();
