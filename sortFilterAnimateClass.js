@@ -208,6 +208,7 @@ export default class SortingDropDown {
             likeIcon.addEventListener('click', this.addOneLike.bind(this));
         }else{
             likeIcon.addEventListener('click', this.removeOneLike.bind(this));
+            likeIcon.classList.add('liked');
         }
     }
 
@@ -232,6 +233,7 @@ export default class SortingDropDown {
         const likeIcon = createLikeIcon();
         likeIcon.dataset.likesNumber = likes;
         likeIcon.dataset.localLiked = "true";
+        likeIcon.classList.add('liked');
         likeIcon.addEventListener('click', this.removeOneLike.bind(this));
         likesContainer.appendChild(likeIcon);
         this.photographerObject.updateTotalLikes(1);

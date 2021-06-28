@@ -858,6 +858,10 @@ form.modal input[type="submit"]{
     cursor: pointer;
 }
 
+.liked {
+    color: #DB8876;
+}
+
 /* Sorting challenge */
 .photo-container {
     transition: transform 0.3s;
