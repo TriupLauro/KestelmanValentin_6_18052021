@@ -38,6 +38,7 @@ export default class PhotographerPage {
         this.lightBoxObject.attachListenerToThumbnails();
 
         this.contactObject.attachListenersToContactForm();
+        this.contactObject.attachListenerToWindow();
     }
 
 }

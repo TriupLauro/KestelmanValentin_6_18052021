@@ -100,4 +100,25 @@ export default class ContactForm {
         this.modalForm.addEventListener('submit', this.submitContactForm.bind(this));
     }
 
+    // Hiding and showing the contact button on mobile
+
+    hideContactBtn() {
+        this.contactBtn.style.transform = 'translate(-50%, 200%)'
+    }
+
+    showContactBtn () {
+        this.contactBtn.style.transform = ''
+    }
+
+    toggleButtonVisibility () {
+        if (window.innerWidth <= 1100) {
+            window.clearTimeout(this.scrollingHappens);
+            this.hideContactBtn();
+            this.scrollingHappens = setTimeout(this.showContactBtn.bind(this), 500);
+        }
+    }
+
+    attachListenerToWindow() {
+        window.addEventListener('scroll', this.toggleButtonVisibility.bind(this));
+    }
 }

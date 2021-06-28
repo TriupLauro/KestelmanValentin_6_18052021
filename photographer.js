@@ -4,29 +4,6 @@ import PhotographerPage from "./photographerPageClass.js";
 //DOM element of the page without the modals
 const mainPage = document.querySelector('div.photographer-page');
 
-//Part relative to the modal form
-const contactBtn = document.querySelector('button.contact');
-
-// Moving the contact button on mobile resolution
-
-let scrollingHappens;
-
-window.addEventListener('scroll', () => {
-    if(window.innerWidth <= 1100) {
-        window.clearTimeout(scrollingHappens);
-        hideContactBtn();
-        scrollingHappens = setTimeout(showContactBtn, 500);
-    }
-})
-
-function hideContactBtn() {
-    contactBtn.style.transform = 'translate(-50%, 200%)'
-}
-
-function showContactBtn () {
-    contactBtn.style.transform = ''
-}
-
 // This function returns a promise, so we need to use .then after we call it
 function readJsonData () {
     return fetch('database/FishEyeData.json')
