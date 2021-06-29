@@ -1,7 +1,7 @@
 import {isNotEmptyString, lockScroll, unlockScroll, validEmailRegex} from "./photographersFunctions.js";
 
 export default class ContactForm {
-    constructor(mainPageDOM,
+    constructor(mainPageDOM,photographerData,
                 contactBtn = document.querySelector('button.contact'),
                 modalbg = document.querySelector('div.modalbg'),
                 closebtn = document.querySelector('button.close'),
@@ -11,6 +11,7 @@ export default class ContactForm {
         this.closebtn = closebtn;
         this.modalForm = modalForm;
         this.mainPage = mainPageDOM;
+        this.photographerData = photographerData;
     }
 
     displayModalForm() {
@@ -98,6 +99,11 @@ export default class ContactForm {
         this.contactBtn.addEventListener('click', this.displayModalForm.bind(this));
         this.closebtn.addEventListener('click', this.exitModalForm.bind(this));
         this.modalForm.addEventListener('submit', this.submitContactForm.bind(this));
+    }
+
+    setContactName() {
+        const contactTitle = this.modalForm.querySelector('h1#contact-name');
+        contactTitle.append(this.photographerData.name);
     }
 
     // Hiding and showing the contact button on mobile

@@ -52,7 +52,6 @@ window.addEventListener('load', () => {
     })
     .catch((error) => {
         //This only runs if there's no or an invalid id for the photographer
-        const loader = document.querySelector('div.loader');
         const displayedMessage = document.querySelector('p.loader__msg');
     
         displayedMessage.innerText = error;

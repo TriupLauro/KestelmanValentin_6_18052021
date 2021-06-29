@@ -11,7 +11,7 @@ export default class PhotographerPage {
         this.lightBoxObject = new Lightbox(this.mediaGallery, mainPage);
         this.dropDownObject = new SortingDropDown(this.mediaGallery,
             this.lightBoxObject, this.photographerObject);
-        this.contactObject = new ContactForm(mainPage);
+        this.contactObject = new ContactForm(mainPage, currentPhotographerData);
     }
 
     initializePage() {
@@ -39,6 +39,7 @@ export default class PhotographerPage {
 
         this.contactObject.attachListenersToContactForm();
         this.contactObject.attachListenerToWindow();
+        this.contactObject.setContactName();
     }
 
 }
