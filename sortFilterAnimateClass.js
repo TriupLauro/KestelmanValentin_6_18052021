@@ -157,7 +157,7 @@ export default class SortingDropDown {
 
     attachListenerToSortBtn() {
         this.sortBtn.addEventListener('click', this.displaySortMenu.bind(this));
-        this.clickHandleIconExpand = this.displaySortMenu.bind(this)
+        this.clickHandleIconExpand = this.displaySortMenu.bind(this);
         this.sortMenuIcon.addEventListener('click', this.clickHandleIconExpand);
     }
 
