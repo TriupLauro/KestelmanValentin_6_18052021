@@ -185,6 +185,7 @@ export default class SortingDropDown {
             }
 
             if (e.key === 'Escape') {
+                e.preventDefault();
                 this.closeDropDown();
             }
 

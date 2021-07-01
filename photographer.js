@@ -47,7 +47,7 @@ window.addEventListener('load', () => {
         //Page is ready to be displayed
         loader.style.display = 'none';
         mainPage.style.display = '';
-        photographerPageObject.photographerObject.focusOnHeader();
+        photographerPageObject.focusOnHeader();
         
     })
     .catch((error) => {

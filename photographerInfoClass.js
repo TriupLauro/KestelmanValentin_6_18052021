@@ -1,6 +1,6 @@
 import {countLikes, createLikeIcon, removeChildTags} from "./photographersFunctions.js";
 
-export default class PhotographerGlobalObject {
+export default class PhotographerInfoObject {
     constructor(photographerData, photographerMedia,
                 headerDOM = document.querySelector('div.photograph-header'),
                 statsDOM = document.querySelector('.stats') ) {
