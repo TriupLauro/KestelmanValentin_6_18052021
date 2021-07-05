@@ -4,6 +4,7 @@ import Lightbox from "./lightboxClass.js";
 import SortingDropDown from "./sortFilterAnimateClass.js";
 import ContactForm from "./contactFormClass.js";
 
+//Class managing all the other classes on the photographer page
 export default class PhotographerPage {
     constructor(currentPhotographerData, currentPhotographerMedias, mainPage) {
         this.photographerInfoObject = new PhotographerInfoObject(currentPhotographerData, currentPhotographerMedias);
@@ -14,6 +15,9 @@ export default class PhotographerPage {
         this.contactObject = new ContactForm(mainPage, currentPhotographerData);
     }
 
+    //Set all the displayed information for the current photographer
+    //Create the media gallery of said photographer
+    //And adds all the event listeners for the interactive elements
     initializePage() {
         this.photographerInfoObject.setPhotographerHeader();
         this.photographerInfoObject.setPhotographerPrice();
@@ -42,6 +46,7 @@ export default class PhotographerPage {
         this.contactObject.setContactName();
     }
 
+    //Useful for screen readers (go directly to relevant information)
     focusOnHeader() {
         this.photographerInfoObject.focusOnHeader();
     }

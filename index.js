@@ -15,6 +15,9 @@ function readJsonData () {
 window.addEventListener('load', () => {
     readJsonData()
     .then((fishEyeData) => {
+        //We create the class managing the photographer gallery from the homepage
+        //Then we display all the photographers available in the JSON file
+        //And we add the event listener to the tags contained in the nav bar in the header
         const displayedGallery = new PhotographerGallery(fishEyeData.photographers);
         displayedGallery.updatePhotographers();
         displayedGallery.attachListenerToNavTags();

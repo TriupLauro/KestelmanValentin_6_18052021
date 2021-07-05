@@ -38,6 +38,8 @@ export function createMediaFrame(title, likes, localLiked = false) {
     const likeIconElt = createLikeIcon();
     likeIconElt.classList.add('js-clickable-like');
     likeIconElt.dataset.likesNumber = likes;
+
+    // Used when adding the event listener to permit either liking or unliking
     likeIconElt.dataset.localLiked = localLiked.toString();
 
     mediaFrameElt.appendChild(mediaDescriptionElt);
@@ -121,10 +123,14 @@ export function sortingChoice(mediaArray, choice, photographerId) {
     return newSortedList;
 }
 
+// Used to count all the likes using the reduce array method
+// Returns the total sum
 export function countLikes(accumulator, currentValue) {
     return accumulator + currentValue;
 }
 
+// Create the Like Icon
+// Used in the stats div and in the media frame
 export function createLikeIcon() {
     const likeIcon = document.createElement('span');
     likeIcon.classList.add('fas', 'fa-heart');

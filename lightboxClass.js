@@ -32,6 +32,9 @@ export default class Lightbox {
         unlockScroll();
     }
 
+    // Reads the DOM created by the media gallery and then display in the lightbox, the media with the specified index
+    // Index specified in the dataset of the media container when the appendMedia method was called
+    // by the media gallery
     goToMediaIndex(index) {
         const newElt = document.querySelector(`.photo-container[data-index='${index}'] > .js-thumbnail`);
         const newMediaHolderElt = document.querySelector(`.photo-container[data-index='${index}']`);
@@ -92,6 +95,7 @@ export default class Lightbox {
         this.goToMediaIndex(nextIndex);
     }
 
+    // Display the lightbox with the DOM elements appropriate for an image
     openLightBoxImage(e) {
         const mediaSrc = e.target.dataset.fullPath;
         const altText = e.target.alt;
@@ -119,6 +123,7 @@ export default class Lightbox {
 
     }
 
+    // Display the lightbox with the appropriate DOM elements for a video
     openLightBoxVideo(e) {
         this.lightboxBg.style.display = 'block';
         this.lightboxDisplayed = true;
@@ -174,7 +179,8 @@ export default class Lightbox {
                 }
             }
         }
-        //Let enter the lightbox with the keyboard
+
+        // Let enter the lightbox with the keyboard, pressing enter simulate a click on the focused element
         const focusedElement = document.activeElement;
         if (focusedElement.classList.contains('js-thumbnail')) {
             if (e.key === 'Enter') {

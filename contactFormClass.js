@@ -30,6 +30,9 @@ export default class ContactForm {
         unlockScroll();
     }
 
+    // First validate all the entries
+    // Then if there are validations errors display the error messages
+    // Otherwise send the user input to the console
     submitContactForm(e) {
         e.preventDefault();
         const firstNameElt = this.modalForm.querySelector('#firstname');
@@ -73,6 +76,8 @@ export default class ContactForm {
         this.contactBtn.focus();
     }
 
+    // Used to validate all the input, using the function contained in the isValid key
+    // Returns an array of all the error messages corresponding to a validation mismatch
     formDataErrorCollection(objectToValidate) {
         const errorMessagesList = [];
 
@@ -85,6 +90,8 @@ export default class ContactForm {
         return errorMessagesList;
     }
 
+    // Push all the user input in an array
+    // For instance, after all the inputs have been validated
     formDataValueCollection(validatedObject) {
         const valueList = [];
 
@@ -101,12 +108,15 @@ export default class ContactForm {
         this.modalForm.addEventListener('submit', this.submitContactForm.bind(this));
     }
 
+    // Display the name of the current photographer on top of the modal form
     setContactName() {
         const contactTitle = this.modalForm.querySelector('h1#contact-name');
         contactTitle.append(this.photographerData.name);
     }
 
     // Hiding and showing the contact button on mobile
+    // On mobile resolution, the contact button is hidden while scrolling
+    // It reappears only once the user has stopped scrolling the page
 
     hideContactBtn() {
         this.contactBtn.style.transform = 'translate(-50%, 200%)'
@@ -118,6 +128,7 @@ export default class ContactForm {
 
     toggleButtonVisibility () {
         if (window.innerWidth <= 1100) {
+            // clearTimeout is necessary to avoid the button from reappearing while the user is still scrolling
             window.clearTimeout(this.scrollingHappens);
             this.hideContactBtn();
             this.scrollingHappens = setTimeout(this.showContactBtn.bind(this), 500);

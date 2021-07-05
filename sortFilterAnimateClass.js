@@ -111,6 +111,7 @@ export default class SortingDropDown {
         this.lightboxObject.attachListenerToThumbnails();
     }
 
+    // Used to manage the accessibility elements of the drop down menu
     updateAriaSelected(itemList, selectedItemIndex) {
         for (let item of itemList) {
             item.setAttribute('aria-selected', 'false');
@@ -142,11 +143,14 @@ export default class SortingDropDown {
         }
     }
 
+    // Update the sorting choice (both in the display and in the class variable)
     updateDisplayedChoice(option) {
         this.currentOption = option;
         this.selectedSorting.innerText = option;
     }
 
+    // Checks if the user already visited the page and has an option
+    // Then it display said sort option in the drop down button
     rememberChoice() {
         if(localStorage.getItem(`photographer${this.mediaGallery.photographerData.id}SortOption`)) {
             this.updateDisplayedChoice(localStorage.getItem(`photographer${this.mediaGallery.photographerData.id}SortOption`));
@@ -157,16 +161,19 @@ export default class SortingDropDown {
 
     attachListenerToSortBtn() {
         this.sortBtn.addEventListener('click', this.displaySortMenu.bind(this));
+        // Necessary to avoid bug when clicking on the awesome font chevron icon
         this.clickHandleIconExpand = this.displaySortMenu.bind(this);
         this.sortMenuIcon.addEventListener('click', this.clickHandleIconExpand);
     }
 
+    // Add the event listeners to each of the sorting options
     attachListenerToSortOptions() {
         this.sortOptions.forEach(optionElt => {
             optionElt.addEventListener('click', this.sortOptionSelected.bind(this));
         });
     }
 
+    // Let the user control the sorting drop down with the keyboard
     attachListenersToKeyBoard() {
         window.addEventListener('keydown', this.keyboardEvents.bind(this));
     }
@@ -189,6 +196,7 @@ export default class SortingDropDown {
                 this.closeDropDown();
             }
 
+            // Simulate a click on the option highlighted when pressing the enter key
             if (e.key === 'Enter') {
                 e.preventDefault();
                 const focusedSortItem = document.querySelector('li.sort-dropdown__item[aria-selected=true]');
@@ -197,18 +205,22 @@ export default class SortingDropDown {
         }
     }
 
+    // Let the user close the dropdown menu when clicking away from it
     attachListenerClickOutside() {
         window.addEventListener('click', this.closeDropDown.bind(this));
     }
 
     // Like and thumbnail animations
-
+    // Checks if the icon has already been liked by the user
+    // If that's the case, instead of letting the user add a new like
+    // It lets the user remove his old like
     makeLikeIconClickable(likeIcon) {
         let localLiked = (likeIcon.dataset.localLiked === 'true');
         if (!localLiked) {
             likeIcon.addEventListener('click', this.addOneLike.bind(this));
         }else{
             likeIcon.addEventListener('click', this.removeOneLike.bind(this));
+            // Modify the appearance of the icon liked by the user
             likeIcon.classList.add('liked');
         }
     }
@@ -223,7 +235,7 @@ export default class SortingDropDown {
         let likes = e.target.dataset.likesNumber;
         const likedMediaContainer = e.target.parentElement.parentElement.parentElement;
         const currentSortOption = this.currentOption;
-        // Function for the challenge
+
         if (currentSortOption === 'Popularité') this.checkDrawLiking(likes, likedMediaContainer);
         likes++;
         const likedMediaObject = this.filteredMedias.find(media => media.id === parseInt(likedMediaContainer.dataset.mediaId,10));
@@ -235,6 +247,7 @@ export default class SortingDropDown {
         likeIcon.dataset.likesNumber = likes;
         likeIcon.dataset.localLiked = "true";
         likeIcon.classList.add('liked');
+        // Directly add the event letting the user unlike
         likeIcon.addEventListener('click', this.removeOneLike.bind(this));
         likesContainer.appendChild(likeIcon);
         this.photographerObject.updateTotalLikes(1);
@@ -255,11 +268,13 @@ export default class SortingDropDown {
         const likeIcon = createLikeIcon();
         likeIcon.dataset.likesNumber = likes;
         likeIcon.dataset.localLiked = "false";
+        // Directly add the event letting the user like again
         likeIcon.addEventListener('click', this.addOneLike.bind(this));
         likesContainer.appendChild(likeIcon);
         this.photographerObject.updateTotalLikes(-1);
     }
 
+    // Part relative to the animation of the thumbnails in case of a draw
     checkDrawLiking(likes, clickedMedia) {
         const drawsList = this.filteredMedias.filter(media => media.likes === parseInt(likes,10));
         if (drawsList.length > 1) {
@@ -385,6 +400,8 @@ export default class SortingDropDown {
         return difference;
     }
 
+    // Get the x,y coordinates of each element in the array passed as argument
+    // For instance, the array of media with the same amount of likes
     getPositionArray(mediaEltArray) {
         return mediaEltArray.map(mediaElt => this.getPosition(mediaElt));
     }

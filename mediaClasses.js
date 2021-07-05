@@ -1,5 +1,13 @@
 import {createMediaFrame} from "./photographersFunctions.js";
 
+// Classes used by the factory to create the appropriate DOM elements
+// using their respective appendMedia method
+
+// The createMediaFrame function, display the title and the likes of the media to be appended
+// It checks if the object has been liked by the current user.
+// If that's not the case, then clicking the like icon increase the likes by one
+// If that's the case, it decrease the likes by one
+
 export class Photograph {
     constructor(photoObject, photographerObject) {
         this.name = photoObject.name;
